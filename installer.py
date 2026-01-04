@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import os
 import json
 import zipfile
@@ -9,39 +9,44 @@ import threading
 import sys
 import platform
 
-# --- CONFIGURATION ---
-BASE_MODS_URL = "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/v1.0/mods.zip"
-TARGET_FORGE_VERSION = "1.20.1-forge-47.4.10"
-PROFILE_NAME = "Wonderland"
-
-# Optional Mods Dictionary
-OPTIONAL_MODS = {
-    # "Optifine": "https://link-to-optifine.jar",
-    # "Just Enough Items": "https://link-to-jei.jar"
+# --- MODPACKS CONFIGURATION ---
+MODPACKS = {
+    "Wonderland": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
+        "profile_name": "Wonderland",
+        "folder_name": "Wonderland",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Furnace"
+    },
+    "The Backrooms": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
+        "profile_name": "Backrooms",
+        "folder_name": "Backrooms",
+        "version_id": "fabric-loader-0.18.4-1.20.1",
+        "icon": "Bookshelf"
+    }
 }
 
 class InstallerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title(f"{PROFILE_NAME} Installer")
-        self.root.geometry("400x450")
+        self.root.title("Modpack Installer")
+        self.root.geometry("400x350")
         
-        # UI Setup
-        tk.Label(root, text=f"{PROFILE_NAME} Installer", font=("Segoe UI", 16, "bold")).pack(pady=10)
+        # Header
+        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=20)
         
-        tk.Label(root, text="Select Optional Mods:", font=("Segoe UI", 10, "bold")).pack(anchor="w", padx=20, pady=(10,0))
+        # Dropdown Menu (Combobox)
+        tk.Label(root, text="Choose which server to install:", font=("Segoe UI", 10)).pack(pady=(0, 5))
         
-        self.vars = {}
-        if not OPTIONAL_MODS:
-            tk.Label(root, text="(No optional mods available)", fg="gray").pack(anchor="w", padx=30)
-        else:
-            for mod_name in OPTIONAL_MODS:
-                var = tk.BooleanVar()
-                chk = tk.Checkbutton(root, text=mod_name, variable=var, font=("Segoe UI", 10))
-                chk.pack(anchor="w", padx=30)
-                self.vars[mod_name] = var
-            
-        self.btn_install = tk.Button(root, text="Install Profile", command=self.start_thread, 
+        self.selected_pack = tk.StringVar()
+        self.dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
+        self.dropdown['values'] = list(MODPACKS.keys())
+        self.dropdown.current(0) # Select first option by default
+        self.dropdown.pack(pady=10, ipadx=20)
+        
+        # Install Button
+        self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
         self.btn_install.pack(pady=30)
         
@@ -54,15 +59,16 @@ class InstallerApp:
 
     def run_install(self):
         try:
-            self.install_logic()
-            self.root.after(0, lambda: messagebox.showinfo("Success", f"Installation Complete!\nOpen Minecraft and select '{PROFILE_NAME}'."))
+            pack_name = self.selected_pack.get()
+            self.install_logic(pack_name)
+            self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!\nRestart Minecraft Launcher to play."))
             self.root.after(0, self.root.quit)
         except Exception as e:
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
             self.root.after(0, lambda: self.reset_ui())
 
     def reset_ui(self):
-        self.btn_install.config(state="normal", text="Install Profile")
+        self.btn_install.config(state="normal", text="Install Selected Pack")
         self.status.config(text="Error occurred.")
 
     def update_status(self, text):
@@ -73,87 +79,58 @@ class InstallerApp:
         with urllib.request.urlopen(req) as response, open(path, 'wb') as out_file:
             shutil.copyfileobj(response, out_file)
 
-    def install_logic(self):
-        # 1. Setup Paths (Cross-Platform)
+    def get_mc_dir(self):
         system = platform.system()
         if system == 'Windows':
-            appdata = os.getenv('APPDATA')
-            mc_dir = os.path.join(appdata, '.minecraft')
-        elif system == 'Darwin': # MacOS
-            home = os.path.expanduser("~")
-            mc_dir = os.path.join(home, "Library", "Application Support", "minecraft")
-        else: # Linux
-            home = os.path.expanduser("~")
-            mc_dir = os.path.join(home, ".minecraft")
+            return os.path.join(os.getenv('APPDATA'), '.minecraft')
+        elif system == 'Darwin':
+            return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
+        return os.path.join(os.path.expanduser("~"), ".minecraft")
 
-        if not os.path.exists(mc_dir):
-            raise Exception(f"Minecraft folder not found at:\n{mc_dir}\nPlease launch Minecraft once.")
-
-        profile_dir = os.path.join(mc_dir, 'profiles', PROFILE_NAME)
-        if not os.path.exists(profile_dir):
-            os.makedirs(profile_dir)
-
-        # 2. Download Base Mods
-        self.update_status("Downloading Base Mods...")
-        base_zip = os.path.join(profile_dir, "base_mods.zip")
-        self.download_file(BASE_MODS_URL, base_zip)
-        
-        self.update_status("Extracting Mods...")
-        with zipfile.ZipFile(base_zip, 'r') as z:
-            z.extractall(profile_dir)
-        os.remove(base_zip)
-
-        # 3. Download Optional Mods
-        mods_folder = os.path.join(profile_dir, "mods")
-        if not os.path.exists(mods_folder):
-            os.makedirs(mods_folder)
-            
-        for mod_name, var in self.vars.items():
-            if var.get():
-                self.update_status(f"Downloading {mod_name}...")
-                url = OPTIONAL_MODS[mod_name]
-                filename = url.split("/")[-1].split("?")[0]
-                self.download_file(url, os.path.join(mods_folder, filename))
-
-        # 4. Update Profile JSON
-        self.update_status("Configuring Launcher...")
-        versions_dir = os.path.join(mc_dir, 'versions')
-        forge_dir = os.path.join(versions_dir, TARGET_FORGE_VERSION)
-        
-        # Smart Search for Forge Version
-        final_version = TARGET_FORGE_VERSION
-        if not os.path.exists(forge_dir):
-            found = False
-            if os.path.exists(versions_dir):
-                for f in os.listdir(versions_dir):
-                    if f.startswith("1.20.1-forge"):
-                        final_version = f
-                        found = True
-                        break
-            if not found:
-                # Warning only - proceed so they can install Forge later
-                self.root.after(0, lambda: messagebox.showwarning("Warning", "Forge 1.20.1 not found!\nPlease install Forge manually."))
-
+    def update_json_profile(self, mc_dir, name, game_dir, version_id, icon):
         profiles_file = os.path.join(mc_dir, 'launcher_profiles.json')
-        if os.path.exists(profiles_file):
-            try:
-                with open(profiles_file, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                
-                data['profiles'][PROFILE_NAME] = {
-                    "name": PROFILE_NAME,
-                    "type": "custom",
-                    "created": "2025-01-01T00:00:00.000Z",
-                    "lastVersionId": final_version,
-                    "icon": "Furnace",
-                    "gameDir": profile_dir
-                }
-                
-                shutil.copy(profiles_file, profiles_file + ".bak")
-                with open(profiles_file, 'w', encoding='utf-8') as f:
-                    json.dump(data, f, indent=2)
-            except Exception as e:
-                raise Exception(f"Failed to update profile: {e}")
+        if not os.path.exists(profiles_file): return
+
+        with open(profiles_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        profile_id = name.replace(" ", "_")
+        
+        data['profiles'][profile_id] = {
+            "created": "2025-01-01T00:00:00.000Z",
+            "gameDir": game_dir,
+            "icon": icon,
+            "lastUsed": "2025-01-01T00:00:00.000Z",
+            "lastVersionId": version_id,
+            "name": name,
+            "type": "custom"
+        }
+
+        shutil.copy(profiles_file, profiles_file + ".bak")
+        with open(profiles_file, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
+
+    def install_logic(self, pack_name):
+        mc_dir = self.get_mc_dir()
+        if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
+
+        config = MODPACKS[pack_name]
+        self.update_status(f"Installing {pack_name}...")
+        
+        # 1. Create Folder
+        profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
+        if not os.path.exists(profile_dir): os.makedirs(profile_dir)
+        
+        # 2. Download & Extract
+        temp_zip = os.path.join(profile_dir, "temp.zip")
+        self.download_file(config['url'], temp_zip)
+        
+        self.update_status("Extracting files...")
+        with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
+        os.remove(temp_zip)
+        
+        # 3. Create Launcher Profile
+        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
 
 if __name__ == "__main__":
     root = tk.Tk()
