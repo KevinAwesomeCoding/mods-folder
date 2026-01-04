@@ -22,7 +22,7 @@ MODPACKS = {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
         "profile_name": "Backrooms",
         "folder_name": "Backrooms",
-        "version_id": "fabric-loader-0.16.10-1.20.1",
+        "version_id": "fabric-loader-0.18.4-1.20.1",
         "icon": "Bookshelf"
     }
 }
@@ -162,3 +162,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
