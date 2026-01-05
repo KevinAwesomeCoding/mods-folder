@@ -116,14 +116,19 @@ class InstallerApp:
         self.progress_bar.pack(fill="x", padx=40, pady=10)
         threading.Thread(target=self.run_install, daemon=True).start()
 
-    def run_install(self):
+     def run_install(self):
         try:
             pack_name = self.selected_pack.get()
             self.install_logic(pack_name)
+            self.root.after(0, self.reset_ui)
+            self.root.after(0, lambda: self.status.config(text="Installation Complete"))
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
+            
         except Exception as e:
+
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
-            self.root.after(0, lambda: self.reset_ui())
+            self.root.after(0, self.reset_ui)
+            self.root.after(0, lambda: self.status.config(text="Error occurred."))
 
     def reset_ui(self):
         self.btn_install.config(state="normal", text="Install Selected Pack")
@@ -214,4 +219,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
 
