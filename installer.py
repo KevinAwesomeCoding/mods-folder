@@ -121,7 +121,6 @@ class InstallerApp:
             pack_name = self.selected_pack.get()
             self.install_logic(pack_name)
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
-            self.root.after(0, self.root.quit)
         except Exception as e:
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
             self.root.after(0, lambda: self.reset_ui())
@@ -215,3 +214,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
