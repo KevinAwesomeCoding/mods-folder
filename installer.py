@@ -115,6 +115,10 @@ class InstallerApp:
         self.btn_install.config(state="disabled", text="Installing...")
         self.progress_bar.pack(fill="x", padx=40, pady=10)
         threading.Thread(target=self.run_install, daemon=True).start()
+        
+    def reset_ui(self):
+        self.btn_install.config(state="normal", text="Install Selected Pack")
+        self.progress_bar.pack_forget()
 
      def run_install(self):
         try:
@@ -219,5 +223,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
 
 
