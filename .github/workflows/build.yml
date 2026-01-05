@@ -28,7 +28,7 @@ jobs:
 
     - name: Build with PyInstaller
       run: |
-        pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" installer.py
+        pyinstaller --onefile --noconsole --name "Minecraft Mods Installer" installer.py
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
