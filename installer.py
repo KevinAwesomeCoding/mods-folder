@@ -10,21 +10,56 @@ import sys
 import platform
 
 # --- MODPACKS CONFIGURATION ---
+# Edit this section to change download links or required versions
 MODPACKS = {
     "Wonderland": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
         "profile_name": "Wonderland",
         "folder_name": "Wonderland",
         "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Furnace"
+        "icon": "Furnace",
+        "required_loader": "Forge 1.20.1 Version 47.4.10" 
     },
     "The Backrooms": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
         "profile_name": "Backrooms",
         "folder_name": "Backrooms",
         "version_id": "fabric-loader-0.18.4-1.20.1",
-        "icon": "Bookshelf"
-    }
+        "icon": "Bookshelf",
+        "required_loader": "Fabric 1.20.1 Version 0.18.4"
+    },
+    "The Anomaly": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
+        "profile_name": "The Anomaly",
+        "folder_name": "The Anomaly",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Crying_Obsidian",
+        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+    },
+    "The One Who Watches": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
+        "profile_name": "The One Who Watches",
+        "folder_name": "The One Who Watches",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Ender_Eye",
+        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+    },
+    "The Obsessed": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
+        "profile_name": "The Obsessed",
+        "folder_name": "The Obsessed",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Spider_Eye",
+        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+    },
+    "From The Fog": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
+        "profile_name": "From The Fog",
+        "folder_name": "From The Fog",
+        "version_id": "fabric-loader-0.18.4-1.21.11",
+        "icon": "Redstone_Torch",
+        "required_loader": "Fabric 1.21.11 Version 0.18.4" 
+    },
 }
 
 class InstallerApp:
@@ -45,7 +80,7 @@ class InstallerApp:
         self.dropdown.pack(pady=10, ipadx=20)
         
         # Install Button
-        self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
+        self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.pre_install_check, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
         self.btn_install.pack(pady=20)
         
@@ -57,9 +92,28 @@ class InstallerApp:
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
+    def pre_install_check(self):
+        pack_name = self.selected_pack.get()
+        config = MODPACKS[pack_name]
+        loader_ver = config['required_loader']
+        
+        # --- THE PROMPT ---
+        message = (
+            f"IF you haven't PLEASE DOWNLOAD {loader_ver} TO CONTINUE.\n\n"
+            "If you have done so, click OK."
+        )
+        
+        # Show prompt. If they click OK, it returns True. If Cancel, False.
+        response = messagebox.askokcancel("Requirement Check", message, icon='warning')
+        
+        if response: # User clicked OK
+            self.start_thread()
+        else: # User clicked Cancel
+            self.update_status("Installation cancelled.")
+
     def start_thread(self):
         self.btn_install.config(state="disabled", text="Installing...")
-        self.progress_bar.pack(fill="x", padx=40, pady=10) # Show bar
+        self.progress_bar.pack(fill="x", padx=40, pady=10)
         threading.Thread(target=self.run_install, daemon=True).start()
 
     def run_install(self):
@@ -75,13 +129,12 @@ class InstallerApp:
     def reset_ui(self):
         self.btn_install.config(state="normal", text="Install Selected Pack")
         self.status.config(text="Error occurred.")
-        self.progress_bar.pack_forget() # Hide bar on error
+        self.progress_bar.pack_forget()
 
     def update_status(self, text):
         self.root.after(0, lambda: self.status.config(text=text))
 
     def update_progress(self, current, total):
-        # Update progress bar value (0 to 100)
         percent = (current / total) * 100
         self.root.after(0, lambda: self.progress_var.set(percent))
 
@@ -89,7 +142,7 @@ class InstallerApp:
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         with urllib.request.urlopen(req) as response:
             total_size = int(response.info().get('Content-Length', 0))
-            block_size = 8192 # 8KB chunks
+            block_size = 8192
             downloaded = 0
             
             with open(path, 'wb') as out_file:
@@ -144,14 +197,14 @@ class InstallerApp:
         
         # 2. Download
         self.update_status(f"Downloading {pack_name}...")
-        self.progress_var.set(0) # Reset bar
+        self.progress_var.set(0)
         
         temp_zip = os.path.join(profile_dir, "temp.zip")
         self.download_file(config['url'], temp_zip)
         
         # 3. Extract
         self.update_status("Extracting files...")
-        self.progress_var.set(100) # Full bar for extraction (indefinite)
+        self.progress_var.set(100)
         with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
         os.remove(temp_zip)
         
@@ -162,4 +215,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
-
