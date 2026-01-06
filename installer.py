@@ -32,7 +32,7 @@ MODPACKS = {
         "profile_name": "The Anomaly",
         "folder_name": "The Anomaly",
         "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Crying_Obsidian",
+        "icon": "Obsidian",
         "required_loader": "Forge 1.20.1 Version 47.4.10" 
     },
     "The One Who Watches": {
@@ -40,7 +40,7 @@ MODPACKS = {
         "profile_name": "The One Who Watches",
         "folder_name": "The One Who Watches",
         "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Ender_Eye",
+        "icon": "Carved_Pumpkin",
         "required_loader": "Forge 1.20.1 Version 47.4.10" 
     },
     "The Obsessed": {
@@ -48,7 +48,7 @@ MODPACKS = {
         "profile_name": "The Obsessed",
         "folder_name": "The Obsessed",
         "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Spider_Eye",
+        "icon": "Netherrack",
         "required_loader": "Forge 1.20.1 Version 47.4.10" 
     },
     "From The Fog": {
@@ -56,8 +56,16 @@ MODPACKS = {
         "profile_name": "From The Fog",
         "folder_name": "From The Fog",
         "version_id": "fabric-loader-0.18.4-1.21.11",
-        "icon": "Redstone_Torch",
+        "icon": "Glass",
         "required_loader": "Fabric 1.21.11 Version 0.18.4" 
+    },
+    "The Broken Script": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
+        "profile_name": "The Broken Script",
+        "folder_name": "The Broken Script,
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Redstone_Block",
+        "required_loader": "Forge 1.20.1 Version 47.4.10" 
     },
 }
 
@@ -219,3 +227,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
