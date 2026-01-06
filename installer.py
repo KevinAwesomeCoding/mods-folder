@@ -10,6 +10,7 @@ import sys
 import platform
 
 # --- MODPACKS CONFIGURATION ---
+# Note: I added a 'loader_url' field to each pack for the version download links.
 MODPACKS = {
     "Wonderland": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
@@ -17,7 +18,7 @@ MODPACKS = {
         "folder_name": "Wonderland",
         "version_id": "1.20.1-forge-47.4.10",
         "icon": "Furnace",
-        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
     },
     "The Backrooms": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
@@ -25,7 +26,7 @@ MODPACKS = {
         "folder_name": "Backrooms",
         "version_id": "fabric-loader-0.18.4-1.20.1",
         "icon": "Bookshelf",
-        "required_loader": "Fabric 1.20.1 Version 0.18.4"
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip"
     },
     "The Anomaly": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
@@ -33,7 +34,7 @@ MODPACKS = {
         "folder_name": "The Anomaly",
         "version_id": "1.20.1-forge-47.4.10",
         "icon": "Obsidian",
-        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
     },
     "The One Who Watches": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
@@ -41,7 +42,7 @@ MODPACKS = {
         "folder_name": "The One Who Watches",
         "version_id": "1.20.1-forge-47.4.10",
         "icon": "Carved_Pumpkin",
-        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
     },
     "The Obsessed": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
@@ -49,7 +50,7 @@ MODPACKS = {
         "folder_name": "The Obsessed",
         "version_id": "1.20.1-forge-47.4.10",
         "icon": "Netherrack",
-        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
     },
     "From The Fog": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
@@ -57,7 +58,7 @@ MODPACKS = {
         "folder_name": "From The Fog",
         "version_id": "fabric-loader-0.18.4-1.21.11",
         "icon": "Glass",
-        "required_loader": "Fabric 1.21.11 Version 0.18.4" 
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip"
     },
     "The Broken Script": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
@@ -65,7 +66,7 @@ MODPACKS = {
         "folder_name": "The Broken Script",
         "version_id": "1.20.1-forge-47.4.10",
         "icon": "Redstone_Block",
-        "required_loader": "Forge 1.20.1 Version 47.4.10" 
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
     },
 }
 
@@ -87,7 +88,7 @@ class InstallerApp:
         self.dropdown.pack(pady=10, ipadx=20)
         
         # Install Button
-        self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.pre_install_check, 
+        self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
         self.btn_install.pack(pady=20)
         
@@ -99,43 +100,8 @@ class InstallerApp:
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
-    def check_loader_installed(self, version_id):
-        """
-        Checks if the version folder exists in .minecraft/versions
-        Works on Mac (uses /) and Windows (uses \) automatically.
-        """
-        mc_dir = self.get_mc_dir()
-        version_path = os.path.join(mc_dir, 'versions', version_id)
-        return os.path.exists(version_path)
-
-    def pre_install_check(self):
-        pack_name = self.selected_pack.get()
-        config = MODPACKS[pack_name]
-        loader_ver = config['required_loader']
-        version_id = config['version_id']
-        
-        # --- SMART CHECK ---
-        # 1. If installed, skip prompt and install immediately.
-        if self.check_loader_installed(version_id):
-            self.start_thread()
-            return
-
-        # 2. If missing, show the warning prompt.
-        message = (
-            f"WARNING: It looks like you don't have {loader_ver} installed yet.\n"
-            f"(We couldn't find a folder named '{version_id}' in your versions folder)\n\n"
-            "Please download and install it first--given in the link in which you downloaded from--or the game won't launch.\n\n"
-            "Click OK if you have installed it (or want to proceed anyway)."
-        )
-        
-        response = messagebox.askokcancel("Missing Loader", message, icon='warning')
-        
-        if response: # User clicked OK
-            self.start_thread()
-        else: # User clicked Cancel
-            self.update_status("Installation cancelled.")
-
     def start_thread(self):
+        """Starts the installation process in a separate thread."""
         self.btn_install.config(state="disabled", text="Installing...")
         self.progress_bar.pack(fill="x", padx=40, pady=10)
         threading.Thread(target=self.run_install, daemon=True).start()
@@ -143,18 +109,76 @@ class InstallerApp:
     def run_install(self):
         try:
             pack_name = self.selected_pack.get()
-            self.install_logic(pack_name)
+            config = MODPACKS[pack_name]
+            mc_dir = self.get_mc_dir()
             
-            # Installation successful - Reset UI and Show Success
+            # --- STEP 1: AUTO-INSTALL LOADER IF MISSING ---
+            version_id = config['version_id']
+            if not self.check_loader_installed(version_id):
+                self.update_status(f"Missing {version_id}. Downloading it now...")
+                self.install_loader(mc_dir, config['loader_url'])
+            
+            # --- STEP 2: INSTALL MODPACK ---
+            self.install_modpack_logic(mc_dir, config)
+            
+            # Success
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
             
         except Exception as e:
-            # Installation failed
+            # Error handling
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
+
+    def check_loader_installed(self, version_id):
+        """Checks if .minecraft/versions/<version_id> exists."""
+        mc_dir = self.get_mc_dir()
+        version_path = os.path.join(mc_dir, 'versions', version_id)
+        return os.path.exists(version_path)
+
+    def install_loader(self, mc_dir, loader_url):
+        """Downloads and extracts the loader zip into .minecraft/versions"""
+        versions_dir = os.path.join(mc_dir, 'versions')
+        if not os.path.exists(versions_dir): os.makedirs(versions_dir)
+        
+        temp_loader_zip = os.path.join(versions_dir, "temp_loader.zip")
+        
+        # Download
+        self.progress_var.set(0)
+        self.download_file(loader_url, temp_loader_zip)
+        
+        # Extract directly into versions folder
+        self.update_status("Installing Loader files...")
+        with zipfile.ZipFile(temp_loader_zip, 'r') as z:
+            z.extractall(versions_dir)
+            
+        os.remove(temp_loader_zip)
+
+    def install_modpack_logic(self, mc_dir, config):
+        """Main modpack installation (Mods + Profile)"""
+        if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
+        
+        # 1. Prepare Profile Folder
+        profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
+        if not os.path.exists(profile_dir): os.makedirs(profile_dir)
+        
+        # 2. Download Mods
+        self.update_status(f"Downloading {config['profile_name']} Mods...")
+        self.progress_var.set(0)
+        
+        temp_zip = os.path.join(profile_dir, "temp.zip")
+        self.download_file(config['url'], temp_zip)
+        
+        # 3. Extract Mods
+        self.update_status("Extracting Mods...")
+        self.progress_var.set(100)
+        with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
+        os.remove(temp_zip)
+        
+        # 4. Create/Update Profile in Launcher
+        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
 
     def reset_ui(self):
         self.btn_install.config(state="normal", text="Install Selected Pack")
@@ -188,7 +212,6 @@ class InstallerApp:
         if system == 'Windows':
             return os.path.join(os.getenv('APPDATA'), '.minecraft')
         elif system == 'Darwin':
-            # This is the correct standard path for Minecraft on macOS
             return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
         return os.path.join(os.path.expanduser("~"), ".minecraft")
 
@@ -215,34 +238,7 @@ class InstallerApp:
         with open(profiles_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
 
-    def install_logic(self, pack_name):
-        mc_dir = self.get_mc_dir()
-        if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
-
-        config = MODPACKS[pack_name]
-        
-        # 1. Create Folder
-        profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
-        if not os.path.exists(profile_dir): os.makedirs(profile_dir)
-        
-        # 2. Download
-        self.update_status(f"Downloading {pack_name}...")
-        self.progress_var.set(0)
-        
-        temp_zip = os.path.join(profile_dir, "temp.zip")
-        self.download_file(config['url'], temp_zip)
-        
-        # 3. Extract
-        self.update_status("Extracting files...")
-        self.progress_var.set(100)
-        with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
-        os.remove(temp_zip)
-        
-        # 4. Profile
-        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
-
 if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
-
