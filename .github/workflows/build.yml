@@ -64,6 +64,14 @@ jobs:
         with:
           tag: "1.0"
           name: "Installer"            # Sets the release title to "Installer"
+          makeLatest: true
+          body: |
+            ## How to Install
+            **Windows:** Download `MinecraftModsInstaller.exe` and run it.
+            **Mac:** Download the Zip, extract it, and run the App.
+            **NOTE: PLEASE DOWNLOAD JAVA FOR IT TO WORK... I'd also advise to download Forge Installer, since it is needed in MOST mods(some mods will need other versions).**
+            
+            *Build updated automatically via GitHub Actions.*
           allowUpdates: true           # Edits the existing release
           removeArtifacts: false       # KEEPS your other files safe
           replacesArtifacts: true      # Overwrites ONLY the files we are uploading
