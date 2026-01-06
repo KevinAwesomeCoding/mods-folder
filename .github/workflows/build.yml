@@ -1,244 +1,80 @@
-import tkinter as tk
-from tkinter import ttk, messagebox
-import os
-import json
-import zipfile
-import urllib.request
-import shutil
-import threading
-import sys
-import platform
+name: Build and Update Installer
 
-# --- MODPACKS CONFIGURATION ---
-# Note: I added a 'loader_url' field to each pack for the version download links.
-MODPACKS = {
-    "Wonderland": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
-        "profile_name": "Wonderland",
-        "folder_name": "Wonderland",
-        "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Furnace",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
-    },
-    "The Backrooms": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
-        "profile_name": "Backrooms",
-        "folder_name": "Backrooms",
-        "version_id": "fabric-loader-0.18.4-1.20.1",
-        "icon": "Bookshelf",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip"
-    },
-    "The Anomaly": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
-        "profile_name": "The Anomaly",
-        "folder_name": "The Anomaly",
-        "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Obsidian",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
-    },
-    "The One Who Watches": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
-        "profile_name": "The One Who Watches",
-        "folder_name": "The One Who Watches",
-        "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Carved_Pumpkin",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
-    },
-    "The Obsessed": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
-        "profile_name": "The Obsessed",
-        "folder_name": "The Obsessed",
-        "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Netherrack",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
-    },
-    "From The Fog": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
-        "profile_name": "From The Fog",
-        "folder_name": "From The Fog",
-        "version_id": "fabric-loader-0.18.4-1.21.11",
-        "icon": "Glass",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip"
-    },
-    "The Broken Script": {
-        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
-        "profile_name": "The Broken Script",
-        "folder_name": "The Broken Script",
-        "version_id": "1.20.1-forge-47.4.10",
-        "icon": "Redstone_Block",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
-    },
-}
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
 
-class InstallerApp:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("Modpack Installer")
-        self.root.geometry("400x400")
-        
-        # Header
-        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=20)
-        
-        # Dropdown
-        tk.Label(root, text="Choose which server to install:", font=("Segoe UI", 10)).pack(pady=(0, 5))
-        self.selected_pack = tk.StringVar()
-        self.dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
-        self.dropdown['values'] = list(MODPACKS.keys())
-        self.dropdown.current(0)
-        self.dropdown.pack(pady=10, ipadx=20)
-        
-        # Install Button
-        self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
-                                     bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
-        self.btn_install.pack(pady=20)
-        
-        # Progress Bar (Hidden by default)
-        self.progress_var = tk.DoubleVar()
-        self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100)
-        
-        # Status Label
-        self.status = tk.Label(root, text="Ready", fg="gray")
-        self.status.pack(side="bottom", pady=10)
+permissions:
+  contents: write
 
-    def start_thread(self):
-        """Starts the installation process in a separate thread."""
-        self.btn_install.config(state="disabled", text="Installing...")
-        self.progress_bar.pack(fill="x", padx=40, pady=10)
-        threading.Thread(target=self.run_install, daemon=True).start()
+jobs:
+  # 1. BUILD WINDOWS
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pyinstaller
+      - run: pyinstaller --onefile --noconsole --name "MinecraftModsInstaller" installer.py
+      # Save the EXE for the next step
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-app
+          path: dist/MinecraftModsInstaller.exe
 
-    def run_install(self):
-        try:
-            pack_name = self.selected_pack.get()
-            config = MODPACKS[pack_name]
-            mc_dir = self.get_mc_dir()
+  # 2. BUILD MAC
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pyinstaller
+      - run: |
+          pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" installer.py
+          cd dist
+          zip -r "MinecraftModsInstaller-Mac.zip" "Minecraft Mods Installer.app"
+      # Save the ZIP for the next step
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-app
+          path: dist/MinecraftModsInstaller-Mac.zip
+
+  # 3. UPLOAD EVERYTHING TO RELEASE (Runs only after both builds finish)
+  release:
+    needs: [build-windows, build-mac]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Windows App
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-app
+
+      - name: Download Mac App
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-app
+
+      - name: Update Release 1.0
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "1.0"
+          name: "Installer"            # Sets the release title to "Installer"
+          makeLatest: true
+          body: |
+            ## How to Install
+            **Windows:** Download `MinecraftModsInstaller.exe` and run it.
+            **Mac:** Download the Zip, extract it, and run the App.
+            **NOTE: PLEASE DOWNLOAD JAVA FOR IT TO WORK... I'd also advise to download Forge Installer, since it is needed in MOST mods(some mods will need other versions).**
             
-            # --- STEP 1: AUTO-INSTALL LOADER IF MISSING ---
-            version_id = config['version_id']
-            if not self.check_loader_installed(version_id):
-                self.update_status(f"Missing {version_id}. Downloading it now...")
-                self.install_loader(mc_dir, config['loader_url'])
-            
-            # --- STEP 2: INSTALL MODPACK ---
-            self.install_modpack_logic(mc_dir, config)
-            
-            # Success
-            self.root.after(0, self.reset_ui)
-            self.root.after(0, lambda: self.status.config(text="Installation Complete"))
-            self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
-            
-        except Exception as e:
-            # Error handling
-            self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
-            self.root.after(0, self.reset_ui)
-            self.root.after(0, lambda: self.status.config(text="Error occurred."))
-
-    def check_loader_installed(self, version_id):
-        """Checks if .minecraft/versions/<version_id> exists."""
-        mc_dir = self.get_mc_dir()
-        version_path = os.path.join(mc_dir, 'versions', version_id)
-        return os.path.exists(version_path)
-
-    def install_loader(self, mc_dir, loader_url):
-        """Downloads and extracts the loader zip into .minecraft/versions"""
-        versions_dir = os.path.join(mc_dir, 'versions')
-        if not os.path.exists(versions_dir): os.makedirs(versions_dir)
-        
-        temp_loader_zip = os.path.join(versions_dir, "temp_loader.zip")
-        
-        # Download
-        self.progress_var.set(0)
-        self.download_file(loader_url, temp_loader_zip)
-        
-        # Extract directly into versions folder
-        self.update_status("Installing Loader files...")
-        with zipfile.ZipFile(temp_loader_zip, 'r') as z:
-            z.extractall(versions_dir)
-            
-        os.remove(temp_loader_zip)
-
-    def install_modpack_logic(self, mc_dir, config):
-        """Main modpack installation (Mods + Profile)"""
-        if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
-        
-        # 1. Prepare Profile Folder
-        profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
-        if not os.path.exists(profile_dir): os.makedirs(profile_dir)
-        
-        # 2. Download Mods
-        self.update_status(f"Downloading {config['profile_name']} Mods...")
-        self.progress_var.set(0)
-        
-        temp_zip = os.path.join(profile_dir, "temp.zip")
-        self.download_file(config['url'], temp_zip)
-        
-        # 3. Extract Mods
-        self.update_status("Extracting Mods...")
-        self.progress_var.set(100)
-        with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
-        os.remove(temp_zip)
-        
-        # 4. Create/Update Profile in Launcher
-        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
-
-    def reset_ui(self):
-        self.btn_install.config(state="normal", text="Install Selected Pack")
-        self.progress_bar.pack_forget()
-
-    def update_status(self, text):
-        self.root.after(0, lambda: self.status.config(text=text))
-
-    def update_progress(self, current, total):
-        percent = (current / total) * 100
-        self.root.after(0, lambda: self.progress_var.set(percent))
-
-    def download_file(self, url, path):
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req) as response:
-            total_size = int(response.info().get('Content-Length', 0))
-            block_size = 8192
-            downloaded = 0
-            
-            with open(path, 'wb') as out_file:
-                while True:
-                    chunk = response.read(block_size)
-                    if not chunk: break
-                    out_file.write(chunk)
-                    downloaded += len(chunk)
-                    if total_size > 0:
-                        self.update_progress(downloaded, total_size)
-
-    def get_mc_dir(self):
-        system = platform.system()
-        if system == 'Windows':
-            return os.path.join(os.getenv('APPDATA'), '.minecraft')
-        elif system == 'Darwin':
-            return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
-        return os.path.join(os.path.expanduser("~"), ".minecraft")
-
-    def update_json_profile(self, mc_dir, name, game_dir, version_id, icon):
-        profiles_file = os.path.join(mc_dir, 'launcher_profiles.json')
-        if not os.path.exists(profiles_file): return
-
-        with open(profiles_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-
-        profile_id = name.replace(" ", "_")
-        
-        data['profiles'][profile_id] = {
-            "created": "2025-01-01T00:00:00.000Z",
-            "gameDir": game_dir,
-            "icon": icon,
-            "lastUsed": "2025-01-01T00:00:00.000Z",
-            "lastVersionId": version_id,
-            "name": name,
-            "type": "custom"
-        }
-
-        shutil.copy(profiles_file, profiles_file + ".bak")
-        with open(profiles_file, 'w', encoding='utf-8') as f:
-            json.dump(data, f, indent=2)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = InstallerApp(root)
-    root.mainloop()
+            *Build updated automatically via GitHub Actions.*
+          allowUpdates: true           # Edits the existing release
+          removeArtifacts: false       # KEEPS your other files safe
+          replacesArtifacts: true      # Overwrites ONLY the files we are uploading
+          artifacts: |
+            MinecraftModsInstaller.exe
+            MinecraftModsInstaller-Mac.zip
