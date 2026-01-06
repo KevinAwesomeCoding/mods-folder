@@ -68,6 +68,46 @@ MODPACKS = {
         "icon": "Redstone_Block",
         "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
     },
+    "000.jar": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/000/mods.zip",
+        "profile_name": "000.jar",
+        "folder_name": "000.jar",
+        "version_id": "1.19.2-forge-43.5.2",
+        "icon": "Barrier",
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip"
+    },
+    "The Newest Goatman": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
+        "profile_name": "The Newest Goatman",
+        "folder_name": "The Newest Goatman",
+        "version_id": "1.19.2-forge-43.5.2",
+        "icon": "Bone_Block",
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip"
+    },
+    "Sanity": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
+        "profile_name": "Sanity",
+        "folder_name": "Sanity",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Soul_Sand",
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+    },
+    "The God": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
+        "profile_name": "The God",
+        "folder_name": "The God",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Beacon",
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+    },
+    "From The Caves": {
+        "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
+        "profile_name": "From The Caves",
+        "folder_name": "From The Caves",
+        "version_id": "1.20.1-forge-47.4.10",
+        "icon": "Deepslate",
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+    },
 }
 
 class InstallerApp:
@@ -242,3 +282,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
