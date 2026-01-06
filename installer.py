@@ -62,7 +62,7 @@ MODPACKS = {
     "The Broken Script": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
         "profile_name": "The Broken Script",
-        "folder_name": "The Broken Script,
+        "folder_name": "The Broken Script",
         "version_id": "1.20.1-forge-47.4.10",
         "icon": "Redstone_Block",
         "required_loader": "Forge 1.20.1 Version 47.4.10" 
@@ -227,4 +227,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
 
