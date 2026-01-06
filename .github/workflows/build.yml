@@ -1,4 +1,4 @@
-name: Build and Update Release 1.0
+name: Force Update Release 1.0
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write  # This is required to allow uploading to releases
+  contents: write
 
 jobs:
   build:
@@ -28,29 +28,28 @@ jobs:
       run: |
         pip install pyinstaller
 
-    # --- WINDOWS BUILD STEP ---
+    # --- WINDOWS BUILD ---
     - name: Build Windows Exe
       if: runner.os == 'Windows'
       run: |
         pyinstaller --onefile --noconsole --name "MinecraftModsInstaller" installer.py
 
-    # --- MAC BUILD STEP ---
+    # --- MAC BUILD ---
     - name: Build Mac App
       if: runner.os == 'macOS'
       run: |
-        # 1. Build the App Bundle
         pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" installer.py
-        
-        # 2. Zip it up (GitHub Releases cannot host raw .app folders)
         cd dist
         zip -r "MinecraftModsInstaller-Mac.zip" "Minecraft Mods Installer.app"
 
-    # --- UPLOAD TO RELEASE 1.0 ---
-    - name: Upload to Release 1.0
-      uses: softprops/action-gh-release@v1
+    # --- FORCE UPDATE RELEASE 1.0 ---
+    - name: Update Release 1.0
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: 1.0  # MUST match your existing release tag
-        files: |
+        tag: "1.0"                        # Targets your specific '1.0' tag
+        allowUpdates: true                # Tells GitHub "Yes, edit the existing release"
+        removeArtifacts: true             # Deletes old .exe/.zip files before uploading new ones
+        artifacts: |
           dist/MinecraftModsInstaller.exe
           dist/MinecraftModsInstaller-Mac.zip
         token: ${{ secrets.GITHUB_TOKEN }}
