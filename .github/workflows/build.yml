@@ -69,7 +69,7 @@ jobs:
             ## How to Install
             **Windows:** Download `MinecraftModsInstaller.exe` and run it.
             **Mac:** Download the Zip, extract it, and run the App.
-            **NOTE: PLEASE DOWNLOAD JAVA FOR ANY OF THESE TO WORK. THE DOWNLOAD IS BELOW OR YOU CAN OBTAIN IT ONLINE**
+            **NOTE, IF NOTHING WORKS, PLEASE DOWNLOAD JAVA. THE DOWNLOAD IS BELOW OR YOU CAN OBTAIN IT ONLINE**
             
             *Build updated automatically via GitHub Actions.*
           allowUpdates: true           # Edits the existing release
