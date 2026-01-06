@@ -124,7 +124,7 @@ class InstallerApp:
         message = (
             f"WARNING: It looks like you don't have {loader_ver} installed yet.\n"
             f"(We couldn't find a folder named '{version_id}' in your versions folder)\n\n"
-            "Please download and install it first, or the game won't launch.\n\n"
+            "Please download and install it first--given in the link in which you downloaded from--or the game won't launch.\n\n"
             "Click OK if you have installed it (or want to proceed anyway)."
         )
         
@@ -245,3 +245,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
