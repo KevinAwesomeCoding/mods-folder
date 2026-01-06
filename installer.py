@@ -99,19 +99,36 @@ class InstallerApp:
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
+    def check_loader_installed(self, version_id):
+        """
+        Checks if the version folder exists in .minecraft/versions
+        Works on Mac (uses /) and Windows (uses \) automatically.
+        """
+        mc_dir = self.get_mc_dir()
+        version_path = os.path.join(mc_dir, 'versions', version_id)
+        return os.path.exists(version_path)
+
     def pre_install_check(self):
         pack_name = self.selected_pack.get()
         config = MODPACKS[pack_name]
         loader_ver = config['required_loader']
+        version_id = config['version_id']
         
-        # --- THE PROMPT ---
+        # --- SMART CHECK ---
+        # 1. If installed, skip prompt and install immediately.
+        if self.check_loader_installed(version_id):
+            self.start_thread()
+            return
+
+        # 2. If missing, show the warning prompt.
         message = (
-            f"IF you haven't PLEASE DOWNLOAD {loader_ver} TO CONTINUE.\n\n"
-            "If you have done so, click OK."
+            f"WARNING: It looks like you don't have {loader_ver} installed yet.\n"
+            f"(We couldn't find a folder named '{version_id}' in your versions folder)\n\n"
+            "Please download and install it first, or the game won't launch.\n\n"
+            "Click OK if you have installed it (or want to proceed anyway)."
         )
         
-        # Show prompt. If they click OK, it returns True. If Cancel, False.
-        response = messagebox.askokcancel("Requirement Check", message, icon='warning')
+        response = messagebox.askokcancel("Missing Loader", message, icon='warning')
         
         if response: # User clicked OK
             self.start_thread()
@@ -128,7 +145,7 @@ class InstallerApp:
             pack_name = self.selected_pack.get()
             self.install_logic(pack_name)
             
-            # Installation successful
+            # Installation successful - Reset UI and Show Success
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
@@ -171,6 +188,7 @@ class InstallerApp:
         if system == 'Windows':
             return os.path.join(os.getenv('APPDATA'), '.minecraft')
         elif system == 'Darwin':
+            # This is the correct standard path for Minecraft on macOS
             return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
         return os.path.join(os.path.expanduser("~"), ".minecraft")
 
@@ -227,5 +245,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
-
-
