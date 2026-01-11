@@ -118,10 +118,10 @@ MODPACKS = {
 }
 
 class InstallerApp:
-    def __init__(self, root):
+        def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
-        self.root.geometry("400x450") # Made slightly taller for extra dropdown
+        self.root.geometry("400x450")
         
         # Header
         tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=15)
@@ -131,32 +131,33 @@ class InstallerApp:
         self.selected_category = tk.StringVar()
         self.cat_dropdown = ttk.Combobox(root, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 10))
         self.cat_dropdown['values'] = list(MODPACKS.keys())
-        self.cat_dropdown.bind("<<ComboboxSelected>>", self.update_pack_dropdown) # When category changes, update packs
-        self.cat_dropdown.current(0) # Select first category by default
+        self.cat_dropdown.bind("<<ComboboxSelected>>", self.update_pack_dropdown)
+        self.cat_dropdown.current(0)
         self.cat_dropdown.pack(pady=5, ipadx=20)
 
         # --- MODPACK DROPDOWN ---
         tk.Label(root, text="Select Modpack:", font=("Segoe UI", 10)).pack(pady=(10, 0))
         self.selected_pack = tk.StringVar()
         self.pack_dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
-        # Values will be filled by update_pack_dropdown
         self.pack_dropdown.pack(pady=5, ipadx=20)
         
-        # Initialize the second dropdown based on the first one
-        self.update_pack_dropdown(None)
-
         # Install Button
         self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
         self.btn_install.pack(pady=25)
         
-        # Progress Bar (Hidden by default)
+        # Progress Bar
         self.progress_var = tk.DoubleVar()
         self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100)
         
         # Status Label
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
+
+        # --- MOVE THIS TO THE END ---
+        # Now that self.btn_install exists, we can safely call this function
+        self.update_pack_dropdown(None)
+
 
     def update_pack_dropdown(self, event):
         """Updates the Modpack dropdown based on the selected Category."""
