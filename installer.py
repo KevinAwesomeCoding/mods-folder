@@ -40,9 +40,9 @@ MODPACKS = {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
         "profile_name": "The One Who Watches",
         "folder_name": "The One Who Watches",
-        "version_id": "1.20.1-forge-47.4.10",
+        "version_id": "1.19.2-forge-43.5.2",
         "icon": "Carved_Pumpkin",
-        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+        "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip"
     },
     "The Obsessed": {
         "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
@@ -282,4 +282,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
 
