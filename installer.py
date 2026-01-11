@@ -10,7 +10,6 @@ import sys
 import platform
 
 # --- MODPACKS CONFIGURATION ---
-# Structure: "Category Name": { "Modpack Name": { details... } }
 MODPACKS = {
     "Horror": {
         "Wonderland": {
@@ -111,14 +110,12 @@ MODPACKS = {
         }
     },
     "Challenge": {
-        # --- ADD YOUR CHALLENGE MODS HERE LATER ---
-        # Example format:
-        # "One Block": { ... details ... },
+        # Placeholders
     }
 }
 
 class InstallerApp:
-        def __init__(self, root):
+    def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
         self.root.geometry("400x450")
@@ -154,13 +151,11 @@ class InstallerApp:
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
-        # --- MOVE THIS TO THE END ---
-        # Now that self.btn_install exists, we can safely call this function
+        # --- CORRECT PLACEMENT ---
         self.update_pack_dropdown(None)
 
 
     def update_pack_dropdown(self, event):
-        """Updates the Modpack dropdown based on the selected Category."""
         category = self.selected_category.get()
         packs = list(MODPACKS[category].keys())
         
@@ -179,18 +174,16 @@ class InstallerApp:
 
     def run_install(self):
         try:
-            # We now need to get config using Category AND Pack Name
             category = self.selected_category.get()
             pack_name = self.selected_pack.get()
             
-            # Safety check
             if pack_name not in MODPACKS[category]:
                 raise Exception("Invalid selection.")
 
             config = MODPACKS[category][pack_name]
             mc_dir = self.get_mc_dir()
             
-            # --- STEP 1: AUTO-INSTALL LOADER IF MISSING ---
+            # --- STEP 1: AUTO-INSTALL LOADER ---
             version_id = config['version_id']
             if not self.check_loader_installed(version_id):
                 self.update_status(f"Missing {version_id}. Downloading it now...")
@@ -199,7 +192,6 @@ class InstallerApp:
             # --- STEP 2: INSTALL MODPACK ---
             self.install_modpack_logic(mc_dir, config)
             
-            # Success
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
@@ -244,7 +236,6 @@ class InstallerApp:
         with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
         os.remove(temp_zip)
         
-        # --- NEW: MOVE VERSION FOLDER IF IT EXISTS ---
         extracted_version_source = os.path.join(profile_dir, "version_data")
         if os.path.exists(extracted_version_source):
             self.update_status("Installing Loader Version...")
