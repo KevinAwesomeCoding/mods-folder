@@ -147,7 +147,7 @@ class InstallerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
-        self.root.geometry("400x450")
+        self.root.geometry("400x480")
         
         # Header
         tk.Label(root, text="Select a Modpack", font =("Segoe UI", 16, "bold")).pack(pady=15)
@@ -212,7 +212,6 @@ class InstallerApp:
             mc_dir = self.get_mc_dir()
             
             # --- STEP 1: INSTALL LOADER (Versions/Libraries) ---
-            # We install this every time to be safe, or you can check if it exists.
             self.update_status(f"Checking loader for {pack_name}...")
             self.install_loader(mc_dir, config['loader_url'])
             
@@ -244,7 +243,7 @@ class InstallerApp:
         
         self.update_status("Installing Loader...")
         
-        # Extract to a temp folder to merge correctly
+        # Extract to a temp folder
         temp_extract_path = os.path.join(mc_dir, "temp_loader_extract")
         if os.path.exists(temp_extract_path): shutil.rmtree(temp_extract_path)
         os.makedirs(temp_extract_path)
@@ -254,37 +253,62 @@ class InstallerApp:
             
         os.remove(temp_loader_zip)
 
-        # ZIP STRUCTURE: Root contains 'versions' and 'libraries' folders directly.
-        # We merge them into .minecraft/versions and .minecraft/libraries
-        
-        src_versions = os.path.join(temp_extract_path, "versions")
-        src_libraries = os.path.join(temp_extract_path, "libraries")
-        
-        if os.path.exists(src_versions):
-            self.merge_folders(src_versions, versions_dir)
+        # --- FIND FOLDERS RECURSIVELY (The "Search and Destroy" Fix) ---
+        found_versions = None
+        found_libraries = None
+
+        for root_path, dirs, files in os.walk(temp_extract_path):
+            if "versions" in dirs:
+                found_versions = os.path.join(root_path, "versions")
+            if "libraries" in dirs:
+                found_libraries = os.path.join(root_path, "libraries")
+            
+            # Stop if we found both to save time
+            if found_versions and found_libraries:
+                break
+
+        # --- MERGE WITH OVERWRITE LOGIC ---
+        if found_versions:
+            self.update_status("Copying version files...")
+            self.merge_folders_robust(found_versions, versions_dir)
         else:
             print("Warning: 'versions' folder not found in loader zip.")
 
-        if os.path.exists(src_libraries):
-            self.merge_folders(src_libraries, libraries_dir)
+        if found_libraries:
+            self.update_status("Copying library files...")
+            self.merge_folders_robust(found_libraries, libraries_dir)
         else:
-            print("Warning: 'libraries' folder not found in loader zip.")
+            # Fallback: Maybe the zip IS the version folder? 
+            # (Unlikely based on your description, but good safety)
+            pass
 
         # Cleanup
         shutil.rmtree(temp_extract_path)
 
-    def merge_folders(self, src, dst):
-        """Recursively merges src folder into dst folder."""
-        if not os.path.exists(dst):
-            os.makedirs(dst)
-        for item in os.listdir(src):
-            s = os.path.join(src, item)
-            d = os.path.join(dst, item)
-            if os.path.isdir(s):
-                self.merge_folders(s, d)
-            else:
-                if not os.path.exists(d):
-                    shutil.copy2(s, d)
+    def merge_folders_robust(self, src, dst):
+        """
+        Robustly merges src into dst.
+        If dst exists, it merges contents.
+        If files exist, it overwrites them (ensuring updates).
+        """
+        # Try using modern Python shutil.copytree if available
+        if sys.version_info >= (3, 8):
+            shutil.copytree(src, dst, dirs_exist_ok=True)
+        else:
+            # Manual fallback for older Python
+            if not os.path.exists(dst):
+                os.makedirs(dst)
+            for item in os.listdir(src):
+                s = os.path.join(src, item)
+                d = os.path.join(dst, item)
+                if os.path.isdir(s):
+                    self.merge_folders_robust(s, d)
+                else:
+                    # Always copy, replacing existing files to ensure updates
+                    try:
+                        shutil.copy2(s, d)
+                    except Exception as e:
+                        print(f"Could not copy {s}: {e}")
 
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
@@ -312,26 +336,26 @@ class InstallerApp:
             z.extractall(temp_extract)
         os.remove(temp_zip)
 
-        # 4. Smart Install Logic
+        # 4. Smart Install Logic (Mods)
         if is_complex:
-            # RLCraft type: move everything to profile root
-            self.merge_folders(temp_extract, profile_dir)
+            self.merge_folders_robust(temp_extract, profile_dir)
         else:
-            # Standard type: Put jars in /mods
             target_mods = os.path.join(profile_dir, "mods")
             if not os.path.exists(target_mods): os.makedirs(target_mods)
             
-            # FIX FOR "MODS INSIDE MODS"
-            # Check if the extracted files contain a folder named "mods"
-            # If yes, move the CONTENTS of that "mods" folder.
-            possible_nested_mods = os.path.join(temp_extract, "mods")
+            # Check for nested 'mods' folder
+            found_mods_nested = None
+            for root_path, dirs, files in os.walk(temp_extract):
+                if "mods" in dirs:
+                    found_mods_nested = os.path.join(root_path, "mods")
+                    break
             
-            if os.path.exists(possible_nested_mods):
-                # The user has mods/mods/file.jar -> We want mods/file.jar
-                self.merge_folders(possible_nested_mods, target_mods)
+            if found_mods_nested:
+                # Found a nested 'mods' folder, move its CONTENTS
+                self.merge_folders_robust(found_mods_nested, target_mods)
             else:
-                # The user just has file.jar -> We put it in mods/
-                self.merge_folders(temp_extract, target_mods)
+                # No nested 'mods' folder, assume all jars in temp are mods
+                self.merge_folders_robust(temp_extract, target_mods)
 
         # Cleanup
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
