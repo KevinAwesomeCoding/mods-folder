@@ -125,7 +125,7 @@ MODPACKS = {
         "Entropy: The Chaos Mod": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/entropy/mods.zip",
             "profile_name": "Entropy: The Chaos Mod",
-            "folder_name": "Entropy: The Chaos Mod",
+            "folder_name": "Entropy",
             "version_id": "fabric-loader-0.18.4-1.21.8",
             "icon": "Furnace",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
