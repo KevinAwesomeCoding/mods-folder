@@ -10,6 +10,10 @@ import sys
 import platform
 
 # --- MODPACKS CONFIGURATION ---
+# Structure: "Category Name": { "Modpack Name": { details... } }
+# NOTE: Add "is_complex": True if your zip contains folders like (mods, config, saves).
+#       If "is_complex": False (or missing), the script puts everything into a 'mods' folder.
+
 MODPACKS = {
     "Horror": {
         "Wonderland": {
@@ -18,7 +22,8 @@ MODPACKS = {
             "folder_name": "Wonderland",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Furnace",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "The Backrooms": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
@@ -26,7 +31,8 @@ MODPACKS = {
             "folder_name": "Backrooms",
             "version_id": "fabric-loader-0.18.4-1.20.1",
             "icon": "Bookshelf",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
+            "is_complex": False
         },
         "The Anomaly": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
@@ -34,7 +40,8 @@ MODPACKS = {
             "folder_name": "The Anomaly",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Obsidian",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "The One Who Watches": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
@@ -42,7 +49,8 @@ MODPACKS = {
             "folder_name": "The One Who Watches",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Carved_Pumpkin",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "The Obsessed": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
@@ -50,7 +58,8 @@ MODPACKS = {
             "folder_name": "The Obsessed",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Netherrack",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "From The Fog": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
@@ -58,7 +67,8 @@ MODPACKS = {
             "folder_name": "From The Fog",
             "version_id": "fabric-loader-0.18.4-1.21.11",
             "icon": "Glass",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
+            "is_complex": False
         },
         "The Broken Script": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
@@ -66,7 +76,8 @@ MODPACKS = {
             "folder_name": "The Broken Script",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Redstone_Block",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "000.jar": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/000/mods.zip",
@@ -74,7 +85,8 @@ MODPACKS = {
             "folder_name": "000.jar",
             "version_id": "1.19.2-forge-43.5.2",
             "icon": "Barrier",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
+            "is_complex": False
         },
         "The Newest Goatman": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
@@ -82,7 +94,8 @@ MODPACKS = {
             "folder_name": "The Newest Goatman",
             "version_id": "1.19.2-forge-43.5.2",
             "icon": "Bone_Block",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
+            "is_complex": False
         },
         "Sanity": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
@@ -90,7 +103,8 @@ MODPACKS = {
             "folder_name": "Sanity",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Soul_Sand",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "The God": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
@@ -98,7 +112,8 @@ MODPACKS = {
             "folder_name": "The God",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Beacon",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
         },
         "From The Caves": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
@@ -106,8 +121,9 @@ MODPACKS = {
             "folder_name": "From The Caves",
             "version_id": "1.20.1-forge-47.4.10",
             "icon": "Bedrock",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip"
-        }
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "is_complex": False
+        },
     },
     "Challenge": {
         "Entropy: The Chaos Mod": {
@@ -117,8 +133,17 @@ MODPACKS = {
             "version_id": "fabric-loader-0.18.4-1.21.8",
             "icon": "Furnace",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip"
+            "is_conplex": False
         },
-    }
+        "RLCraft": {
+            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
+            "profile_name": "RLCraft",
+            "folder_name": "RLCraft",
+            "version_id": "1.12.2-forge-14.23.5.2864",
+            "icon": "Bedrock",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
+            "is_complex": True
+        }
 }
 
 class InstallerApp:
@@ -128,7 +153,7 @@ class InstallerApp:
         self.root.geometry("400x450")
         
         # Header
-        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=15)
+        tk.Label(root, text="Select a Modpack", font =("Segoe UI", 16, "bold")).pack(pady=15)
         
         # --- CATEGORY DROPDOWN ---
         tk.Label(root, text="Select Category:", font=("Segoe UI", 10, "bold")).pack(pady=(5, 0))
@@ -158,9 +183,8 @@ class InstallerApp:
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
-        # --- CORRECT PLACEMENT ---
+        # Initialize Dropdown Logic
         self.update_pack_dropdown(None)
-
 
     def update_pack_dropdown(self, event):
         category = self.selected_category.get()
@@ -199,6 +223,7 @@ class InstallerApp:
             # --- STEP 2: INSTALL MODPACK ---
             self.install_modpack_logic(mc_dir, config)
             
+            # Success UI Updates
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
@@ -229,20 +254,40 @@ class InstallerApp:
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
         
+        # 1. Prepare Main Profile Folder
         profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
         if not os.path.exists(profile_dir): os.makedirs(profile_dir)
         
-        self.update_status(f"Downloading {config['profile_name']} Mods...")
+        # --- CHECK: IS THIS A COMPLEX PACK? ---
+        is_complex = config.get('is_complex', False)
+        
+        if is_complex:
+            # Extract straight to profile root (for packs with config, saves, etc.)
+            extract_target = profile_dir
+            status_text = "Extracting Full Profile..."
+        else:
+            # Extract into a 'mods' subfolder (for simple mod lists)
+            extract_target = os.path.join(profile_dir, "mods")
+            if not os.path.exists(extract_target): os.makedirs(extract_target)
+            status_text = "Extracting Mods..."
+
+        # 2. Download
+        self.update_status(f"Downloading {config['profile_name']}...")
         self.progress_var.set(0)
         
         temp_zip = os.path.join(profile_dir, "temp.zip")
         self.download_file(config['url'], temp_zip)
         
-        self.update_status("Extracting Mods...")
+        # 3. Extract to target
+        self.update_status(status_text)
         self.progress_var.set(100)
-        with zipfile.ZipFile(temp_zip, 'r') as z: z.extractall(profile_dir)
+        with zipfile.ZipFile(temp_zip, 'r') as z:
+            z.extractall(extract_target)
+            
         os.remove(temp_zip)
         
+        # --- NEW: MOVE VERSION FOLDER IF IT EXISTS ---
+        # This handles cases where version data is bundled inside the modpack zip
         extracted_version_source = os.path.join(profile_dir, "version_data")
         if os.path.exists(extracted_version_source):
             self.update_status("Installing Loader Version...")
@@ -317,4 +362,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
-
