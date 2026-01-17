@@ -211,11 +211,10 @@ class InstallerApp:
             config = MODPACKS[category][pack_name]
             mc_dir = self.get_mc_dir()
             
-            # --- STEP 1: AUTO-INSTALL LOADER ---
-            version_id = config['version_id']
-            if not self.check_loader_installed(version_id):
-                self.update_status(f"Missing {version_id}. Downloading it now...")
-                self.install_loader(mc_dir, config['loader_url'])
+            # --- STEP 1: INSTALL LOADER (Versions/Libraries) ---
+            # We install this every time to be safe, or you can check if it exists.
+            self.update_status(f"Checking loader for {pack_name}...")
+            self.install_loader(mc_dir, config['loader_url'])
             
             # --- STEP 2: INSTALL MODPACK ---
             self.install_modpack_logic(mc_dir, config)
@@ -230,29 +229,62 @@ class InstallerApp:
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
 
-    def check_loader_installed(self, version_id):
-        mc_dir = self.get_mc_dir()
-        version_path = os.path.join(mc_dir, 'versions', version_id)
-        return os.path.exists(version_path)
-
     def install_loader(self, mc_dir, loader_url):
         versions_dir = os.path.join(mc_dir, 'versions')
-        if not os.path.exists(versions_dir): os.makedirs(versions_dir)
+        libraries_dir = os.path.join(mc_dir, 'libraries')
         
-        # Download loader zip
-        temp_loader_zip = os.path.join(versions_dir, "temp_loader.zip")
+        if not os.path.exists(versions_dir): os.makedirs(versions_dir)
+        if not os.path.exists(libraries_dir): os.makedirs(libraries_dir)
+        
+        temp_loader_zip = os.path.join(mc_dir, "temp_loader.zip")
         self.progress_var.set(0)
+        
+        self.update_status("Downloading Loader...")
         self.download_file(loader_url, temp_loader_zip)
         
-        self.update_status("Installing Loader and Libraries...")
+        self.update_status("Installing Loader...")
         
-        # --- CRITICAL FIX: Extract to .minecraft root (mc_dir) ---
-        # This ensures 'libraries' goes to .minecraft/libraries
-        # and 'versions' goes to .minecraft/versions
+        # Extract to a temp folder to merge correctly
+        temp_extract_path = os.path.join(mc_dir, "temp_loader_extract")
+        if os.path.exists(temp_extract_path): shutil.rmtree(temp_extract_path)
+        os.makedirs(temp_extract_path)
+
         with zipfile.ZipFile(temp_loader_zip, 'r') as z:
-            z.extractall(mc_dir)
+            z.extractall(temp_extract_path)
             
         os.remove(temp_loader_zip)
+
+        # ZIP STRUCTURE: Root contains 'versions' and 'libraries' folders directly.
+        # We merge them into .minecraft/versions and .minecraft/libraries
+        
+        src_versions = os.path.join(temp_extract_path, "versions")
+        src_libraries = os.path.join(temp_extract_path, "libraries")
+        
+        if os.path.exists(src_versions):
+            self.merge_folders(src_versions, versions_dir)
+        else:
+            print("Warning: 'versions' folder not found in loader zip.")
+
+        if os.path.exists(src_libraries):
+            self.merge_folders(src_libraries, libraries_dir)
+        else:
+            print("Warning: 'libraries' folder not found in loader zip.")
+
+        # Cleanup
+        shutil.rmtree(temp_extract_path)
+
+    def merge_folders(self, src, dst):
+        """Recursively merges src folder into dst folder."""
+        if not os.path.exists(dst):
+            os.makedirs(dst)
+        for item in os.listdir(src):
+            s = os.path.join(src, item)
+            d = os.path.join(dst, item)
+            if os.path.isdir(s):
+                self.merge_folders(s, d)
+            else:
+                if not os.path.exists(d):
+                    shutil.copy2(s, d)
 
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
@@ -261,39 +293,49 @@ class InstallerApp:
         profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
         if not os.path.exists(profile_dir): os.makedirs(profile_dir)
         
-        # --- CHECK: IS THIS A COMPLEX PACK? ---
         is_complex = config.get('is_complex', False)
         
-        if is_complex:
-            # Extract straight to profile root (for packs with config, saves, etc.)
-            extract_target = profile_dir
-            status_text = "Extracting Full Profile..."
-        else:
-            # Extract into a 'mods' subfolder (for simple mod lists)
-            extract_target = os.path.join(profile_dir, "mods")
-            if not os.path.exists(extract_target): os.makedirs(extract_target)
-            status_text = "Extracting Mods..."
-
-        # 2. Download
+        # 2. Download Modpack
         self.update_status(f"Downloading {config['profile_name']}...")
         self.progress_var.set(0)
-        
         temp_zip = os.path.join(profile_dir, "temp.zip")
         self.download_file(config['url'], temp_zip)
         
-        # 3. Extract to target
-        self.update_status(status_text)
+        # 3. Extract to temp location first
+        temp_extract = os.path.join(profile_dir, "temp_extract_mods")
+        if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
+        os.makedirs(temp_extract)
+        
+        self.update_status("Extracting mods...")
         self.progress_var.set(100)
         with zipfile.ZipFile(temp_zip, 'r') as z:
-            z.extractall(extract_target)
-            
+            z.extractall(temp_extract)
         os.remove(temp_zip)
-        
-        # --- LEGACY CLEANUP (Just in case) ---
-        extracted_version_source = os.path.join(profile_dir, "version_data")
-        if os.path.exists(extracted_version_source):
-            shutil.rmtree(extracted_version_source)
 
+        # 4. Smart Install Logic
+        if is_complex:
+            # RLCraft type: move everything to profile root
+            self.merge_folders(temp_extract, profile_dir)
+        else:
+            # Standard type: Put jars in /mods
+            target_mods = os.path.join(profile_dir, "mods")
+            if not os.path.exists(target_mods): os.makedirs(target_mods)
+            
+            # FIX FOR "MODS INSIDE MODS"
+            # Check if the extracted files contain a folder named "mods"
+            # If yes, move the CONTENTS of that "mods" folder.
+            possible_nested_mods = os.path.join(temp_extract, "mods")
+            
+            if os.path.exists(possible_nested_mods):
+                # The user has mods/mods/file.jar -> We want mods/file.jar
+                self.merge_folders(possible_nested_mods, target_mods)
+            else:
+                # The user just has file.jar -> We put it in mods/
+                self.merge_folders(temp_extract, target_mods)
+
+        # Cleanup
+        if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
+        
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
 
     def reset_ui(self):
