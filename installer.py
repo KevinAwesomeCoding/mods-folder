@@ -239,13 +239,19 @@ class InstallerApp:
         versions_dir = os.path.join(mc_dir, 'versions')
         if not os.path.exists(versions_dir): os.makedirs(versions_dir)
         
+        # Download loader zip
         temp_loader_zip = os.path.join(versions_dir, "temp_loader.zip")
         self.progress_var.set(0)
         self.download_file(loader_url, temp_loader_zip)
         
-        self.update_status("Installing Loader files...")
+        self.update_status("Installing Loader and Libraries...")
+        
+        # --- CRITICAL FIX: Extract to .minecraft root (mc_dir) ---
+        # This ensures 'libraries' goes to .minecraft/libraries
+        # and 'versions' goes to .minecraft/versions
         with zipfile.ZipFile(temp_loader_zip, 'r') as z:
-            z.extractall(versions_dir)
+            z.extractall(mc_dir)
+            
         os.remove(temp_loader_zip)
 
     def install_modpack_logic(self, mc_dir, config):
@@ -283,17 +289,9 @@ class InstallerApp:
             
         os.remove(temp_zip)
         
-        # --- NEW: MOVE VERSION FOLDER IF IT EXISTS ---
-        # This handles cases where version data is bundled inside the modpack zip
+        # --- LEGACY CLEANUP (Just in case) ---
         extracted_version_source = os.path.join(profile_dir, "version_data")
         if os.path.exists(extracted_version_source):
-            self.update_status("Installing Loader Version...")
-            main_versions_dir = os.path.join(mc_dir, "versions")
-            for item in os.listdir(extracted_version_source):
-                s = os.path.join(extracted_version_source, item)
-                d = os.path.join(main_versions_dir, item)
-                if not os.path.exists(d):
-                    shutil.move(s, d)
             shutil.rmtree(extracted_version_source)
 
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
@@ -359,5 +357,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
-
-
