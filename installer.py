@@ -10,10 +10,6 @@ import sys
 import platform
 
 # --- MODPACKS CONFIGURATION ---
-# Structure: "Category Name": { "Modpack Name": { details... } }
-# NOTE: Add "is_complex": True if your zip contains folders like (mods, config, saves).
-#       If "is_complex": False (or missing), the script puts everything into a 'mods' folder.
-
 MODPACKS = {
     "Horror": {
         "Wonderland": {
@@ -123,7 +119,7 @@ MODPACKS = {
             "icon": "Bedrock",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
             "is_complex": False
-        },
+        }
     },
     "Challenge": {
         "Entropy: The Chaos Mod": {
@@ -144,6 +140,7 @@ MODPACKS = {
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
             "is_complex": True
         }
+    }
 }
 
 class InstallerApp:
@@ -362,4 +359,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
-
