@@ -132,8 +132,8 @@ MODPACKS = {
             "folder_name": "Entropy: The Chaos Mod",
             "version_id": "fabric-loader-0.18.4-1.21.8",
             "icon": "Furnace",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip"
-            "is_conplex": False
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
+            "is_complex": False
         },
         "RLCraft": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
@@ -362,3 +362,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
