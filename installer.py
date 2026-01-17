@@ -16,9 +16,9 @@ MODPACKS = {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
             "profile_name": "Wonderland",
             "folder_name": "Wonderland",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Furnace",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         },
         "The Backrooms": {
@@ -34,9 +34,9 @@ MODPACKS = {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
             "profile_name": "The Anomaly",
             "folder_name": "The Anomaly",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Obsidian",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         },
         "The One Who Watches": {
@@ -52,9 +52,9 @@ MODPACKS = {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
             "profile_name": "The Obsessed",
             "folder_name": "The Obsessed",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Netherrack",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         },
         "From The Fog": {
@@ -70,9 +70,9 @@ MODPACKS = {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
             "profile_name": "The Broken Script",
             "folder_name": "The Broken Script",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Redstone_Block",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         },
         "000.jar": {
@@ -97,27 +97,27 @@ MODPACKS = {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
             "profile_name": "Sanity",
             "folder_name": "Sanity",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Soul_Sand",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         },
         "The God": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
             "profile_name": "The God",
             "folder_name": "The God",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Beacon",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         },
         "From The Caves": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
             "profile_name": "From The Caves",
             "folder_name": "From The Caves",
-            "version_id": "1.20.1-forge-47.4.10",
+            "version_id": "1.20.1-forge-47.4.15",
             "icon": "Bedrock",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.10.zip",
+            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
             "is_complex": False
         }
     },
@@ -359,4 +359,5 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = InstallerApp(root)
     root.mainloop()
+
 
