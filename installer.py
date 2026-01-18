@@ -10,6 +10,17 @@ import sys
 import platform
 import time 
 import random
+import base64
+from io import BytesIO
+
+# Try to import Pillow for image handling
+try:
+    from PIL import Image, ImageTk
+    HAS_PILLOW = True
+except ImportError:
+    HAS_PILLOW = False
+    print("Warning: Pillow not installed. Icons will not display in the app (but will work in Launcher if pre-calculated).")
+    print("Run: pip install pillow")
 
 # CONFIG
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
@@ -19,13 +30,16 @@ class InstallerApp:
         self.root = root
         self.root.title("Modpack Installer")
         
+        # Cache for loaded icons
+        self.icon_cache = {}
+        self.current_icon_base64 = None 
+
         # --- CENTER THE WINDOW ---
-        window_width = 400
-        window_height = 500
+        window_width = 450 # Slightly wider for icon
+        window_height = 550
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         
-        # Calculate position x and y coordinates
         x = (screen_width // 2) - (window_width // 2)
         y = (screen_height // 2) - (window_height // 2)
         
@@ -59,12 +73,17 @@ class InstallerApp:
         tk.Label(root, text="Select Modpack:", font=("Segoe UI", 10)).pack(pady=(10, 0))
         self.selected_pack = tk.StringVar()
         self.pack_dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
+        self.pack_dropdown.bind("<<ComboboxSelected>>", self.on_pack_selected)
         self.pack_dropdown.pack(pady=5, ipadx=20)
         
+        # --- ICON PREVIEW ---
+        self.icon_label = tk.Label(root, text="")
+        self.icon_label.pack(pady=10)
+
         # Install Button
         self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
-        self.btn_install.pack(pady=25)
+        self.btn_install.pack(pady=15)
         
         # Progress Bar
         self.progress_var = tk.DoubleVar()
@@ -130,10 +149,65 @@ class InstallerApp:
             self.pack_dropdown['values'] = packs
             if packs:
                 self.pack_dropdown.current(0)
-                self.btn_install.config(state="normal")
+                self.on_pack_selected(None) # Trigger icon update
             else:
                 self.pack_dropdown.set("No packs")
                 self.btn_install.config(state="disabled")
+                self.icon_label.config(image='', text="No Icon")
+
+    def on_pack_selected(self, event):
+        """Called when user selects a specific modpack."""
+        category = self.selected_category.get()
+        pack_name = self.selected_pack.get()
+        
+        if category in self.modpacks and pack_name in self.modpacks[category]:
+            self.btn_install.config(state="normal")
+            config = self.modpacks[category][pack_name]
+            
+            # Display Icon if available
+            if 'icon_url' in config and HAS_PILLOW:
+                self.display_icon(config['icon_url'])
+            else:
+                self.icon_label.config(image='', text="")
+                self.current_icon_base64 = None
+
+    def display_icon(self, url):
+        # 1. Check cache
+        if url in self.icon_cache:
+            photo, b64_str = self.icon_cache[url]
+            self.icon_label.config(image=photo, text="")
+            self.current_icon_base64 = b64_str
+            return
+
+        # 2. Download in thread
+        def fetch():
+            try:
+                req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                with urllib.request.urlopen(req) as response:
+                    img_data = response.read()
+                
+                # Convert for UI
+                image = Image.open(BytesIO(img_data))
+                image = image.resize((64, 64), Image.Resampling.LANCZOS)
+                photo = ImageTk.PhotoImage(image)
+                
+                # Convert for Launcher (Base64)
+                buffered = BytesIO()
+                image.save(buffered, format="PNG")
+                b64_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+                # Update UI safely
+                self.root.after(0, lambda: self._update_icon_label(url, photo, b64_str))
+            except Exception as e:
+                print(f"Icon load error: {e}")
+                self.root.after(0, lambda: self.icon_label.config(text=""))
+
+        threading.Thread(target=fetch, daemon=True).start()
+
+    def _update_icon_label(self, url, photo, b64_str):
+        self.icon_cache[url] = (photo, b64_str)
+        self.icon_label.config(image=photo, text="")
+        self.current_icon_base64 = b64_str
 
     def start_thread(self):
         if not self.modpacks: return
@@ -169,21 +243,16 @@ class InstallerApp:
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
   
     def install_loader(self, mc_dir, loader_url):
-        # Extract the version ID from the URL to check if it exists
         version_id = loader_url.split('/')[-1].replace('.zip', '')
-        
         versions_dir = os.path.join(mc_dir, 'versions')
         version_folder = os.path.join(versions_dir, version_id)
         
-        # --- CHECK IF VERSION ALREADY EXISTS ---
         if os.path.exists(version_folder):
             self.update_status(f"Loader {version_id} already installed, skipping...")
             print(f"✓ Skipping download: {version_id} already exists")
-            return  # Exit early, no need to download
+            return
         
-        # --- VERSION DOES NOT EXIST, PROCEED WITH DOWNLOAD ---
         libraries_dir = os.path.join(mc_dir, 'libraries')
-        
         if not os.path.exists(versions_dir): os.makedirs(versions_dir)
         if not os.path.exists(libraries_dir): os.makedirs(libraries_dir)
         
@@ -194,26 +263,21 @@ class InstallerApp:
         self.download_file(loader_url, temp_loader_zip)
         
         self.update_status("Installing Loader...")
-        
         temp_extract_path = os.path.join(mc_dir, "temp_loader_extract")
         if os.path.exists(temp_extract_path): shutil.rmtree(temp_extract_path)
         os.makedirs(temp_extract_path)
 
         with zipfile.ZipFile(temp_loader_zip, 'r') as z:
             z.extractall(temp_extract_path)
-            
         os.remove(temp_loader_zip)
 
         found_versions = None
         found_libraries = None
 
         for root_path, dirs, files in os.walk(temp_extract_path):
-            if "versions" in dirs:
-                found_versions = os.path.join(root_path, "versions")
-            if "libraries" in dirs:
-                found_libraries = os.path.join(root_path, "libraries")
-            if found_versions and found_libraries:
-                break
+            if "versions" in dirs: found_versions = os.path.join(root_path, "versions")
+            if "libraries" in dirs: found_libraries = os.path.join(root_path, "libraries")
+            if found_versions and found_libraries: break
 
         if found_versions:
             self.update_status("Copying version files...")
@@ -279,7 +343,11 @@ class InstallerApp:
                 self.merge_folders_robust(temp_extract, target_mods)
 
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
-        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
+        
+        # Pass the calculated Base64 icon if available, otherwise fallback to config or default
+        final_icon = self.current_icon_base64 if self.current_icon_base64 else config.get('icon', "Furnace")
+        
+        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], final_icon)
 
     def reset_ui(self):
         self.btn_install.config(state="normal", text="Install Selected Pack")
@@ -323,15 +391,13 @@ class InstallerApp:
             data = json.load(f)
 
         profile_id = name.replace(" ", "_")
-        
-        # Get current timestamp in ISO 8601 format (what Minecraft expects)
         current_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
         
         data['profiles'][profile_id] = {
             "created": current_time,
             "gameDir": game_dir,
-            "icon": icon,
-            "lastUsed": current_time,  # This makes it show up first!
+            "icon": icon,  # Now accepts Base64 strings!
+            "lastUsed": current_time,
             "lastVersionId": version_id,
             "name": name,
             "type": "custom"
