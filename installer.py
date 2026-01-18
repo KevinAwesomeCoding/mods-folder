@@ -9,139 +9,23 @@ import threading
 import sys
 import platform
 
-# --- MODPACKS CONFIGURATION ---
-MODPACKS = {
-    "Horror": {
-        "Wonderland": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
-            "profile_name": "Wonderland",
-            "folder_name": "Wonderland",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Furnace",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        },
-        "The Backrooms": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
-            "profile_name": "Backrooms",
-            "folder_name": "Backrooms",
-            "version_id": "fabric-loader-0.18.4-1.20.1",
-            "icon": "Bookshelf",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
-            "is_complex": False
-        },
-        "The Anomaly": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
-            "profile_name": "The Anomaly",
-            "folder_name": "The Anomaly",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Obsidian",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        },
-        "The One Who Watches": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
-            "profile_name": "The One Who Watches",
-            "folder_name": "The One Who Watches",
-            "version_id": "1.19.2-forge-43.5.2",
-            "icon": "Carved_Pumpkin",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": False
-        },
-        "The Obsessed": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
-            "profile_name": "The Obsessed",
-            "folder_name": "The Obsessed",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Netherrack",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        },
-        "From The Fog": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
-            "profile_name": "From The Fog",
-            "folder_name": "From The Fog",
-            "version_id": "fabric-loader-0.18.4-1.21.11",
-            "icon": "Glass",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
-            "is_complex": False
-        },
-        "The Broken Script": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
-            "profile_name": "The Broken Script",
-            "folder_name": "The Broken Script",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Redstone_Block",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        },
-        "000.jar": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/000/mods.zip",
-            "profile_name": "000.jar",
-            "folder_name": "000.jar",
-            "version_id": "1.19.2-forge-43.5.2",
-            "icon": "Barrier",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": False
-        },
-        "The Newest Goatman": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
-            "profile_name": "The Newest Goatman",
-            "folder_name": "The Newest Goatman",
-            "version_id": "1.19.2-forge-43.5.2",
-            "icon": "Bone_Block",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": False
-        },
-        "Sanity": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
-            "profile_name": "Sanity",
-            "folder_name": "Sanity",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Soul_Sand",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        },
-        "The God": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
-            "profile_name": "The God",
-            "folder_name": "The God",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Beacon",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        },
-        "From The Caves": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
-            "profile_name": "From The Caves",
-            "folder_name": "From The Caves",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon": "Bedrock",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
-        }
-    },
-    "Challenge": {
-        "Entropy: The Chaos Mod": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/entropy/mods.zip",
-            "profile_name": "Entropy: The Chaos Mod",
-            "folder_name": "Entropy",
-            "version_id": "fabric-loader-0.18.4-1.21.8",
-            "icon": "Furnace",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
-            "is_complex": False
-        },
-        "RLCraft": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
-            "profile_name": "RLCraft",
-            "folder_name": "RLCraft",
-            "version_id": "1.12.2-forge-14.23.5.2864",
-            "icon": "Bedrock",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
-            "is_complex": True
-        }
-    }
-}
+def load_modpacks():
+    try:
+        # Try to load from the same directory as the script
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        modpacks_file = os.path.join(script_dir, 'modpacks.json')
+        
+        with open(modpacks_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        messagebox.showerror("Error", "modpacks.json file not found!\nPlease place it in the same folder as the installer.")
+        sys.exit(1)
+    except json.JSONDecodeError as e:
+        messagebox.showerror("Error", f"Invalid JSON in modpacks.json:\n{e}")
+        sys.exit(1)
+
+MODPACKS = load_modpacks()
+
 
 class InstallerApp:
     def __init__(self, root):
