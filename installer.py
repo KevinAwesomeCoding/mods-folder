@@ -15,7 +15,7 @@ import random
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
 
 class InstallerApp:
-        def __init__(self, root):
+    def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
         
@@ -29,8 +29,9 @@ class InstallerApp:
         x = (screen_width // 2) - (window_width // 2)
         y = (screen_height // 2) - (window_height // 2)
         
-        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+        self.root.geometry(f"{window_width}x{window_height}+{int(x)}+{int(y)}")
 
+        # 1. LOAD DATA FIRST
         self.modpacks = self.load_data()
 
         # Header
@@ -94,7 +95,8 @@ class InstallerApp:
                 return json.loads(data)
                 
         except Exception as e:
-            messagebox.showerror("Connection Error", f"Could not load modpack list.\n{e}")
+            # We don't want a popup on startup if offline, just return empty
+            print(f"Error loading data: {e}")
             return {}
 
     def refresh_data(self):
