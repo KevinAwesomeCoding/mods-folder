@@ -11,83 +11,115 @@ import platform
 import time 
 import random
 
-MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
 
-def load_modpacks():
-    try:
-        # Add a random query parameter to force a fresh download
-        fresh_url = f"{MODPACKS_URL}?t={int(time.time())}-{random.randint(1, 1000)}"
-        
-        print(f"Downloading from: {fresh_url}") # Debug print
-        
-        req = urllib.request.Request(fresh_url, headers={
-            'User-Agent': 'Mozilla/5.0',
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache'
-        })
-        
-        with urllib.request.urlopen(req) as response:
-            data = response.read().decode('utf-8')
-            return json.loads(data)
-            
-    except Exception as e:
-        # Only fallback if download totally fails
-        messagebox.showerror("Connection Error", f"Could not load modpack list.\n{e}")
-        sys.exit(1)
+MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
 
 class InstallerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
-        self.root.geometry("400x480")
+        self.root.geometry("400x500") 
         
+       
+        self.modpacks = self.load_data()
+
         # Header
-        tk.Label(root, text="Select a Modpack", font =("Segoe UI", 16, "bold")).pack(pady=15)
+        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=(15, 5))
+
         
-        # --- CATEGORY DROPDOWN ---
+        self.btn_refresh = tk.Button(root, text="🔄 Refresh List", command=self.refresh_data, font=("Segoe UI", 8))
+        self.btn_refresh.pack(pady=5)
+        
+        
         tk.Label(root, text="Select Category:", font=("Segoe UI", 10, "bold")).pack(pady=(5, 0))
         self.selected_category = tk.StringVar()
         self.cat_dropdown = ttk.Combobox(root, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 10))
-        self.cat_dropdown['values'] = list(MODPACKS.keys())
+        
+       
+        if self.modpacks:
+            self.cat_dropdown['values'] = list(self.modpacks.keys())
+            self.cat_dropdown.current(0)
+        else:
+            self.cat_dropdown['values'] = ["Error loading data"]
+
         self.cat_dropdown.bind("<<ComboboxSelected>>", self.update_pack_dropdown)
-        self.cat_dropdown.current(0)
         self.cat_dropdown.pack(pady=5, ipadx=20)
 
-        # --- MODPACK DROPDOWN ---
+        
         tk.Label(root, text="Select Modpack:", font=("Segoe UI", 10)).pack(pady=(10, 0))
         self.selected_pack = tk.StringVar()
         self.pack_dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
         self.pack_dropdown.pack(pady=5, ipadx=20)
         
-        # Install Button
+      
         self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
         self.btn_install.pack(pady=25)
         
-        # Progress Bar
+        
         self.progress_var = tk.DoubleVar()
         self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100)
         
-        # Status Label
+      
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
-        # Initialize Dropdown Logic
-        self.update_pack_dropdown(None)
+        
+        if self.modpacks:
+            self.update_pack_dropdown(None)
+
+    def load_data(self):
+        """Downloads the JSON and returns it. Returns {} on error."""
+        try:
+            fresh_url = f"{MODPACKS_URL}?t={int(time.time())}-{random.randint(1, 1000)}"
+            print(f"Downloading from: {fresh_url}")
+            
+            req = urllib.request.Request(fresh_url, headers={
+                'User-Agent': 'Mozilla/5.0',
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
+            })
+            
+            with urllib.request.urlopen(req) as response:
+                data = response.read().decode('utf-8')
+                return json.loads(data)
+                
+        except Exception as e:
+            messagebox.showerror("Connection Error", f"Could not load modpack list.\n{e}")
+            return {}
+
+    def refresh_data(self):
+        self.btn_refresh.config(state="disabled", text="Refreshing...")
+        self.root.update()
+        
+        new_data = self.load_data()
+        
+        if new_data:
+            self.modpacks = new_data
+            self.cat_dropdown['values'] = list(self.modpacks.keys())
+            if self.modpacks:
+                self.cat_dropdown.current(0)
+                self.update_pack_dropdown(None)
+            messagebox.showinfo("Refreshed", "Modpack list updated!")
+        
+        self.btn_refresh.config(state="normal", text="🔄 Refresh List")
 
     def update_pack_dropdown(self, event):
-        category = self.selected_category.get()
-        packs = list(MODPACKS[category].keys())
+        if not self.modpacks: return
         
-        self.pack_dropdown['values'] = packs
-        if packs:
-            self.pack_dropdown.current(0)
-            self.btn_install.config(state="normal")
-        else:
-            self.pack_dropdown.set("No packs in this category")
-            self.btn_install.config(state="disabled")
+        category = self.selected_category.get()
+        if category in self.modpacks:
+            packs = list(self.modpacks[category].keys())
+            self.pack_dropdown['values'] = packs
+            if packs:
+                self.pack_dropdown.current(0)
+                self.btn_install.config(state="normal")
+            else:
+                self.pack_dropdown.set("No packs")
+                self.btn_install.config(state="disabled")
 
     def start_thread(self):
+        if not self.modpacks: return
         self.btn_install.config(state="disabled", text="Installing...")
         self.progress_bar.pack(fill="x", padx=40, pady=10)
         threading.Thread(target=self.run_install, daemon=True).start()
@@ -97,20 +129,20 @@ class InstallerApp:
             category = self.selected_category.get()
             pack_name = self.selected_pack.get()
             
-            if pack_name not in MODPACKS[category]:
+            # Use self.modpacks here instead of global MODPACKS
+            if pack_name not in self.modpacks[category]:
                 raise Exception("Invalid selection.")
 
-            config = MODPACKS[category][pack_name]
+            config = self.modpacks[category][pack_name]
             mc_dir = self.get_mc_dir()
             
-            # --- STEP 1: INSTALL LOADER (Versions/Libraries) ---
+            # 1. Loader
             self.update_status(f"Checking loader for {pack_name}...")
             self.install_loader(mc_dir, config['loader_url'])
             
-            # --- STEP 2: INSTALL MODPACK ---
+            # 2. Modpack
             self.install_modpack_logic(mc_dir, config)
             
-            # Success UI Updates
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
             self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
@@ -119,8 +151,9 @@ class InstallerApp:
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
-
+  
     def install_loader(self, mc_dir, loader_url):
+        # ... (Same code as before) ...
         versions_dir = os.path.join(mc_dir, 'versions')
         libraries_dir = os.path.join(mc_dir, 'libraries')
         
@@ -135,7 +168,6 @@ class InstallerApp:
         
         self.update_status("Installing Loader...")
         
-        # Extract to a temp folder
         temp_extract_path = os.path.join(mc_dir, "temp_loader_extract")
         if os.path.exists(temp_extract_path): shutil.rmtree(temp_extract_path)
         os.makedirs(temp_extract_path)
@@ -145,7 +177,6 @@ class InstallerApp:
             
         os.remove(temp_loader_zip)
 
-        # --- FIND FOLDERS RECURSIVELY (The "Search and Destroy" Fix) ---
         found_versions = None
         found_libraries = None
 
@@ -154,70 +185,45 @@ class InstallerApp:
                 found_versions = os.path.join(root_path, "versions")
             if "libraries" in dirs:
                 found_libraries = os.path.join(root_path, "libraries")
-            
-            # Stop if we found both to save time
             if found_versions and found_libraries:
                 break
 
-        # --- MERGE WITH OVERWRITE LOGIC ---
         if found_versions:
             self.update_status("Copying version files...")
             self.merge_folders_robust(found_versions, versions_dir)
-        else:
-            print("Warning: 'versions' folder not found in loader zip.")
-
+        
         if found_libraries:
             self.update_status("Copying library files...")
             self.merge_folders_robust(found_libraries, libraries_dir)
-        else:
-            # Fallback: Maybe the zip IS the version folder? 
-            # (Unlikely based on your description, but good safety)
-            pass
 
-        # Cleanup
         shutil.rmtree(temp_extract_path)
 
     def merge_folders_robust(self, src, dst):
-        """
-        Robustly merges src into dst.
-        If dst exists, it merges contents.
-        If files exist, it overwrites them (ensuring updates).
-        """
-        # Try using modern Python shutil.copytree if available
         if sys.version_info >= (3, 8):
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
-            # Manual fallback for older Python
-            if not os.path.exists(dst):
-                os.makedirs(dst)
+            if not os.path.exists(dst): os.makedirs(dst)
             for item in os.listdir(src):
                 s = os.path.join(src, item)
                 d = os.path.join(dst, item)
                 if os.path.isdir(s):
                     self.merge_folders_robust(s, d)
                 else:
-                    # Always copy, replacing existing files to ensure updates
-                    try:
-                        shutil.copy2(s, d)
-                    except Exception as e:
-                        print(f"Could not copy {s}: {e}")
+                    try: shutil.copy2(s, d)
+                    except: pass
 
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
-        
-        # 1. Prepare Main Profile Folder
         profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
         if not os.path.exists(profile_dir): os.makedirs(profile_dir)
         
         is_complex = config.get('is_complex', False)
         
-        # 2. Download Modpack
         self.update_status(f"Downloading {config['profile_name']}...")
         self.progress_var.set(0)
         temp_zip = os.path.join(profile_dir, "temp.zip")
         self.download_file(config['url'], temp_zip)
         
-        # 3. Extract to temp location first
         temp_extract = os.path.join(profile_dir, "temp_extract_mods")
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         os.makedirs(temp_extract)
@@ -228,14 +234,12 @@ class InstallerApp:
             z.extractall(temp_extract)
         os.remove(temp_zip)
 
-        # 4. Smart Install Logic (Mods)
         if is_complex:
             self.merge_folders_robust(temp_extract, profile_dir)
         else:
             target_mods = os.path.join(profile_dir, "mods")
             if not os.path.exists(target_mods): os.makedirs(target_mods)
             
-            # Check for nested 'mods' folder
             found_mods_nested = None
             for root_path, dirs, files in os.walk(temp_extract):
                 if "mods" in dirs:
@@ -243,15 +247,11 @@ class InstallerApp:
                     break
             
             if found_mods_nested:
-                # Found a nested 'mods' folder, move its CONTENTS
                 self.merge_folders_robust(found_mods_nested, target_mods)
             else:
-                # No nested 'mods' folder, assume all jars in temp are mods
                 self.merge_folders_robust(temp_extract, target_mods)
 
-        # Cleanup
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
-        
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
 
     def reset_ui(self):
