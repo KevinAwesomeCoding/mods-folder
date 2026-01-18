@@ -7,7 +7,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Furnace",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The Backrooms": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
@@ -16,7 +16,7 @@
             "version_id": "fabric-loader-0.18.4-1.20.1",
             "icon": "Bookshelf",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The Anomaly": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
@@ -25,7 +25,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Obsidian",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The One Who Watches": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
@@ -34,7 +34,7 @@
             "version_id": "1.19.2-forge-43.5.2",
             "icon": "Carved_Pumpkin",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The Obsessed": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
@@ -43,7 +43,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Netherrack",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "From The Fog": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
@@ -52,7 +52,7 @@
             "version_id": "fabric-loader-0.18.4-1.21.11",
             "icon": "Glass",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The Broken Script": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
@@ -61,7 +61,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Redstone_Block",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "000.jar": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/000/mods.zip",
@@ -70,7 +70,7 @@
             "version_id": "1.19.2-forge-43.5.2",
             "icon": "Barrier",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The Newest Goatman": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
@@ -79,7 +79,7 @@
             "version_id": "1.19.2-forge-43.5.2",
             "icon": "Bone_Block",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "Sanity": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
@@ -88,7 +88,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Soul_Sand",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "The God": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
@@ -97,7 +97,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Beacon",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "From The Caves": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
@@ -106,7 +106,7 @@
             "version_id": "1.20.1-forge-47.4.15",
             "icon": "Bedrock",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": False
+            "is_complex": false
         }
     },
     "Challenge": {
@@ -117,7 +117,7 @@
             "version_id": "fabric-loader-0.18.4-1.21.8",
             "icon": "Furnace",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
-            "is_complex": False
+            "is_complex": false
         },
         "RLCraft": {
             "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
@@ -126,7 +126,7 @@
             "version_id": "1.12.2-forge-14.23.5.2864",
             "icon": "Bedrock",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
-            "is_complex": True
+            "is_complex": true
         }
     }
 }
