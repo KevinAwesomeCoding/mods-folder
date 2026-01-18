@@ -10,7 +10,6 @@ import sys
 import platform
 import time 
 import random
-import base64
 from io import BytesIO
 
 # Try to import Pillow for image handling
@@ -19,7 +18,7 @@ try:
     HAS_PILLOW = True
 except ImportError:
     HAS_PILLOW = False
-    print("Warning: Pillow not installed. Icons will not display in the app (but will work in Launcher if pre-calculated).")
+    print("Warning: Pillow not installed. Icons will not display in the app.")
     print("Run: pip install pillow")
 
 # CONFIG
@@ -30,13 +29,13 @@ class InstallerApp:
         self.root = root
         self.root.title("Modpack Installer")
         
-        # Cache for loaded icons
+        # Cache for loaded icons (for UI preview only)
         self.icon_cache = {}
-        self.current_icon_base64 = None 
+        self.current_icon_path = None  # Path to downloaded icon file
 
         # --- CENTER THE WINDOW ---
         window_width = 450 
-        window_height = 600 # Slightly taller for status messages
+        window_height = 600
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         
@@ -99,7 +98,6 @@ class InstallerApp:
 
     def load_data(self):
         try:
-            # Add timestamp to prevent caching
             fresh_url = f"{MODPACKS_URL}?t={int(time.time())}-{random.randint(1, 1000)}"
             print(f"Downloading from: {fresh_url}")
             
@@ -157,62 +155,44 @@ class InstallerApp:
             self.btn_install.config(state="normal")
             config = self.modpacks[category][pack_name]
             
-            # Reset icon state
-            self.current_icon_base64 = None
+            # Reset icon path
+            self.current_icon_path = None
             
+            # Display preview in UI
             if 'icon_url' in config and HAS_PILLOW:
-                self.display_icon(config['icon_url'])
+                self.display_icon_preview(config['icon_url'])
             else:
                 self.icon_label.config(image='', text="")
 
-    def download_icon_data(self, url):
-        """Helper to download and convert icon synchronously."""
-        try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req) as response:
-                img_data = response.read()
-            
-            image = Image.open(BytesIO(img_data))
-            if getattr(image, "is_animated", False):
-                image.seek(0)
-            
-            # Resize for Launcher (must be square, ideally 64x64)
-            image = image.resize((64, 64), Image.Resampling.LANCZOS)
-            
-            # Create Base64 for Launcher
-            buffered = BytesIO()
-            image.save(buffered, format="PNG")
-            b64_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode('utf-8')
-            
-            # Create PhotoImage for UI
-            photo = ImageTk.PhotoImage(image)
-            return photo, b64_str
-        except Exception as e:
-            print(f"Icon download failed: {e}")
-            return None, None
-
-    def display_icon(self, url):
-        # 1. Check cache
+    def display_icon_preview(self, url):
+        """Downloads icon for UI preview only (non-blocking)."""
         if url in self.icon_cache:
-            photo, b64_str = self.icon_cache[url]
+            photo = self.icon_cache[url]
             self.icon_label.config(image=photo, text="")
-            self.current_icon_base64 = b64_str
             return
 
-        # 2. Download in thread for UI preview
         def fetch():
-            photo, b64_str = self.download_icon_data(url)
-            if photo:
-                self.root.after(0, lambda: self._update_icon_label(url, photo, b64_str))
-            else:
-                self.root.after(0, lambda: self.icon_label.config(text=""))
+            try:
+                req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+                with urllib.request.urlopen(req) as response:
+                    img_data = response.read()
+                
+                image = Image.open(BytesIO(img_data))
+                if getattr(image, "is_animated", False):
+                    image.seek(0)
+                
+                image = image.resize((64, 64), Image.Resampling.LANCZOS)
+                photo = ImageTk.PhotoImage(image)
+                
+                self.root.after(0, lambda: self._update_icon_preview(url, photo))
+            except Exception as e:
+                print(f"Icon preview error: {e}")
 
         threading.Thread(target=fetch, daemon=True).start()
 
-    def _update_icon_label(self, url, photo, b64_str):
-        self.icon_cache[url] = (photo, b64_str)
+    def _update_icon_preview(self, url, photo):
+        self.icon_cache[url] = photo
         self.icon_label.config(image=photo, text="")
-        self.current_icon_base64 = b64_str
 
     def start_thread(self):
         if not self.modpacks: return
@@ -230,15 +210,6 @@ class InstallerApp:
 
             config = self.modpacks[category][pack_name]
             mc_dir = self.get_mc_dir()
-            
-            # --- CRITICAL FIX: ENSURE ICON IS READY ---
-            # If we don't have the base64 icon yet (e.g. user clicked install fast),
-            # download it NOW before installing so it doesn't default to "Furnace".
-            if not self.current_icon_base64 and 'icon_url' in config:
-                self.update_status("Downloading Icon...")
-                _, b64_str = self.download_icon_data(config['icon_url'])
-                if b64_str:
-                    self.current_icon_base64 = b64_str
             
             # 1. Loader
             self.update_status(f"Checking loader for {pack_name}...")
@@ -315,6 +286,33 @@ class InstallerApp:
                     try: shutil.copy2(s, d)
                     except: pass
 
+    def download_icon_file(self, icon_url, profile_dir):
+        """Downloads the icon and saves it to profile_dir/icon.png. Returns the file path."""
+        try:
+            self.update_status("Downloading icon...")
+            
+            # Determine file extension from URL
+            if icon_url.endswith('.gif'):
+                icon_filename = "icon.gif"
+            else:
+                icon_filename = "icon.png"
+            
+            icon_path = os.path.join(profile_dir, icon_filename)
+            
+            req = urllib.request.Request(icon_url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response:
+                img_data = response.read()
+            
+            # Save the file
+            with open(icon_path, 'wb') as f:
+                f.write(img_data)
+            
+            print(f"✓ Icon saved to: {icon_path}")
+            return icon_path
+        except Exception as e:
+            print(f"Icon download failed: {e}")
+            return None
+
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
         profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
@@ -346,7 +344,6 @@ class InstallerApp:
             target_mods = os.path.join(profile_dir, "mods")
             if not os.path.exists(target_mods): os.makedirs(target_mods)
             
-            # Robust Logic: Check if zip ALREADY had a "mods" folder
             found_mods_nested = None
             for root_path, dirs, files in os.walk(temp_extract):
                 if "mods" in dirs:
@@ -356,12 +353,17 @@ class InstallerApp:
             if found_mods_nested:
                 self.merge_folders_robust(found_mods_nested, target_mods)
             else:
-                # If no "mods" folder found, assume all files ARE the mods
                 self.merge_folders_robust(temp_extract, target_mods)
 
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         
-        final_icon = self.current_icon_base64 if self.current_icon_base64 else config.get('icon', "Furnace")
+        # --- DOWNLOAD ICON TO PROFILE FOLDER ---
+        final_icon = config.get('icon', "Furnace")  # Default fallback
+        if 'icon_url' in config:
+            downloaded_icon_path = self.download_icon_file(config['icon_url'], profile_dir)
+            if downloaded_icon_path:
+                final_icon = downloaded_icon_path  # Use the file path
+        
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], final_icon)
 
     def reset_ui(self):
@@ -411,7 +413,7 @@ class InstallerApp:
         data['profiles'][profile_id] = {
             "created": current_time,
             "gameDir": game_dir,
-            "icon": icon,
+            "icon": icon,  # Now a file path like "C:\\...\\profiles\\Wonderland\\icon.png"
             "lastUsed": current_time,
             "lastVersionId": version_id,
             "name": name,
