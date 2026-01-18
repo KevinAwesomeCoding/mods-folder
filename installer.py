@@ -35,8 +35,8 @@ class InstallerApp:
         self.current_icon_base64 = None 
 
         # --- CENTER THE WINDOW ---
-        window_width = 450 # Slightly wider for icon
-        window_height = 550
+        window_width = 450 
+        window_height = 600 # Slightly taller for status messages
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         
@@ -98,8 +98,8 @@ class InstallerApp:
             self.update_pack_dropdown(None)
 
     def load_data(self):
-        """Downloads the JSON and returns it. Returns {} on error."""
         try:
+            # Add timestamp to prevent caching
             fresh_url = f"{MODPACKS_URL}?t={int(time.time())}-{random.randint(1, 1000)}"
             print(f"Downloading from: {fresh_url}")
             
@@ -112,7 +112,6 @@ class InstallerApp:
             with urllib.request.urlopen(req) as response:
                 data = response.read().decode('utf-8')
                 return json.loads(data)
-                
         except Exception as e:
             print(f"Error loading data: {e}")
             return {}
@@ -125,15 +124,11 @@ class InstallerApp:
         
         if new_data:
             self.modpacks = new_data
-            
-            # Clear and Reset Category Dropdown
             self.cat_dropdown.set('') 
             self.cat_dropdown['values'] = list(self.modpacks.keys())
-            
             if self.modpacks:
                 self.cat_dropdown.current(0) 
                 self.update_pack_dropdown(None) 
-            
             messagebox.showinfo("Refreshed", "Modpack list updated successfully!")
         else:
             messagebox.showwarning("Refresh Failed", "Could not load new data. Keeping old list.")
@@ -142,21 +137,19 @@ class InstallerApp:
 
     def update_pack_dropdown(self, event):
         if not self.modpacks: return
-        
         category = self.selected_category.get()
         if category in self.modpacks:
             packs = list(self.modpacks[category].keys())
             self.pack_dropdown['values'] = packs
             if packs:
                 self.pack_dropdown.current(0)
-                self.on_pack_selected(None) # Trigger icon update
+                self.on_pack_selected(None) 
             else:
                 self.pack_dropdown.set("No packs")
                 self.btn_install.config(state="disabled")
                 self.icon_label.config(image='', text="No Icon")
 
     def on_pack_selected(self, event):
-        """Called when user selects a specific modpack."""
         category = self.selected_category.get()
         pack_name = self.selected_pack.get()
         
@@ -164,12 +157,39 @@ class InstallerApp:
             self.btn_install.config(state="normal")
             config = self.modpacks[category][pack_name]
             
-            # Display Icon if available
+            # Reset icon state
+            self.current_icon_base64 = None
+            
             if 'icon_url' in config and HAS_PILLOW:
                 self.display_icon(config['icon_url'])
             else:
                 self.icon_label.config(image='', text="")
-                self.current_icon_base64 = None
+
+    def download_icon_data(self, url):
+        """Helper to download and convert icon synchronously."""
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req) as response:
+                img_data = response.read()
+            
+            image = Image.open(BytesIO(img_data))
+            if getattr(image, "is_animated", False):
+                image.seek(0)
+            
+            # Resize for Launcher (must be square, ideally 64x64)
+            image = image.resize((64, 64), Image.Resampling.LANCZOS)
+            
+            # Create Base64 for Launcher
+            buffered = BytesIO()
+            image.save(buffered, format="PNG")
+            b64_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode('utf-8')
+            
+            # Create PhotoImage for UI
+            photo = ImageTk.PhotoImage(image)
+            return photo, b64_str
+        except Exception as e:
+            print(f"Icon download failed: {e}")
+            return None, None
 
     def display_icon(self, url):
         # 1. Check cache
@@ -179,27 +199,12 @@ class InstallerApp:
             self.current_icon_base64 = b64_str
             return
 
-        # 2. Download in thread
+        # 2. Download in thread for UI preview
         def fetch():
-            try:
-                req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                with urllib.request.urlopen(req) as response:
-                    img_data = response.read()
-                
-                # Convert for UI
-                image = Image.open(BytesIO(img_data))
-                image = image.resize((64, 64), Image.Resampling.LANCZOS)
-                photo = ImageTk.PhotoImage(image)
-                
-                # Convert for Launcher (Base64)
-                buffered = BytesIO()
-                image.save(buffered, format="PNG")
-                b64_str = "data:image/png;base64," + base64.b64encode(buffered.getvalue()).decode('utf-8')
-
-                # Update UI safely
+            photo, b64_str = self.download_icon_data(url)
+            if photo:
                 self.root.after(0, lambda: self._update_icon_label(url, photo, b64_str))
-            except Exception as e:
-                print(f"Icon load error: {e}")
+            else:
                 self.root.after(0, lambda: self.icon_label.config(text=""))
 
         threading.Thread(target=fetch, daemon=True).start()
@@ -226,6 +231,15 @@ class InstallerApp:
             config = self.modpacks[category][pack_name]
             mc_dir = self.get_mc_dir()
             
+            # --- CRITICAL FIX: ENSURE ICON IS READY ---
+            # If we don't have the base64 icon yet (e.g. user clicked install fast),
+            # download it NOW before installing so it doesn't default to "Furnace".
+            if not self.current_icon_base64 and 'icon_url' in config:
+                self.update_status("Downloading Icon...")
+                _, b64_str = self.download_icon_data(config['icon_url'])
+                if b64_str:
+                    self.current_icon_base64 = b64_str
+            
             # 1. Loader
             self.update_status(f"Checking loader for {pack_name}...")
             self.install_loader(mc_dir, config['loader_url'])
@@ -241,7 +255,8 @@ class InstallerApp:
             self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
-  
+            print(f"Full error: {e}")
+
     def install_loader(self, mc_dir, loader_url):
         version_id = loader_url.split('/')[-1].replace('.zip', '')
         versions_dir = os.path.join(mc_dir, 'versions')
@@ -249,7 +264,6 @@ class InstallerApp:
         
         if os.path.exists(version_folder):
             self.update_status(f"Loader {version_id} already installed, skipping...")
-            print(f"✓ Skipping download: {version_id} already exists")
             return
         
         libraries_dir = os.path.join(mc_dir, 'libraries')
@@ -280,11 +294,9 @@ class InstallerApp:
             if found_versions and found_libraries: break
 
         if found_versions:
-            self.update_status("Copying version files...")
             self.merge_folders_robust(found_versions, versions_dir)
         
         if found_libraries:
-            self.update_status("Copying library files...")
             self.merge_folders_robust(found_libraries, libraries_dir)
 
         shutil.rmtree(temp_extract_path)
@@ -306,7 +318,10 @@ class InstallerApp:
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
         profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
-        if not os.path.exists(profile_dir): os.makedirs(profile_dir)
+        
+        if os.path.exists(profile_dir):
+            shutil.rmtree(profile_dir)
+        os.makedirs(profile_dir)
         
         is_complex = config.get('is_complex', False)
         
@@ -331,6 +346,7 @@ class InstallerApp:
             target_mods = os.path.join(profile_dir, "mods")
             if not os.path.exists(target_mods): os.makedirs(target_mods)
             
+            # Robust Logic: Check if zip ALREADY had a "mods" folder
             found_mods_nested = None
             for root_path, dirs, files in os.walk(temp_extract):
                 if "mods" in dirs:
@@ -340,13 +356,12 @@ class InstallerApp:
             if found_mods_nested:
                 self.merge_folders_robust(found_mods_nested, target_mods)
             else:
+                # If no "mods" folder found, assume all files ARE the mods
                 self.merge_folders_robust(temp_extract, target_mods)
 
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         
-        # Pass the calculated Base64 icon if available, otherwise fallback to config or default
         final_icon = self.current_icon_base64 if self.current_icon_base64 else config.get('icon', "Furnace")
-        
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], final_icon)
 
     def reset_ui(self):
@@ -396,7 +411,7 @@ class InstallerApp:
         data['profiles'][profile_id] = {
             "created": current_time,
             "gameDir": game_dir,
-            "icon": icon,  # Now accepts Base64 strings!
+            "icon": icon,
             "lastUsed": current_time,
             "lastVersionId": version_id,
             "name": name,
