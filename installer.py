@@ -95,8 +95,7 @@ class InstallerApp:
                 return json.loads(data)
                 
         except Exception as e:
-            # We don't want a popup on startup if offline, just return empty
-            print(f"Error loading data: {e}")
+            print(f"Error loading  {e}")
             return {}
 
     def refresh_data(self):
@@ -105,7 +104,7 @@ class InstallerApp:
         
         new_data = self.load_data()
         
-        if new_data:
+        if new_
             self.modpacks = new_data
             
             # Clear and Reset Category Dropdown
@@ -170,7 +169,21 @@ class InstallerApp:
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
   
     def install_loader(self, mc_dir, loader_url):
+        # Extract the version ID from the URL to check if it exists
+        # Example URL: .../versions/1.20.1-forge-47.4.15.zip
+        # We want to extract: 1.20.1-forge-47.4.15
+        version_id = loader_url.split('/')[-1].replace('.zip', '')
+        
         versions_dir = os.path.join(mc_dir, 'versions')
+        version_folder = os.path.join(versions_dir, version_id)
+        
+        # --- CHECK IF VERSION ALREADY EXISTS ---
+        if os.path.exists(version_folder):
+            self.update_status(f"Loader {version_id} already installed, skipping...")
+            print(f"✓ Skipping download: {version_id} already exists")
+            return  # Exit early, no need to download
+        
+        # --- VERSION DOES NOT EXIST, PROCEED WITH DOWNLOAD ---
         libraries_dir = os.path.join(mc_dir, 'libraries')
         
         if not os.path.exists(versions_dir): os.makedirs(versions_dir)
