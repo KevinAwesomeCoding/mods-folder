@@ -8,23 +8,32 @@ import shutil
 import threading
 import sys
 import platform
+import time 
+import random
 
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
 
 def load_modpacks():
     try:
-        # Download the JSON from GitHub
-        req = urllib.request.Request(MODPACKS_URL, headers={'User-Agent': 'Mozilla/5.0'})
+        # Add a random query parameter to force a fresh download
+        fresh_url = f"{MODPACKS_URL}?t={int(time.time())}-{random.randint(1, 1000)}"
+        
+        print(f"Downloading from: {fresh_url}") # Debug print
+        
+        req = urllib.request.Request(fresh_url, headers={
+            'User-Agent': 'Mozilla/5.0',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        })
+        
         with urllib.request.urlopen(req) as response:
             data = response.read().decode('utf-8')
             return json.loads(data)
+            
     except Exception as e:
-        # Fallback if internet is down or GitHub is unreachable
-        messagebox.showerror("Connection Error", f"Could not load modpack list from GitHub.\n\nError: {e}")
+        # Only fallback if download totally fails
+        messagebox.showerror("Connection Error", f"Could not load modpack list.\n{e}")
         sys.exit(1)
-
-MODPACKS = load_modpacks()
-
 
 class InstallerApp:
     def __init__(self, root):
