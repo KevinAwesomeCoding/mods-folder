@@ -15,12 +15,22 @@ import random
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
 
 class InstallerApp:
-    def __init__(self, root):
+        def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
-        self.root.geometry("400x500") 
         
-        # 1. LOAD DATA FIRST
+        # --- CENTER THE WINDOW ---
+        window_width = 400
+        window_height = 500
+        screen_width = root.winfo_screenwidth()
+        screen_height = root.winfo_screenheight()
+        
+        # Calculate position x and y coordinates
+        x = (screen_width // 2) - (window_width // 2)
+        y = (screen_height // 2) - (window_height // 2)
+        
+        self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
+
         self.modpacks = self.load_data()
 
         # Header
