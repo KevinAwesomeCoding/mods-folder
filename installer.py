@@ -9,19 +9,18 @@ import threading
 import sys
 import platform
 
+MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
+
 def load_modpacks():
     try:
-        # Try to load from the same directory as the script
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        modpacks_file = os.path.join(script_dir, 'modpacks.json')
-        
-        with open(modpacks_file, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        messagebox.showerror("Error", "modpacks.json file not found!\nPlease place it in the same folder as the installer.")
-        sys.exit(1)
-    except json.JSONDecodeError as e:
-        messagebox.showerror("Error", f"Invalid JSON in modpacks.json:\n{e}")
+        # Download the JSON from GitHub
+        req = urllib.request.Request(MODPACKS_URL, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
+            data = response.read().decode('utf-8')
+            return json.loads(data)
+    except Exception as e:
+        # Fallback if internet is down or GitHub is unreachable
+        messagebox.showerror("Connection Error", f"Could not load modpack list from GitHub.\n\nError: {e}")
         sys.exit(1)
 
 MODPACKS = load_modpacks()
