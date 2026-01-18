@@ -88,21 +88,32 @@ class InstallerApp:
             messagebox.showerror("Connection Error", f"Could not load modpack list.\n{e}")
             return {}
 
-    def refresh_data(self):
-        self.btn_refresh.config(state="disabled", text="Refreshing...")
-        self.root.update()
+        def refresh_data(self):
         
+        self.btn_refresh.config(state="disabled", text="Refreshing...")
+        self.root.update_idletasks() 
+        
+       
         new_data = self.load_data()
         
         if new_data:
             self.modpacks = new_data
+            
+            
+            self.cat_dropdown.set('') 
             self.cat_dropdown['values'] = list(self.modpacks.keys())
+            
             if self.modpacks:
-                self.cat_dropdown.current(0)
-                self.update_pack_dropdown(None)
-            messagebox.showinfo("Refreshed", "Modpack list updated!")
+                self.cat_dropdown.current(0) 
+                self.update_pack_dropdown(None) 
+            
+            messagebox.showinfo("Refreshed", "Modpack list updated successfully!")
+        else:
+            messagebox.showwarning("Refresh Failed", "Could not load new data. Keeping old list.")
+
         
         self.btn_refresh.config(state="normal", text="🔄 Refresh List")
+
 
     def update_pack_dropdown(self, event):
         if not self.modpacks: return
