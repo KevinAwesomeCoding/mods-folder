@@ -158,4 +158,164 @@ class InstallerApp:
             self.root.after(0, lambda: self.status.config(text="Error occurred."))
   
     def install_loader(self, mc_dir, loader_url):
-        versions_dir = os.path.join(mc
+        versions_dir = os.path.join(mc_dir, 'versions')
+        libraries_dir = os.path.join(mc_dir, 'libraries')
+        
+        if not os.path.exists(versions_dir): os.makedirs(versions_dir)
+        if not os.path.exists(libraries_dir): os.makedirs(libraries_dir)
+        
+        temp_loader_zip = os.path.join(mc_dir, "temp_loader.zip")
+        self.progress_var.set(0)
+        
+        self.update_status("Downloading Loader...")
+        self.download_file(loader_url, temp_loader_zip)
+        
+        self.update_status("Installing Loader...")
+        
+        temp_extract_path = os.path.join(mc_dir, "temp_loader_extract")
+        if os.path.exists(temp_extract_path): shutil.rmtree(temp_extract_path)
+        os.makedirs(temp_extract_path)
+
+        with zipfile.ZipFile(temp_loader_zip, 'r') as z:
+            z.extractall(temp_extract_path)
+            
+        os.remove(temp_loader_zip)
+
+        found_versions = None
+        found_libraries = None
+
+        for root_path, dirs, files in os.walk(temp_extract_path):
+            if "versions" in dirs:
+                found_versions = os.path.join(root_path, "versions")
+            if "libraries" in dirs:
+                found_libraries = os.path.join(root_path, "libraries")
+            if found_versions and found_libraries:
+                break
+
+        if found_versions:
+            self.update_status("Copying version files...")
+            self.merge_folders_robust(found_versions, versions_dir)
+        
+        if found_libraries:
+            self.update_status("Copying library files...")
+            self.merge_folders_robust(found_libraries, libraries_dir)
+
+        shutil.rmtree(temp_extract_path)
+
+    def merge_folders_robust(self, src, dst):
+        if sys.version_info >= (3, 8):
+            shutil.copytree(src, dst, dirs_exist_ok=True)
+        else:
+            if not os.path.exists(dst): os.makedirs(dst)
+            for item in os.listdir(src):
+                s = os.path.join(src, item)
+                d = os.path.join(dst, item)
+                if os.path.isdir(s):
+                    self.merge_folders_robust(s, d)
+                else:
+                    try: shutil.copy2(s, d)
+                    except: pass
+
+    def install_modpack_logic(self, mc_dir, config):
+        if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
+        profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
+        if not os.path.exists(profile_dir): os.makedirs(profile_dir)
+        
+        is_complex = config.get('is_complex', False)
+        
+        self.update_status(f"Downloading {config['profile_name']}...")
+        self.progress_var.set(0)
+        temp_zip = os.path.join(profile_dir, "temp.zip")
+        self.download_file(config['url'], temp_zip)
+        
+        temp_extract = os.path.join(profile_dir, "temp_extract_mods")
+        if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
+        os.makedirs(temp_extract)
+        
+        self.update_status("Extracting mods...")
+        self.progress_var.set(100)
+        with zipfile.ZipFile(temp_zip, 'r') as z:
+            z.extractall(temp_extract)
+        os.remove(temp_zip)
+
+        if is_complex:
+            self.merge_folders_robust(temp_extract, profile_dir)
+        else:
+            target_mods = os.path.join(profile_dir, "mods")
+            if not os.path.exists(target_mods): os.makedirs(target_mods)
+            
+            found_mods_nested = None
+            for root_path, dirs, files in os.walk(temp_extract):
+                if "mods" in dirs:
+                    found_mods_nested = os.path.join(root_path, "mods")
+                    break
+            
+            if found_mods_nested:
+                self.merge_folders_robust(found_mods_nested, target_mods)
+            else:
+                self.merge_folders_robust(temp_extract, target_mods)
+
+        if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
+        self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], config['icon'])
+
+    def reset_ui(self):
+        self.btn_install.config(state="normal", text="Install Selected Pack")
+        self.progress_bar.pack_forget()
+
+    def update_status(self, text):
+        self.root.after(0, lambda: self.status.config(text=text))
+
+    def update_progress(self, current, total):
+        percent = (current / total) * 100
+        self.root.after(0, lambda: self.progress_var.set(percent))
+
+    def download_file(self, url, path):
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req) as response:
+            total_size = int(response.info().get('Content-Length', 0))
+            block_size = 8192
+            downloaded = 0
+            with open(path, 'wb') as out_file:
+                while True:
+                    chunk = response.read(block_size)
+                    if not chunk: break
+                    out_file.write(chunk)
+                    downloaded += len(chunk)
+                    if total_size > 0:
+                        self.update_progress(downloaded, total_size)
+
+    def get_mc_dir(self):
+        system = platform.system()
+        if system == 'Windows':
+            return os.path.join(os.getenv('APPDATA'), '.minecraft')
+        elif system == 'Darwin':
+            return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
+        return os.path.join(os.path.expanduser("~"), ".minecraft")
+
+    def update_json_profile(self, mc_dir, name, game_dir, version_id, icon):
+        profiles_file = os.path.join(mc_dir, 'launcher_profiles.json')
+        if not os.path.exists(profiles_file): return
+
+        with open(profiles_file, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        profile_id = name.replace(" ", "_")
+        
+        data['profiles'][profile_id] = {
+            "created": "2025-01-01T00:00:00.000Z",
+            "gameDir": game_dir,
+            "icon": icon,
+            "lastUsed": "2025-01-01T00:00:00.000Z",
+            "lastVersionId": version_id,
+            "name": name,
+            "type": "custom"
+        }
+
+        shutil.copy(profiles_file, profiles_file + ".bak")
+        with open(profiles_file, 'w', encoding='utf-8') as f:
+            json.dump(data, f, indent=2)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = InstallerApp(root)
+    root.mainloop()
