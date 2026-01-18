@@ -315,7 +315,7 @@ class InstallerApp:
             return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
         return os.path.join(os.path.expanduser("~"), ".minecraft")
 
-        def update_json_profile(self, mc_dir, name, game_dir, version_id, icon):
+    def update_json_profile(self, mc_dir, name, game_dir, version_id, icon):
         profiles_file = os.path.join(mc_dir, 'launcher_profiles.json')
         if not os.path.exists(profiles_file): return
 
@@ -340,7 +340,6 @@ class InstallerApp:
         shutil.copy(profiles_file, profiles_file + ".bak")
         with open(profiles_file, 'w', encoding='utf-8') as f:
             json.dump(data, f, indent=2)
-
 
 if __name__ == "__main__":
     root = tk.Tk()
