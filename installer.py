@@ -95,7 +95,7 @@ class InstallerApp:
                 return json.loads(data)
                 
         except Exception as e:
-            print(f"Error loading  {e}")
+            print(f"Error loading data: {e}")
             return {}
 
     def refresh_data(self):
@@ -104,7 +104,7 @@ class InstallerApp:
         
         new_data = self.load_data()
         
-        if new_
+        if new_data:
             self.modpacks = new_data
             
             # Clear and Reset Category Dropdown
@@ -170,8 +170,6 @@ class InstallerApp:
   
     def install_loader(self, mc_dir, loader_url):
         # Extract the version ID from the URL to check if it exists
-        # Example URL: .../versions/1.20.1-forge-47.4.15.zip
-        # We want to extract: 1.20.1-forge-47.4.15
         version_id = loader_url.split('/')[-1].replace('.zip', '')
         
         versions_dir = os.path.join(mc_dir, 'versions')
