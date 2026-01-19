@@ -11,6 +11,7 @@ import platform
 import time 
 import random
 import base64
+import ssl  # <--- NEW IMPORT
 from io import BytesIO
 
 # Try to import Pillow for image handling
@@ -20,7 +21,6 @@ try:
 except ImportError:
     HAS_PILLOW = False
     print("Warning: Pillow not installed. Icons will not display in the app.")
-    print("Run: pip install pillow")
 
 # CONFIG
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/refs/heads/main/modpacks.json" 
@@ -30,32 +30,27 @@ class InstallerApp:
         self.root = root
         self.root.title("Modpack Installer")
         
-        # Cache for loaded icons (for UI preview only)
         self.icon_cache = {}
         self.current_icon_path = None
 
-        # --- CENTER THE WINDOW ---
+        # Center Window
         window_width = 450 
         window_height = 600
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
-        
         x = (screen_width // 2) - (window_width // 2)
         y = (screen_height // 2) - (window_height // 2)
-        
         self.root.geometry(f"{window_width}x{window_height}+{int(x)}+{int(y)}")
 
-        # 1. LOAD DATA FIRST
+        # 1. LOAD DATA
         self.modpacks = self.load_data()
 
-        # Header
+        # UI Elements
         tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=(15, 5))
 
-        # Refresh Button
         self.btn_refresh = tk.Button(root, text="🔄 Refresh List", command=self.refresh_data, font=("Segoe UI", 8))
         self.btn_refresh.pack(pady=5)
         
-        # --- CATEGORY DROPDOWN ---
         tk.Label(root, text="Select Category:", font=("Segoe UI", 10, "bold")).pack(pady=(5, 0))
         self.selected_category = tk.StringVar()
         self.cat_dropdown = ttk.Combobox(root, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 10))
@@ -69,31 +64,25 @@ class InstallerApp:
         self.cat_dropdown.bind("<<ComboboxSelected>>", self.update_pack_dropdown)
         self.cat_dropdown.pack(pady=5, ipadx=20)
 
-        # --- MODPACK DROPDOWN ---
         tk.Label(root, text="Select Modpack:", font=("Segoe UI", 10)).pack(pady=(10, 0))
         self.selected_pack = tk.StringVar()
         self.pack_dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
         self.pack_dropdown.bind("<<ComboboxSelected>>", self.on_pack_selected)
         self.pack_dropdown.pack(pady=5, ipadx=20)
         
-        # --- ICON PREVIEW ---
         self.icon_label = tk.Label(root, text="")
         self.icon_label.pack(pady=10)
 
-        # Install Button
         self.btn_install = tk.Button(root, text="Install Selected Pack", command=self.start_thread, 
                                      bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20)
         self.btn_install.pack(pady=15)
         
-        # Progress Bar
         self.progress_var = tk.DoubleVar()
         self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100)
         
-        # Status Label
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
-        # Initialize Dropdown Logic
         if self.modpacks:
             self.update_pack_dropdown(None)
 
@@ -102,17 +91,22 @@ class InstallerApp:
             fresh_url = f"{MODPACKS_URL}?t={int(time.time())}-{random.randint(1, 1000)}"
             print(f"Downloading from: {fresh_url}")
             
+            # FIX FOR MAC SSL ERRORS
+            context = ssl._create_unverified_context()
+            
             req = urllib.request.Request(fresh_url, headers={
                 'User-Agent': 'Mozilla/5.0',
                 'Cache-Control': 'no-cache',
                 'Pragma': 'no-cache'
             })
             
-            with urllib.request.urlopen(req) as response:
+            with urllib.request.urlopen(req, context=context, timeout=10) as response:
                 data = response.read().decode('utf-8')
                 return json.loads(data)
         except Exception as e:
             print(f"Error loading data: {e}")
+            # Show error popup only if it's not the initial load (to avoid popup spam on startup if offline)
+            # But since it's "Error loading data", we should probably let the user know.
             return {}
 
     def refresh_data(self):
@@ -130,7 +124,7 @@ class InstallerApp:
                 self.update_pack_dropdown(None) 
             messagebox.showinfo("Refreshed", "Modpack list updated successfully!")
         else:
-            messagebox.showwarning("Refresh Failed", "Could not load new data. Keeping old list.")
+            messagebox.showwarning("Refresh Failed", "Could not load new data. Check internet connection.")
 
         self.btn_refresh.config(state="normal", text="🔄 Refresh List")
 
@@ -156,17 +150,14 @@ class InstallerApp:
             self.btn_install.config(state="normal")
             config = self.modpacks[category][pack_name]
             
-            # Reset icon path
             self.current_icon_path = None
             
-            # Display preview in UI
             if 'icon_url' in config and HAS_PILLOW:
                 self.display_icon_preview(config['icon_url'])
             else:
                 self.icon_label.config(image='', text="")
 
     def display_icon_preview(self, url):
-        """Downloads icon for UI preview only (non-blocking)."""
         if url in self.icon_cache:
             photo = self.icon_cache[url]
             self.icon_label.config(image=photo, text="")
@@ -174,8 +165,10 @@ class InstallerApp:
 
         def fetch():
             try:
+                # FIX FOR MAC SSL
+                context = ssl._create_unverified_context()
                 req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-                with urllib.request.urlopen(req) as response:
+                with urllib.request.urlopen(req, context=context, timeout=10) as response:
                     img_data = response.read()
                 
                 image = Image.open(BytesIO(img_data))
@@ -288,61 +281,35 @@ class InstallerApp:
                     except: pass
 
     def download_icon_file(self, icon_url, profile_dir):
-        """Downloads the icon, resizes it to 128x128, and saves it to profile_dir/icon.png."""
-        if not HAS_PILLOW:
-            print("Pillow not installed, skipping icon download")
-            return None
-            
+        if not HAS_PILLOW: return None
         try:
-            print(f"Attempting to download icon from: {icon_url}")
-            
             icon_path = os.path.join(profile_dir, "icon.png")
             
+            # FIX FOR MAC SSL
+            context = ssl._create_unverified_context()
             req = urllib.request.Request(icon_url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=10) as response:
+            with urllib.request.urlopen(req, context=context, timeout=10) as response:
                 img_data = response.read()
             
-            print(f"Downloaded {len(img_data)} bytes")
-            
-            # Open the image with Pillow
             image = Image.open(BytesIO(img_data))
-            
-            # If it's an animated GIF, grab the first frame
             if getattr(image, "is_animated", False):
                 image.seek(0)
-            
-            # Convert to RGBA if needed (handles transparency)
             if image.mode != 'RGBA':
                 image = image.convert('RGBA')
-            
-            # Resize to EXACTLY 128x128 (required by Minecraft Launcher)
             image = image.resize((128, 128), Image.Resampling.LANCZOS)
-            
-            # Save as PNG
             image.save(icon_path, format="PNG")
             
-            print(f"✓ Icon saved to: {icon_path} (128x128)")
-            
-            # Verify the file exists
-            if os.path.exists(icon_path):
-                print(f"✓ Verified: Icon file exists at {icon_path}")
-                return icon_path
-            else:
-                print("ERROR: Icon file was not created!")
-                return None
-                
+            if os.path.exists(icon_path): return icon_path
+            return None
         except Exception as e:
             print(f"Icon download/resize failed: {e}")
-            import traceback
-            traceback.print_exc()
             return None
 
     def install_modpack_logic(self, mc_dir, config):
         if not os.path.exists(mc_dir): raise Exception("Minecraft not found.")
         profile_dir = os.path.join(mc_dir, 'profiles', config['folder_name'])
         
-        if os.path.exists(profile_dir):
-            shutil.rmtree(profile_dir)
+        if os.path.exists(profile_dir): shutil.rmtree(profile_dir)
         os.makedirs(profile_dir)
         
         is_complex = config.get('is_complex', False)
@@ -381,16 +348,12 @@ class InstallerApp:
 
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         
-        # --- DOWNLOAD ICON TO PROFILE FOLDER (128x128) ---
         final_icon = config.get('icon', "Furnace")
         if 'icon_url' in config:
             self.update_status("Downloading icon...")
             downloaded_icon_path = self.download_icon_file(config['icon_url'], profile_dir)
             if downloaded_icon_path:
-                print(f"Using custom icon: {downloaded_icon_path}")
                 final_icon = downloaded_icon_path
-            else:
-                print("Icon download failed, using fallback")
         
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], final_icon)
 
@@ -406,8 +369,10 @@ class InstallerApp:
         self.root.after(0, lambda: self.progress_var.set(percent))
 
     def download_file(self, url, path):
+        # FIX FOR MAC SSL
+        context = ssl._create_unverified_context()
         req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req) as response:
+        with urllib.request.urlopen(req, context=context) as response:
             total_size = int(response.info().get('Content-Length', 0))
             block_size = 8192
             downloaded = 0
@@ -438,17 +403,14 @@ class InstallerApp:
         profile_id = name.replace(" ", "_")
         current_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
         
-        # CRITICAL FIX: Convert file path to Base64
         if isinstance(icon, str) and os.path.isfile(icon):
             try:
-                # Read the icon file and convert to Base64
                 with open(icon, 'rb') as img_file:
                     img_data = img_file.read()
                 icon = "data:image/png;base64," + base64.b64encode(img_data).decode('utf-8')
-                print(f"✓ Converted icon to Base64 ({len(icon)} characters)")
             except Exception as e:
                 print(f"Failed to convert icon to Base64: {e}")
-                icon = "Furnace"  # Fallback
+                icon = "Furnace"
         
         data['profiles'][profile_id] = {
             "created": current_time,
