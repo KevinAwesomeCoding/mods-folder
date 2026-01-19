@@ -25,7 +25,7 @@ jobs:
           name: windows-app
           path: dist/MinecraftModsInstaller.exe
 
-  # 2. BUILD MAC
+    # 2. BUILD MAC
   build-mac:
     runs-on: macos-latest
     steps:
@@ -33,16 +33,17 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      
+      # --- NEW STEP: RUN NETWORK TEST ---
+      - name: Run Mac Network Test
+        run: python test_mac_network.py
+      # ----------------------------------
+
       - run: pip install pyinstaller pillow
       - run: |
           pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL installer.py
           cd dist
           zip -r "MinecraftModsInstaller-Mac.zip" "Minecraft Mods Installer.app"
-      # Save the ZIP for the next step
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mac-app
-          path: dist/MinecraftModsInstaller-Mac.zip
 
   # 3. UPLOAD EVERYTHING TO RELEASE (Runs only after both builds finish)
   release:
