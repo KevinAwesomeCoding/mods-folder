@@ -44,6 +44,11 @@ jobs:
           pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL installer.py
           cd dist
           zip -r "MinecraftModsInstaller-Mac.zip" "Minecraft Mods Installer.app"
+          - name: Self-test (macOS app)
+      - run: |
+          "./dist/Minecraft Mods Installer.app/Contents/MacOS/Minecraft Mods Installer" --selftest
+          cat installer_debug.log
+
 
   # 3. UPLOAD EVERYTHING TO RELEASE (Runs only after both builds finish)
   release:
