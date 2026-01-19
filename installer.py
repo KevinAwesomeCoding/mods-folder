@@ -288,14 +288,20 @@ class InstallerApp:
 
     def download_icon_file(self, icon_url, profile_dir):
         """Downloads the icon, resizes it to 128x128, and saves it to profile_dir/icon.png. Returns the file path."""
+        if not HAS_PILLOW:
+            print("Pillow not installed, skipping icon download")
+            return None
+            
         try:
-            self.update_status("Downloading icon...")
+            print(f"Attempting to download icon from: {icon_url}")
             
             icon_path = os.path.join(profile_dir, "icon.png")
             
             req = urllib.request.Request(icon_url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req) as response:
+            with urllib.request.urlopen(req, timeout=10) as response:
                 img_data = response.read()
+            
+            print(f"Downloaded {len(img_data)} bytes")
             
             # Open the image with Pillow
             image = Image.open(BytesIO(img_data))
@@ -315,9 +321,19 @@ class InstallerApp:
             image.save(icon_path, format="PNG")
             
             print(f"✓ Icon saved to: {icon_path} (128x128)")
-            return icon_path
+            
+            # Verify the file exists
+            if os.path.exists(icon_path):
+                print(f"✓ Verified: Icon file exists at {icon_path}")
+                return icon_path
+            else:
+                print("ERROR: Icon file was not created!")
+                return None
+                
         except Exception as e:
             print(f"Icon download/resize failed: {e}")
+            import traceback
+            traceback.print_exc()
             return None
 
     def install_modpack_logic(self, mc_dir, config):
@@ -365,11 +381,18 @@ class InstallerApp:
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         
         # --- DOWNLOAD ICON TO PROFILE FOLDER (128x128) ---
+        print(f"Profile folder is: {profile_dir}")
+        print(f"Profile folder exists: {os.path.exists(profile_dir)}")
+        
         final_icon = config.get('icon', "Furnace")
         if 'icon_url' in config:
+            self.update_status("Downloading icon...")
             downloaded_icon_path = self.download_icon_file(config['icon_url'], profile_dir)
             if downloaded_icon_path:
+                print(f"Using custom icon: {downloaded_icon_path}")
                 final_icon = downloaded_icon_path
+            else:
+                print("Icon download failed, using fallback")
         
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], final_icon)
 
@@ -416,6 +439,8 @@ class InstallerApp:
 
         profile_id = name.replace(" ", "_")
         current_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
+        
+        print(f"Writing profile with icon: {icon}")
         
         data['profiles'][profile_id] = {
             "created": current_time,
