@@ -10,6 +10,7 @@ import sys
 import platform
 import time 
 import random
+import base64
 from io import BytesIO
 
 # Try to import Pillow for image handling
@@ -287,7 +288,7 @@ class InstallerApp:
                     except: pass
 
     def download_icon_file(self, icon_url, profile_dir):
-        """Downloads the icon, resizes it to 128x128, and saves it to profile_dir/icon.png. Returns the file path."""
+        """Downloads the icon, resizes it to 128x128, and saves it to profile_dir/icon.png."""
         if not HAS_PILLOW:
             print("Pillow not installed, skipping icon download")
             return None
@@ -381,9 +382,6 @@ class InstallerApp:
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         
         # --- DOWNLOAD ICON TO PROFILE FOLDER (128x128) ---
-        print(f"Profile folder is: {profile_dir}")
-        print(f"Profile folder exists: {os.path.exists(profile_dir)}")
-        
         final_icon = config.get('icon', "Furnace")
         if 'icon_url' in config:
             self.update_status("Downloading icon...")
@@ -440,7 +438,17 @@ class InstallerApp:
         profile_id = name.replace(" ", "_")
         current_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
         
-        print(f"Writing profile with icon: {icon}")
+        # CRITICAL FIX: Convert file path to Base64
+        if isinstance(icon, str) and os.path.isfile(icon):
+            try:
+                # Read the icon file and convert to Base64
+                with open(icon, 'rb') as img_file:
+                    img_data = img_file.read()
+                icon = "data:image/png;base64," + base64.b64encode(img_data).decode('utf-8')
+                print(f"✓ Converted icon to Base64 ({len(icon)} characters)")
+            except Exception as e:
+                print(f"Failed to convert icon to Base64: {e}")
+                icon = "Furnace"  # Fallback
         
         data['profiles'][profile_id] = {
             "created": current_time,
