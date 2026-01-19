@@ -31,7 +31,7 @@ class InstallerApp:
         
         # Cache for loaded icons (for UI preview only)
         self.icon_cache = {}
-        self.current_icon_path = None  # Path to downloaded icon file
+        self.current_icon_path = None
 
         # --- CENTER THE WINDOW ---
         window_width = 450 
@@ -287,30 +287,37 @@ class InstallerApp:
                     except: pass
 
     def download_icon_file(self, icon_url, profile_dir):
-        """Downloads the icon and saves it to profile_dir/icon.png. Returns the file path."""
+        """Downloads the icon, resizes it to 128x128, and saves it to profile_dir/icon.png. Returns the file path."""
         try:
             self.update_status("Downloading icon...")
             
-            # Determine file extension from URL
-            if icon_url.endswith('.gif'):
-                icon_filename = "icon.gif"
-            else:
-                icon_filename = "icon.png"
-            
-            icon_path = os.path.join(profile_dir, icon_filename)
+            icon_path = os.path.join(profile_dir, "icon.png")
             
             req = urllib.request.Request(icon_url, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(req) as response:
                 img_data = response.read()
             
-            # Save the file
-            with open(icon_path, 'wb') as f:
-                f.write(img_data)
+            # Open the image with Pillow
+            image = Image.open(BytesIO(img_data))
             
-            print(f"✓ Icon saved to: {icon_path}")
+            # If it's an animated GIF, grab the first frame
+            if getattr(image, "is_animated", False):
+                image.seek(0)
+            
+            # Convert to RGBA if needed (handles transparency)
+            if image.mode != 'RGBA':
+                image = image.convert('RGBA')
+            
+            # Resize to EXACTLY 128x128 (required by Minecraft Launcher)
+            image = image.resize((128, 128), Image.Resampling.LANCZOS)
+            
+            # Save as PNG
+            image.save(icon_path, format="PNG")
+            
+            print(f"✓ Icon saved to: {icon_path} (128x128)")
             return icon_path
         except Exception as e:
-            print(f"Icon download failed: {e}")
+            print(f"Icon download/resize failed: {e}")
             return None
 
     def install_modpack_logic(self, mc_dir, config):
@@ -357,12 +364,12 @@ class InstallerApp:
 
         if os.path.exists(temp_extract): shutil.rmtree(temp_extract)
         
-        # --- DOWNLOAD ICON TO PROFILE FOLDER ---
-        final_icon = config.get('icon', "Furnace")  # Default fallback
+        # --- DOWNLOAD ICON TO PROFILE FOLDER (128x128) ---
+        final_icon = config.get('icon', "Furnace")
         if 'icon_url' in config:
             downloaded_icon_path = self.download_icon_file(config['icon_url'], profile_dir)
             if downloaded_icon_path:
-                final_icon = downloaded_icon_path  # Use the file path
+                final_icon = downloaded_icon_path
         
         self.update_json_profile(mc_dir, config['profile_name'], profile_dir, config['version_id'], final_icon)
 
@@ -413,7 +420,7 @@ class InstallerApp:
         data['profiles'][profile_id] = {
             "created": current_time,
             "gameDir": game_dir,
-            "icon": icon,  # Now a file path like "C:\\...\\profiles\\Wonderland\\icon.png"
+            "icon": icon,
             "lastUsed": current_time,
             "lastVersionId": version_id,
             "name": name,
