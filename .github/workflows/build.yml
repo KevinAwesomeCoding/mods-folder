@@ -3,97 +3,98 @@ name: Build and Update Installer
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
+  # 1. BUILD WINDOWS
   build-windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10' 
-        
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
-        
-    - name: Build Windows Executable
-      run: |
-        pyinstaller --onefile --name MinecraftModsInstaller-Windows installer.py
-        
-    - name: Upload Windows Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: windows-app
-        path: dist/MinecraftModsInstaller-Windows.exe
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install pyinstaller pillow certifi
+      - run: pyinstaller --onefile --noconsole --name "MinecraftModsInstaller" --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL --collect-all certifi installer.py
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-app
+          path: dist/MinecraftModsInstaller.exe
 
+  # 2. BUILD MAC
   build-mac:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      # 1. Run Python Script Test (Confirms code works on Mac Server)
+      - name: Run Python Network Test
+        run: python test_mac_network.py
 
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
+      # 2. Install Build Tools (CRITICAL: Added certifi)
+      - run: pip install pyinstaller pillow certifi
 
-    - name: Build Mac Universal App
-      run: |
-        # --target-architecture universal2 makes it work on BOTH Intel and M1/M2 Macs
-        pyinstaller --onefile --target-architecture universal2 --name MinecraftModsInstaller-Mac-Universal installer.py
+      # 3. Build App (CRITICAL: Added --collect-all certifi)
+      - run: |
+          pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" \
+            --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
+            --hidden-import ssl --hidden-import certifi --collect-all certifi \
+            installer.py
 
-    - name: Zip Mac Artifact
-      run: |
-        cd dist
-        # Zips the universal binary
-        zip -r ../MinecraftModsInstaller-Mac-Universal.zip MinecraftModsInstaller-Mac-Universal
+      # 4. Self-Test the Bundled App (Confirms App works properly)
+      - name: Self-test Bundled App
+        run: |
+          "./dist/Minecraft Mods Installer.app/Contents/MacOS/Minecraft Mods Installer" --selftest
+          cat installer_debug.log
 
-    - name: Upload Mac Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: MinecraftModsInstaller-Mac-Universal.zip
-        path: MinecraftModsInstaller-Mac-Universal.zip
+      # 5. Zip ONLY if tests pass
+      - name: Zip Mac App
+        run: |
+          cd dist
+          zip -r "MinecraftModsInstaller-Mac.zip" "Minecraft Mods Installer.app"
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-app
+          path: dist/MinecraftModsInstaller-Mac.zip
+
+  # 3. UPLOAD EVERYTHING
   release:
-    needs: [build-mac, build-windows]
+    needs: [build-windows, build-mac]
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
     steps:
-    - name: Download Windows Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: windows-app
-        path: windows-app
+      - name: Download Windows App
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-app
 
-    - name: Download Mac Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: MinecraftModsInstaller-Mac-Universal.zip
-        path: .
+      - name: Download Mac App
+        uses: actions/download-artifact@v4
+        with:
+          name: mac-app
 
-    - name: Zip Windows Artifact
-      run: zip -j MinecraftModsInstaller-Windows.zip windows-app/MinecraftModsInstaller-Windows.exe
-
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        tag_name: v${{ github.run_number }}
-        name: Release v${{ github.run_number }}
-        draft: false
-        prerelease: false
-        files: |
-          MinecraftModsInstaller-Windows.zip
-          MinecraftModsInstaller-Mac-Universal.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update Release 1.0
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "1.0"
+          name: "Installer"
+          makeLatest: true
+          body: |
+            ## How to Install
+            **Windows:** Download `MinecraftModsInstaller.exe` and run it.
+            **Mac:** Download the Zip, extract it, and run the App.
+            
+            *Build updated automatically via GitHub Actions.*
+          allowUpdates: true
+          removeArtifacts: false
+          replacesArtifacts: true
+          artifacts: |
+            MinecraftModsInstaller.exe
+            MinecraftModsInstaller-Mac.zip
