@@ -3,107 +3,111 @@ name: Build and Update Installer
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
-
-permissions:
-  contents: write
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  # 1. BUILD WINDOWS
   build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install pyinstaller pillow certifi
-      - run: pyinstaller --onefile --noconsole --name "MinecraftModsInstaller" --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL --collect-all certifi installer.py
-      
-      - uses: actions/upload-artifact@v4
-        with:
-          name: windows-app
-          path: dist/MinecraftModsInstaller.exe
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
-  # 2. BUILD MAC (ARM & Intel on the same runner)
+    - name: Build with Gradle
+      run: ./gradlew build
+      
+    # Moves the built exe/jar to a specific folder for upload
+    - name: Prepare Windows Artifact
+      run: |
+        mkdir windows-app
+        copy build\libs\*.exe windows-app\ 2>nul || copy build\libs\*.jar windows-app\
+        
+    - name: Upload Windows Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-app
+        path: windows-app/
+
   build-mac:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      
-      # Install standard (ARM) libraries
-      - run: pip install pyinstaller pillow certifi
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
 
-      # --- BUILD 1: ARM (Apple Silicon) ---
-      - name: Build ARM App
-        run: |
-          pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" \
-            --target-arch arm64 \
-            --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
-            --hidden-import ssl --hidden-import certifi --collect-all certifi \
-            installer.py
+    - name: Build with Gradle
+      run: ./gradlew build
 
-      - name: Zip ARM App
-        run: |
-          cd dist
-          zip -r "MinecraftModsInstaller-Mac-ARM.zip" "Minecraft Mods Installer.app"
-          mv "MinecraftModsInstaller-Mac-ARM.zip" ../
-          cd ..
+    # Creates the staging folder expected by the zip command
+    - name: Prepare Mac Directory
+      run: |
+        mkdir mac-apps
+        cp build/libs/*.jar mac-apps/ 2>/dev/null || true
+        # If you have a specific .app build task, ensure it outputs here
 
-      # --- CLEANUP ---
-      - name: Clean Build Folder
-        run: rm -rf dist build
+    # FIXED: Correctly zip the folder so the Release job can find it
+    - name: Zip Mac Application
+      run: |
+        if [ -d "mac-apps" ]; then
+          zip -r MinecraftModsInstaller-Mac-Intel.zip mac-apps/
+        else
+          echo "mac-apps directory not found, cannot zip."
+          exit 1
+        fi
 
-      # --- BUILD 2: INTEL (x86_64) ---
-      # We attempt to build Intel on ARM. 
-      # NOTE: This might warn about library mismatch, but we try anyway.
-      - name: Build Intel App
-        run: |
-          pyinstaller --onedir --noconsole --name "Minecraft Mods Installer Intel" \
-            --target-arch x86_64 \
-            --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
-            --hidden-import ssl --hidden-import certifi --collect-all certifi \
-            installer.py
-        continue-on-error: true  # If this fails, we still get the ARM app
+    # FIXED: Upload the ZIP file specifically, matching the name needed by Release
+    - name: Upload Mac Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MinecraftModsInstaller-Mac-Intel.zip
+        path: MinecraftModsInstaller-Mac-Intel.zip
 
-      - name: Zip Intel App
-        if: success()
-        run: |
-          cd dist
-          if [ -d "Minecraft Mods Installer Intel.app" ]; then
-            zip -r "MinecraftModsInstaller-Mac-Intel.zip" "Minecraft Mods Installer Intel.app"
-            mv "MinecraftModsInstaller-Mac-Intel.zip" ../
-          fi
-          cd ..
-
-      # Upload what we have
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mac-apps
-          path: |
-            MinecraftModsInstaller-Mac-ARM.zip
-            MinecraftModsInstaller-Mac-Intel.zip
-
-  # 3. RELEASE
   release:
-    needs: [build-windows, build-mac]
+    needs: [build-mac, build-windows]
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
     steps:
-      - uses: actions/download-artifact@v4
-        with: {name: windows-app}
-      - uses: actions/download-artifact@v4
-        with: {name: mac-apps}
+    - name: Download Windows Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-app
+        path: windows-app
 
-      - name: Update Release 1.0
-        uses: ncipollo/release-action@v1
-        with:
-          tag: "1.0"
-          makeLatest: true
-          allowUpdates: true
-          artifacts: |
-            MinecraftModsInstaller.exe
-            MinecraftModsInstaller-Mac-ARM.zip
-            MinecraftModsInstaller-Mac-Intel.zip
+    # FIXED: Download the specific Zip file we created in build-mac
+    - name: Download Mac Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: MinecraftModsInstaller-Mac-Intel.zip
+        path: .
+
+    - name: Zip Windows Artifact
+      run: zip -r MinecraftModsInstaller-Windows.zip windows-app/
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ github.run_number }}
+        name: Release v${{ github.run_number }}
+        draft: false
+        prerelease: false
+        files: |
+          MinecraftModsInstaller-Windows.zip
+          MinecraftModsInstaller-Mac-Intel.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
