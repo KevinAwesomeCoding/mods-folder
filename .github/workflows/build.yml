@@ -18,17 +18,20 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-
     - name: Build with Gradle
-      run: ./gradlew build
+      run: |
+        if (Test-Path gradlew.bat) {
+          ./gradlew build
+        } else {
+          echo "Gradlew not found. Using system Gradle..."
+          gradle build
+        }
       
-    # Moves the built exe/jar to a specific folder for upload
     - name: Prepare Windows Artifact
       run: |
         mkdir windows-app
-        copy build\libs\*.exe windows-app\ 2>nul || copy build\libs\*.jar windows-app\
+        if (Test-Path build\libs\*.exe) { copy build\libs\*.exe windows-app\ }
+        if (Test-Path build\libs\*.jar) { copy build\libs\*.jar windows-app\ }
         
     - name: Upload Windows Artifact
       uses: actions/upload-artifact@v4
@@ -46,21 +49,27 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
 
+    # DEBUG: See what files are actually there
+    - name: List files (Debug)
+      run: ls -R
+
+    # UPDATED: Smart Build - tries gradlew first, falls back to gradle
     - name: Build with Gradle
-      run: ./gradlew build
+      run: |
+        if [ -f gradlew ]; then
+          chmod +x gradlew
+          ./gradlew build
+        else
+          echo "Gradlew file not found. Attempting to use system Gradle..."
+          gradle build
+        fi
 
-    # Creates the staging folder expected by the zip command
     - name: Prepare Mac Directory
       run: |
         mkdir mac-apps
         cp build/libs/*.jar mac-apps/ 2>/dev/null || true
-        # If you have a specific .app build task, ensure it outputs here
 
-    # FIXED: Correctly zip the folder so the Release job can find it
     - name: Zip Mac Application
       run: |
         if [ -d "mac-apps" ]; then
@@ -70,7 +79,6 @@ jobs:
           exit 1
         fi
 
-    # FIXED: Upload the ZIP file specifically, matching the name needed by Release
     - name: Upload Mac Artifact
       uses: actions/upload-artifact@v4
       with:
@@ -89,7 +97,6 @@ jobs:
         name: windows-app
         path: windows-app
 
-    # FIXED: Download the specific Zip file we created in build-mac
     - name: Download Mac Artifact
       uses: actions/download-artifact@v4
       with:
