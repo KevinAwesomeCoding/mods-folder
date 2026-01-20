@@ -25,7 +25,7 @@ jobs:
           name: windows-app
           path: dist/MinecraftModsInstaller.exe
 
-  # 2. BUILD MAC - ARM and Intel from the same runner
+  # 2. BUILD MAC (Universal - Works on Intel AND Apple Silicon)
   build-mac:
     runs-on: macos-latest
     steps:
@@ -34,57 +34,44 @@ jobs:
         with:
           python-version: '3.11'
       
+      # Python Network Test
       - name: Run Python Network Test
         run: python test_mac_network.py
 
-      - run: pip install pyinstaller pillow certifi
+      # Install libraries forcing universal binary support where possible
+      - run: |
+          pip install --upgrade pip
+          pip install --platform macosx_10_9_universal2 --only-binary=:all: --target .packages pillow certifi pyinstaller
+          # Add the custom packages to PYTHONPATH so PyInstaller finds them
+          echo "PYTHONPATH=$PWD/.packages" >> $GITHUB_ENV
+          echo "PATH=$PWD/.packages/bin:$PATH" >> $GITHUB_ENV
 
-      # Build ARM version (Apple Silicon)
-      - name: Build ARM App
+      # Build Universal App (Works on Intel + ARM)
+      - name: Build Universal App
         run: |
-          pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" \
-            --target-arch arm64 \
+          python3 .packages/bin/pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" \
+            --target-arch universal2 \
             --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
             --hidden-import ssl --hidden-import certifi --collect-all certifi \
             installer.py
 
-      - name: Self-test ARM App
+      # Verify it runs (on the ARM runner)
+      - name: Self-test App
         run: |
           "./dist/Minecraft Mods Installer.app/Contents/MacOS/Minecraft Mods Installer" --selftest
           cat installer_debug.log
 
-      - name: Zip ARM App
+      - name: Zip Mac App
         run: |
           cd dist
-          zip -r "MinecraftModsInstaller-Mac-ARM.zip" "Minecraft Mods Installer.app"
-          cd ..
-
-      # Clean up for Intel build
-      - name: Clean dist folder
-        run: rm -rf dist build
-
-      # Build Intel version (x86_64)
-      - name: Build Intel App
-        run: |
-          pyinstaller --onedir --noconsole --name "Minecraft Mods Installer Intel" \
-            --target-arch x86_64 \
-            --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
-            --hidden-import ssl --hidden-import certifi --collect-all certifi \
-            installer.py
-
-      - name: Zip Intel App
-        run: |
-          cd dist
-          zip -r "MinecraftModsInstaller-Mac-Intel.zip" "Minecraft Mods Installer Intel.app"
+          zip -r "MinecraftModsInstaller-Mac-Universal.zip" "Minecraft Mods Installer.app"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: mac-apps
-          path: |
-            dist/MinecraftModsInstaller-Mac-ARM.zip
-            dist/MinecraftModsInstaller-Mac-Intel.zip
+          name: mac-app
+          path: dist/MinecraftModsInstaller-Mac-Universal.zip
 
-  # 3. UPLOAD EVERYTHING TO RELEASE
+  # 3. UPLOAD EVERYTHING
   release:
     needs: [build-windows, build-mac]
     runs-on: ubuntu-latest
@@ -94,10 +81,10 @@ jobs:
         with:
           name: windows-app
 
-      - name: Download Mac Apps
+      - name: Download Mac App
         uses: actions/download-artifact@v4
         with:
-          name: mac-apps
+          name: mac-app
 
       - name: Update Release 1.0
         uses: ncipollo/release-action@v1
@@ -110,11 +97,8 @@ jobs:
             
             **Windows:** Download `MinecraftModsInstaller.exe` and run it.
             
-            **Mac (Apple Silicon M1/M2/M3):** Download `MinecraftModsInstaller-Mac-ARM.zip`, extract it, and run the App.
-            
-            **Mac (Intel):** Download `MinecraftModsInstaller-Mac-Intel.zip`, extract it, and run the App.
-            
-            *Not sure which Mac version you have? Click the Apple logo → About This Mac. If it says "Apple M1/M2/M3", use ARM. If it says "Intel", use Intel.*
+            **Mac (All versions):** Download `MinecraftModsInstaller-Mac-Universal.zip`, extract it, and run the App.
+            *Works on both Intel Macs and Apple Silicon (M1/M2/M3).*
             
             *Build updated automatically via GitHub Actions.*
           allowUpdates: true
@@ -122,5 +106,4 @@ jobs:
           replacesArtifacts: true
           artifacts: |
             MinecraftModsInstaller.exe
-            MinecraftModsInstaller-Mac-ARM.zip
-            MinecraftModsInstaller-Mac-Intel.zip
+            MinecraftModsInstaller-Mac-Universal.zip
