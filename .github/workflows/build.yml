@@ -18,20 +18,32 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
         
-    - name: Build with Gradle
+    - name: Build with Gradle (Auto-Detect)
       run: |
+        # Powershell script to find build.gradle anywhere
+        $buildFile = Get-ChildItem -Path . -Recurse -Include build.gradle, build.gradle.kts -ErrorAction SilentlyContinue | Select-Object -First 1
+        
+        if (-not $buildFile) {
+          Write-Error "CRITICAL ERROR: No build.gradle file found anywhere in the repository. Did you push your code?"
+          exit 1
+        }
+        
+        $buildDir = $buildFile.DirectoryName
+        Write-Host "Found project in: $buildDir"
+        Set-Location $buildDir
+        
         if (Test-Path gradlew.bat) {
           ./gradlew build
         } else {
-          echo "Gradlew not found. Using system Gradle..."
+          Write-Host "No gradlew.bat found, using system gradle..."
           gradle build
         }
       
     - name: Prepare Windows Artifact
       run: |
         mkdir windows-app
-        if (Test-Path build\libs\*.exe) { copy build\libs\*.exe windows-app\ }
-        if (Test-Path build\libs\*.jar) { copy build\libs\*.jar windows-app\ }
+        # Find the built exe or jar anywhere in the build/libs folders
+        Get-ChildItem -Path . -Recurse -Include *.exe, *.jar | Where-Object { $_.FullName -like "*build\libs*" } | Copy-Item -Destination windows-app\
         
     - name: Upload Windows Artifact
       uses: actions/upload-artifact@v4
@@ -50,32 +62,43 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    # DEBUG: See what files are actually there
-    - name: List files (Debug)
-      run: ls -R
-
-    # UPDATED: Smart Build - tries gradlew first, falls back to gradle
-    - name: Build with Gradle
+    - name: Build with Gradle (Auto-Detect)
       run: |
+        # Find build.gradle anywhere in the repo
+        BUILD_FILE=$(find . -name "build.gradle" -o -name "build.gradle.kts" | head -n 1)
+        
+        if [ -z "$BUILD_FILE" ]; then
+          echo "CRITICAL ERROR: No build.gradle file found anywhere! Listing all files:"
+          ls -R
+          exit 1
+        fi
+        
+        BUILD_DIR=$(dirname "$BUILD_FILE")
+        echo "Found project in directory: $BUILD_DIR"
+        cd "$BUILD_DIR"
+        
         if [ -f gradlew ]; then
           chmod +x gradlew
           ./gradlew build
         else
-          echo "Gradlew file not found. Attempting to use system Gradle..."
+          echo "Gradlew not found. Using system Gradle..."
           gradle build
         fi
 
     - name: Prepare Mac Directory
       run: |
         mkdir mac-apps
-        cp build/libs/*.jar mac-apps/ 2>/dev/null || true
+        # Find .jar files specifically inside any build/libs folder
+        find . -path "*/build/libs/*.jar" -exec cp {} mac-apps/ \;
+        echo "Contents of mac-apps:"
+        ls -l mac-apps/
 
     - name: Zip Mac Application
       run: |
-        if [ -d "mac-apps" ]; then
+        if [ "$(ls -A mac-apps)" ]; then
           zip -r MinecraftModsInstaller-Mac-Intel.zip mac-apps/
         else
-          echo "mac-apps directory not found, cannot zip."
+          echo "Error: No built files found in mac-apps! Build might have failed to produce output."
           exit 1
         fi
 
