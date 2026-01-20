@@ -9,6 +9,7 @@ permissions:
   contents: write
 
 jobs:
+  # 1. BUILD WINDOWS
   build-windows:
     runs-on: windows-latest
     steps:
@@ -18,72 +19,85 @@ jobs:
           python-version: '3.11'
       - run: pip install pyinstaller pillow certifi
       - run: pyinstaller --onefile --noconsole --name "MinecraftModsInstaller" --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL --collect-all certifi installer.py
+      
       - uses: actions/upload-artifact@v4
         with:
           name: windows-app
           path: dist/MinecraftModsInstaller.exe
 
-  # ARM BUILD (M1/M2/M3)
-  build-mac-arm:
+  # 2. BUILD MAC (ARM & Intel on the same runner)
+  build-mac:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      
+      # Install standard (ARM) libraries
       - run: pip install pyinstaller pillow certifi
-      - run: |
+
+      # --- BUILD 1: ARM (Apple Silicon) ---
+      - name: Build ARM App
+        run: |
           pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" \
             --target-arch arm64 \
             --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
             --hidden-import ssl --hidden-import certifi --collect-all certifi \
             installer.py
-      - run: |
+
+      - name: Zip ARM App
+        run: |
           cd dist
           zip -r "MinecraftModsInstaller-Mac-ARM.zip" "Minecraft Mods Installer.app"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mac-arm-app
-          path: dist/MinecraftModsInstaller-Mac-ARM.zip
+          mv "MinecraftModsInstaller-Mac-ARM.zip" ../
+          cd ..
 
-  # INTEL BUILD (Retrying macos-13)
-  build-mac-intel:
-    runs-on: macos-13 # This IS available for public repos
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: pip install pyinstaller pillow certifi
-      - run: |
+      # --- CLEANUP ---
+      - name: Clean Build Folder
+        run: rm -rf dist build
+
+      # --- BUILD 2: INTEL (x86_64) ---
+      # We attempt to build Intel on ARM. 
+      # NOTE: This might warn about library mismatch, but we try anyway.
+      - name: Build Intel App
+        run: |
           pyinstaller --onedir --noconsole --name "Minecraft Mods Installer Intel" \
             --target-arch x86_64 \
             --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
             --hidden-import ssl --hidden-import certifi --collect-all certifi \
             installer.py
-      - run: |
+        continue-on-error: true  # If this fails, we still get the ARM app
+
+      - name: Zip Intel App
+        if: success()
+        run: |
           cd dist
-          zip -r "MinecraftModsInstaller-Mac-Intel.zip" "Minecraft Mods Installer Intel.app"
+          if [ -d "Minecraft Mods Installer Intel.app" ]; then
+            zip -r "MinecraftModsInstaller-Mac-Intel.zip" "Minecraft Mods Installer Intel.app"
+            mv "MinecraftModsInstaller-Mac-Intel.zip" ../
+          fi
+          cd ..
+
+      # Upload what we have
       - uses: actions/upload-artifact@v4
         with:
-          name: mac-intel-app
-          path: dist/MinecraftModsInstaller-Mac-Intel.zip
+          name: mac-apps
+          path: |
+            MinecraftModsInstaller-Mac-ARM.zip
+            MinecraftModsInstaller-Mac-Intel.zip
 
+  # 3. RELEASE
   release:
-    needs: [build-windows, build-mac-arm, build-mac-intel]
+    needs: [build-windows, build-mac]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with: {name: windows-app}
       - uses: actions/download-artifact@v4
-        with: {name: mac-arm-app}
-      # Make Intel optional in case it fails again
-      - uses: actions/download-artifact@v4
-        with: 
-          name: mac-intel-app
-        continue-on-error: true
-        
-      - name: Update Release
+        with: {name: mac-apps}
+
+      - name: Update Release 1.0
         uses: ncipollo/release-action@v1
         with:
           tag: "1.0"
