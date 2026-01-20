@@ -21,12 +21,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install pyinstaller
-        # If you have other requirements, install them here
-        # pip install -r requirements.txt
         
     - name: Build Windows Executable
       run: |
-        # Creates a standalone exe from your python script
         pyinstaller --onefile --name MinecraftModsInstaller-Windows installer.py
         
     - name: Upload Windows Artifact
@@ -50,22 +47,22 @@ jobs:
         python -m pip install --upgrade pip
         pip install pyinstaller
 
-    - name: Build Mac Application
+    - name: Build Mac Universal App
       run: |
-        # Creates a standalone executable for Mac
-        pyinstaller --onefile --name MinecraftModsInstaller-Mac-Intel installer.py
+        # --target-architecture universal2 makes it work on BOTH Intel and M1/M2 Macs
+        pyinstaller --onefile --target-architecture universal2 --name MinecraftModsInstaller-Mac-Universal installer.py
 
     - name: Zip Mac Artifact
       run: |
         cd dist
-        # PyInstaller on Mac creates a binary file, not just .exe
-        zip -r ../MinecraftModsInstaller-Mac-Intel.zip MinecraftModsInstaller-Mac-Intel
+        # Zips the universal binary
+        zip -r ../MinecraftModsInstaller-Mac-Universal.zip MinecraftModsInstaller-Mac-Universal
 
     - name: Upload Mac Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MinecraftModsInstaller-Mac-Intel.zip
-        path: MinecraftModsInstaller-Mac-Intel.zip
+        name: MinecraftModsInstaller-Mac-Universal.zip
+        path: MinecraftModsInstaller-Mac-Universal.zip
 
   release:
     needs: [build-mac, build-windows]
@@ -82,7 +79,7 @@ jobs:
     - name: Download Mac Artifact
       uses: actions/download-artifact@v4
       with:
-        name: MinecraftModsInstaller-Mac-Intel.zip
+        name: MinecraftModsInstaller-Mac-Universal.zip
         path: .
 
     - name: Zip Windows Artifact
@@ -97,6 +94,6 @@ jobs:
         prerelease: false
         files: |
           MinecraftModsInstaller-Windows.zip
-          MinecraftModsInstaller-Mac-Intel.zip
+          MinecraftModsInstaller-Mac-Universal.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
