@@ -14,12 +14,22 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install pyinstaller pillow certifi
-      - run: pyinstaller --onefile --noconsole --name "MinecraftModsInstaller" --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL --collect-all certifi installer.py
-      
+
+      - name: Install build deps (Windows)
+        run: pip install pyinstaller pillow certifi
+
+      - name: Build Windows EXE
+        run: >
+          pyinstaller --onefile --noconsole --name "MinecraftModsInstaller"
+          --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder
+          --collect-all PIL
+          --hidden-import ssl --hidden-import certifi --collect-all certifi
+          installer.py
+
       - uses: actions/upload-artifact@v4
         with:
           name: windows-app
@@ -30,25 +40,28 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
-      # 1. Run Python Script Test (Confirms code works on Mac Server)
+
+      # 1. Run Python Script Test (confirms code + SSL work on Mac runner)
       - name: Run Python Network Test
         run: python test_mac_network.py
 
-      # 2. Install Build Tools (CRITICAL: Added certifi)
-      - run: pip install pyinstaller pillow certifi
+      # 2. Install Build Tools (PyInstaller + Pillow + certifi)
+      - name: Install build deps (macOS)
+        run: pip install pyinstaller pillow certifi
 
-      # 3. Build App (CRITICAL: Added --collect-all certifi)
-      - run: |
+      # 3. Build macOS app bundle
+      - name: Build macOS App
+        run: |
           pyinstaller --onedir --noconsole --name "Minecraft Mods Installer" \
             --hidden-import PIL --hidden-import PIL._imagingtk --hidden-import PIL._tkinter_finder --collect-all PIL \
             --hidden-import ssl --hidden-import certifi --collect-all certifi \
             installer.py
 
-      # 4. Self-Test the Bundled App (Confirms App works properly)
+      # 4. Self-test inside the bundled app (uses your --selftest flag)
       - name: Self-test Bundled App
         run: |
           "./dist/Minecraft Mods Installer.app/Contents/MacOS/Minecraft Mods Installer" --selftest
