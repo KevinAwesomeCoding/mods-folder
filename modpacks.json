@@ -162,6 +162,7 @@
             "version_id": "1.21.1-forge-52.1.10",
             "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
             "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.21.1-forge-52.1.109.zip",
-            "is_complex": true
+            "is_complex": false
+        }
     }
 }
