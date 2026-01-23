@@ -1,168 +1,284 @@
 {
-    "Horror": {
-        "Wonderland": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
-            "profile_name": "Wonderland",
-            "folder_name": "Wonderland",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1537/975/64/64/638998597436421586.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        },
-        "The Backrooms": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
-            "profile_name": "Backrooms",
-            "folder_name": "Backrooms",
-            "version_id": "fabric-loader-0.18.4-1.20.1",
-            "icon_url": "https://cdn.modrinth.com/data/H6pjI7Ol/831ad01659612e42dc2adfe6bcf00b3a4a5515f4_96.webp",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
-            "is_complex": false
-        },
-        "The Anomaly": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
-            "profile_name": "The Anomaly",
-            "folder_name": "The Anomaly",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1021/144/64/64/638546002248440614.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        },
-        "The One Who Watches": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
-            "profile_name": "The One Who Watches",
-            "folder_name": "The One Who Watches",
-            "version_id": "1.19.2-forge-43.5.2",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1060/792/64/64/638592615065266762.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": false
-        },
-        "The Obsessed": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
-            "profile_name": "The Obsessed",
-            "folder_name": "The Obsessed",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1493/316/64/64/638970280843690955_animated.gif",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        },
-        "From The Fog": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
-            "profile_name": "From The Fog",
-            "folder_name": "From The Fog",
-            "version_id": "fabric-loader-0.18.4-1.21.11",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1502/343/64/64/638976000076917783.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
-            "is_complex": false
-        },
-        "The Broken Script": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
-            "profile_name": "The Broken Script",
-            "folder_name": "The Broken Script",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1221/788/64/64/638800364077412589.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        },
-        "000.jar": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/000/mods.zip",
-            "profile_name": "000.jar",
-            "folder_name": "000.jar",
-            "version_id": "1.19.2-forge-43.5.2",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1105/911/64/64/638655651054127554.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": false
-        },
-        "The Newest Goatman": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
-            "profile_name": "The Newest Goatman",
-            "folder_name": "The Newest Goatman",
-            "version_id": "1.19.2-forge-43.5.2",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1044/3/64/64/638571542156444978.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
-            "is_complex": false
-        },
-        "Sanity": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
-            "profile_name": "Sanity",
-            "folder_name": "Sanity",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/834/875/64/64/638226090797745278.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        },
-        "The God": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
-            "profile_name": "The God",
-            "folder_name": "The God",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1178/74/64/64/638750696362718504.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        },
-        "From The Caves": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
-            "profile_name": "From The Caves",
-            "folder_name": "From The Caves",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1602/726/64/64/639035320375482236_animated.gif",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": false
-        }
+  "Horror": {
+    "Wonderland": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wonderland/mods.zip",
+      "profile_name": "Wonderland",
+      "folder_name": "Wonderland",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1537/975/64/64/638998597436421586.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "A psychological horror mod centered around the entity 'Herobrine' and the mystery of Wonderland.jar. It features sanity mechanics, eerie atmospheric sounds, and hallucinations that blur the line between reality and the game.",
+      "rating": "3/10: Slow rising game. Nothing literally happened, only cool thing was it teleported to other worlds."
     },
-    "Challenge": {
-        "Entropy: The Chaos Mod": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/entropy/mods.zip",
-            "profile_name": "Entropy: The Chaos Mod",
-            "folder_name": "Entropy",
-            "version_id": "fabric-loader-0.18.4-1.21.8",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/356/538/64/64/637516966184620115.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
-            "is_complex": false
-        },
-        "ZombieCraft": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/zombiecraft/mods.zip",
-            "profile_name": "ZombieCraft",
-            "folder_name": "ZombieCraft",
-            "version_id": "1.20.1-forge-47.4.15",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1140/104/64/64/638703335269676904.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-            "is_complex": true
-        },
-        "RLCraft": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
-            "profile_name": "RLCraft",
-            "folder_name": "RLCraft",
-            "version_id": "1.12.2-forge-14.23.5.2864",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/468/243/64/64/637751369169569212.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
-            "is_complex": true
-        },
-        "Pixelmon": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/pixelmon/mods.zip",
-            "profile_name": "Pixelmon",
-            "folder_name": "Pixelmon",
-            "version_id": "neoforge-21.1.218",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/279/234/64/64/637276853291457748.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
-            "is_complex": false
-        },
-        "Lucky Blocks": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyblocks/mods.zip",
-            "profile_name": "Lucky Blocks",
-            "folder_name": "LuckyBlocks",
-            "version_id": "1.8.9-forge1.8.9-11.15.1.2318-1.8.9",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1068/25/64/64/638602414341255227.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.8.9-forge1.8.9-11.15.1.2318-1.8.9.zip",
-            "is_complex": true
-        },
-        "No Cubes3": {
-            "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/nocubes/mods.zip",
-            "profile_name": "No Cubes",
-            "folder_name": "NoCubes",
-            "version_id": "fabric-loader-0.18.4-1.20.1",
-            "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
-            "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
-            "is_complex": false
-        }
+    "The Backrooms": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/backrooms/mods.zip",
+      "profile_name": "Backrooms",
+      "folder_name": "Backrooms",
+      "version_id": "fabric-loader-0.18.4-1.20.1",
+      "icon_url": "https://cdn.modrinth.com/data/H6pjI7Ol/831ad01659612e42dc2adfe6bcf00b3a4a5515f4_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
+      "is_complex": false,
+      "description": "An immersive exploration mod based on the popular creepypasta. Clip out of reality into the mono-yellow infinite maze, featuring multiple levels, entities like the Bacteria, and a sanity system.",
+      "rating": ""
+    },
+    "The Anomaly": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/anomaly/mods.zip",
+      "profile_name": "The Anomaly",
+      "folder_name": "The Anomaly",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1021/144/64/64/638546002248440614.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "This mod introduces 'The Anomaly,' a stalking entity that learns from your behavior. It creates a constant sense of dread with subtle visual glitches, fake sounds, and sudden, aggressive encounters.",
+      "rating": ""
+    },
+    "The One Who Watches": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/onewhowatches/mods.zip",
+      "profile_name": "The One Who Watches",
+      "folder_name": "The One Who Watches",
+      "version_id": "1.19.2-forge-43.5.2",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1060/792/64/64/638592615065266762.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
+      "is_complex": false,
+      "description": "Adds a stalker entity that observes you from a distance. It rarely attacks directly but drains your sanity by appearing on hilltops, behind trees, and in dark caves, forcing you to always watch your back.",
+      "rating": ""
+    },
+    "The Obsessed": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
+      "profile_name": "The Obsessed",
+      "folder_name": "The Obsessed",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1493/316/64/64/638970280843690955_animated.gif",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "Features a yandere-style horror entity that becomes 'obsessed' with the player. It leaves gifts, writes notes, and becomes increasingly aggressive if ignored or rejected.",
+      "rating": ""
+    },
+    "From The Fog": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthefog/mods.zip",
+      "profile_name": "From The Fog",
+      "folder_name": "From The Fog",
+      "version_id": "fabric-loader-0.18.4-1.21.11",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1502/343/64/64/638976000076917783.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
+      "is_complex": false,
+      "description": "The definitive Herobrine experience. This mod focuses on atmospheric horror rather than jumpscares, with Herobrine stalking you, building structures, and vanishing in the fog.",
+      "rating": ""
+    },
+    "The Broken Script": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/brokenscript/mods.zip",
+      "profile_name": "The Broken Script",
+      "folder_name": "The Broken Script",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1221/788/64/64/638800364077412589.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "A meta-horror mod where the game's code appears to be breaking. Expect corrupted textures, glitchy entities, and chat messages from the game itself trying to warn you.",
+      "rating": ""
+    },
+    "000.jar": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/000/mods.zip",
+      "profile_name": "000.jar",
+      "folder_name": "000.jar",
+      "version_id": "1.19.2-forge-43.5.2",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1105/911/64/64/638655651054127554.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
+      "is_complex": false,
+      "description": "Based on a creepypasta about a cursed jar file. This mod introduces a dark, distorted version of the Overworld with void creatures and unsettling ambient silence.",
+      "rating": ""
+    },
+    "The Newest Goatman": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
+      "profile_name": "The Newest Goatman",
+      "folder_name": "The Newest Goatman",
+      "version_id": "1.19.2-forge-43.5.2",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1044/3/64/64/638571542156444978.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
+      "is_complex": false,
+      "description": "Adds the Goatman, a terrifying cryptid that mimics player sounds and movements. It hunts you in forests, can open doors, and gets faster the longer you survive.",
+      "rating": ""
+    },
+    "Fear Nightfall: Remains of Chaos": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fnroc/mods.zip",
+      "profile_name": "Fear Nightfall: Remains of Chaos",
+      "folder_name": "FNROC",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1108/633/64/64/638659048745871424.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "description": "A story-driven horror modpack designed for co-op. Features a campaign, custom bosses, sanity mechanics, and the 'Remains of Chaos' update which adds new zones and weapons.",
+      "rating": ""
+    },
+    "Dread": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/dread/mods.zip",
+      "profile_name": "Dread",
+      "folder_name": "Dread",
+      "version_id": "1.19.2-forge-43.5.2",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1504/785/64/64/638977225925060212.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
+      "is_complex": true,
+      "description": "A survival horror pack that removes all vanilla hostile mobs and replaces them with terrifying custom entities. The goal is pure survival in a world that wants you dead.",
+      "rating": ""
+    },
+    "Cave Horror Project": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/dread/mods.zip",
+      "profile_name": "Cave Horror Project",
+      "folder_name": "CaveHorrorProject",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1183/618/64/64/638757353708439357.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "description": "Transforms caves into a nightmare. Adds entities like the Cave Dweller and Man From The Fog, making mining a terrifying experience with realistic sound physics.",
+      "rating": ""
+    },
+    "Sanity": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sanity/mods.zip",
+      "profile_name": "Sanity",
+      "folder_name": "Sanity",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/834/875/64/64/638226090797745278.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "A mod that focuses entirely on psychological horror. It adds a sanity bar that lowers in the dark or near monsters, causing hallucinations, screen shaking, and eventual death.",
+      "rating": "4/10: it's just a slow rising game, not really scary... only to make your game harder. Wouldnt ebven coun this as scary."
+    },
+    "The God": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thegod/mods.zip",
+      "profile_name": "The God",
+      "folder_name": "The God",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1178/74/64/64/638750696362718504.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "Introduces a 'Karma' system. Killing passive mobs lowers your karma. If it hits zero, a terrifying entity known as 'The God' appears to judge and execute you.",
+      "rating": ""
+    },
+    "From The Caves": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/fromthecaves/mods.zip",
+      "profile_name": "From The Caves",
+      "folder_name": "From The Caves",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1602/726/64/64/639035320375482236_animated.gif",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "description": "Adds a stalking entity that hunts you underground. It can break torches, create fake sounds, and climb walls, forcing you to rely on sound and quick reflexes.",
+      "rating": ""
     }
+  },
+  "Challenge": {
+    "Entropy: The Chaos Mod": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/entropy/mods.zip",
+      "profile_name": "Entropy: The Chaos Mod",
+      "folder_name": "Entropy",
+      "version_id": "fabric-loader-0.18.4-1.21.8",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/356/538/64/64/637516966184620115.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
+      "is_complex": false,
+      "description": "A 'randomizer' style modpack where chaos ensues. Every 30 seconds a random effect happens—explosions, mob spawns, or item swaps. Pure unpredictability.",
+      "rating": ""
+    },
+    "RLCraft": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
+      "profile_name": "RLCraft",
+      "folder_name": "RLCraft",
+      "version_id": "1.12.2-forge-14.23.5.2864",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/468/243/64/64/637751369169569212.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
+      "is_complex": true,
+      "description": "Real Life Craft. The hardest modpack ever created. Adds thirst, temperature, realistic healing, and brutal dragons. You will die... a lot.",
+      "rating": ""
+    },
+    "Pixelmon": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/pixelmon/mods.zip",
+      "profile_name": "Pixelmon",
+      "folder_name": "Pixelmon",
+      "version_id": "neoforge-21.1.218",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/279/234/64/64/637276853291457748.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
+      "is_complex": false,
+      "description": "Pokémon in Minecraft. Catch, train, and battle hundreds of Pokémon. Features gyms, centers, and a full battle system faithful to the original games.",
+      "rating": ""
+    },
+    "Lucky Block Challenge": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyblockchallenge/mods.zip",
+      "profile_name": "Lucky Block Challenge",
+      "folder_name": "LuckyBlockChallenge",
+      "version_id": "neoforge-21.1.218",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1068/25/64/64/638602414341255227.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
+      "is_complex": true,
+      "description": "A race map style pack centered around Lucky Blocks. Break blocks for random loot or disasters. Best played with friends in a race to the finish.",
+      "rating": ""
+    },
+    "Lucky Blocks (DONT DOWNLOAD--ITS BUNS)": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyblocks/mods.zip",
+      "profile_name": "Lucky Blocks",
+      "folder_name": "LuckyBlocks",
+      "version_id": "1.8.9-forge1.8.9-11.15.1.2318-1.8.9",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1068/25/64/64/638602414341255227.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.8.9-forge1.8.9-11.15.1.2318-1.8.9.zip",
+      "is_complex": true,
+      "description": "The classic 1.8.9 version of Lucky Blocks. It's old, buggy, and not recommended, but preserved here for nostalgia or testing.",
+      "rating": ""
+    },
+    "No Cubes": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/nocubes/mods.zip",
+      "profile_name": "No Cubes",
+      "folder_name": "NoCubes",
+      "version_id": "fabric-loader-0.18.4-1.20.1",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
+      "is_complex": false,
+      "description": "Makes Minecraft completely round. Changes terrain generation to smooth slopes and curves, removing the blocky grid entirely for a surreal experience.",
+      "rating": ""
+    },
+    "Beyond Depth": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods.zip",
+      "mac_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mac_mods.zip",
+      "profile_name": "Beyond Depth",
+      "folder_name": "BeyondDepth",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "description": "An deep-sea exploration modpack. Adds terrifying aquatic horrors, submarines, and deep ocean biomes. (Mac users get a specialized version automatically).",
+      "rating": ""
+    }
+  },
+  "Apocalypse": {
+    "DeceasedCraft": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/deceasedcraft/mods.zip",
+      "profile_name": "DeceasedCraft",
+      "folder_name": "DeceasedCraft",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1577/605/64/64/639022081315858417.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "description": "A modern zombie apocalypse modpack. Features guns, vehicles, city generation, and smart zombie AI that can build and break blocks to get to you.",
+      "rating": ""
+    },
+    "ZombieCraft": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/zombiecraft/mods.zip",
+      "profile_name": "ZombieCraft",
+      "folder_name": "ZombieCraft",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1140/104/64/64/638703335269676904.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "description": "Classic zombie survival. Focuses on base defense against waves of undead. Includes barbed wire, turrets, and hordes that grow larger every night.",
+      "rating": ""
+    },
+    "Cursed Walking": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/cursedwalking/mods.zip",
+      "profile_name": "Cursed Walking",
+      "folder_name": "CursedWalking",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/614/500/64/64/637998216126755132.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "description": "A Walking Dead inspired modpack. Resources are extremely scarce, zombies are slow but persistent, and one bite can infect and kill you.",
+      "rating": ""
+    }
+  }
 }
