@@ -68,6 +68,10 @@ def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
         total_size = int(response.info().get("Content-Length", 0))
         block_size = 8192
         downloaded = 0
+        
+        start_time = time.time()
+        last_update_time = 0
+        
         with open(path, "wb") as out_file:
             while True:
                 chunk = response.read(block_size)
@@ -75,8 +79,23 @@ def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
                     break
                 out_file.write(chunk)
                 downloaded += len(chunk)
-                if progress_cb and total_size > 0:
-                    progress_cb(downloaded, total_size)
+                
+                # Update UI only every 0.1s to prevent lag
+                current_time = time.time()
+                if progress_cb and total_size > 0 and (current_time - last_update_time > 0.1):
+                    elapsed_time = current_time - start_time
+                    if elapsed_time > 0:
+                        speed = downloaded / elapsed_time
+                        remaining_bytes = total_size - downloaded
+                        eta_seconds = remaining_bytes / speed
+                    else:
+                        eta_seconds = 0
+                    progress_cb(downloaded, total_size, eta_seconds)
+                    last_update_time = current_time
+            
+            # Ensure final update hits 100%
+            if progress_cb and total_size > 0:
+                progress_cb(total_size, total_size, 0)
 
 class InstallerApp:
     def __init__(self, root):
@@ -85,10 +104,11 @@ class InstallerApp:
 
         self.icon_cache = {}
         self.current_icon_base64 = None
+        self.current_action_name = "Processing"
 
         # Center window
         window_width = 500
-        window_height = 700  # Increased height slightly for the rating box
+        window_height = 700
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -137,8 +157,7 @@ class InstallerApp:
         )
         self.desc_label.pack(pady=(0, 5))
 
-        # --- NEW: Rating Label ---
-        # We create a Frame to hold the rating so we can add a border or background if we want later
+        # Rating Frame
         self.rating_frame = tk.Frame(root)
         self.rating_frame.pack(pady=(5, 10))
 
@@ -149,7 +168,7 @@ class InstallerApp:
             self.rating_frame, 
             text="", 
             font=("Segoe UI", 9, "italic"), 
-            fg="#E65100", # A nice burnt orange color for the rating
+            fg="#E65100", 
             wraplength=400,
             justify="center"
         )
@@ -177,9 +196,18 @@ class InstallerApp:
         self.root.after(0, lambda: self.status.config(text=text))
         log(f"STATUS: {text}")
 
-    def update_progress(self, current, total):
+    def update_progress(self, current, total, eta_seconds=0):
+        if total <= 0: return
         percent = (current / total) * 100
         self.root.after(0, lambda: self.progress_var.set(percent))
+        
+        if eta_seconds < 60:
+            time_str = f"{int(eta_seconds)}s"
+        else:
+            time_str = f"{int(eta_seconds // 60)}m {int(eta_seconds % 60)}s"
+            
+        status_text = f"{self.current_action_name}... {int(percent)}% ({time_str} left)"
+        self.root.after(0, lambda: self.status.config(text=status_text))
 
     def load_data(self):
         try:
@@ -234,27 +262,20 @@ class InstallerApp:
         if category in self.modpacks and pack_name in self.modpacks[category]:
             config = self.modpacks[category][pack_name]
             
-            # Update Icon
             if HAS_PILLOW and "icon_url" in config:
                 self.display_icon_preview(config["icon_url"])
             else:
                 self.icon_label.config(image="", text="")
             
-            # Update Description
             desc_text = config.get("description", "No description available.")
             self.desc_label.config(text=desc_text)
 
-            # --- NEW: Update Rating ---
             rating_text = config.get("rating", "").strip()
-            
             if rating_text:
-                # If there is a rating, show the frame and text
                 self.rating_text.config(text=rating_text)
                 self.rating_frame.pack(pady=(5, 10)) 
             else:
-                # If no rating, hide the frame completely so there's no empty gap
                 self.rating_frame.pack_forget()
-
 
     def display_icon_preview(self, url):
         if not HAS_PILLOW:
@@ -320,6 +341,8 @@ class InstallerApp:
                 download_url = config["windows_url"]
             
             self.update_status(f"Checking loader for {pack_name}...")
+            
+            self.current_action_name = "Downloading Loader"
             self.install_loader(mc_dir, config["loader_url"])
 
             self.install_modpack_logic(mc_dir, config, download_url)
@@ -357,7 +380,7 @@ class InstallerApp:
         temp_loader_zip = os.path.join(mc_dir, "temp_loader.zip")
         self.progress_var.set(0)
 
-        self.update_status("Downloading Loader...")
+        self.current_action_name = "Downloading Loader"
         http_download_file(loader_url, temp_loader_zip, progress_cb=self.update_progress, timeout=60)
 
         self.update_status("Installing Loader...")
@@ -432,6 +455,7 @@ class InstallerApp:
         self.progress_var.set(0)
         temp_zip = os.path.join(profile_dir, "temp.zip")
         
+        self.current_action_name = "Downloading Mods"
         http_download_file(download_url, temp_zip, progress_cb=self.update_progress, timeout=120)
 
         temp_extract = os.path.join(profile_dir, "temp_extract")
@@ -440,8 +464,35 @@ class InstallerApp:
         os.makedirs(temp_extract, exist_ok=True)
 
         self.update_status("Extracting mods...")
+        self.current_action_name = "Extracting"
+        
         with zipfile.ZipFile(temp_zip, "r") as z:
-            z.extractall(temp_extract)
+            total_size = sum(f.file_size for f in z.infolist())
+            extracted_size = 0
+            start_time = time.time()
+            last_update_time = 0
+            
+            for file_info in z.infolist():
+                z.extract(file_info, temp_extract)
+                extracted_size += file_info.file_size
+                
+                # Optimized UI Update: Every 0.1 seconds
+                current_time = time.time()
+                if (current_time - last_update_time > 0.1):
+                    elapsed_time = current_time - start_time
+                    if elapsed_time > 0:
+                        speed = extracted_size / elapsed_time
+                        remaining = total_size - extracted_size
+                        eta = remaining / speed
+                    else:
+                        eta = 0
+                    
+                    self.update_progress(extracted_size, total_size, eta)
+                    last_update_time = current_time
+            
+            # Ensure we hit 100% at the end
+            self.update_progress(total_size, total_size, 0)
+
         os.remove(temp_zip)
 
         is_complex = config.get("is_complex", False)
