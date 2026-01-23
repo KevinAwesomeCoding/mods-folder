@@ -34,7 +34,6 @@ except Exception:
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/main/modpacks.json"
 LOG_PATH = os.path.join(os.getcwd(), "installer_debug.log")
 
-
 def log(msg: str):
     try:
         with open(LOG_PATH, "a", encoding="utf-8") as f:
@@ -42,12 +41,7 @@ def log(msg: str):
     except Exception:
         pass
 
-
 def get_ssl_context():
-    """
-    Use certifi CA bundle when available; this avoids certificate discovery issues
-    in frozen macOS apps. [web:144][web:138]
-    """
     try:
         if HAS_CERTIFI:
             ca = certifi.where()
@@ -57,9 +51,7 @@ def get_ssl_context():
         pass
     return ssl.create_default_context()
 
-
 SSL_CTX = get_ssl_context()
-
 
 def http_get_bytes(url: str, timeout=15) -> bytes:
     req = urllib.request.Request(url, headers={
@@ -69,7 +61,6 @@ def http_get_bytes(url: str, timeout=15) -> bytes:
     })
     with urllib.request.urlopen(req, context=SSL_CTX, timeout=timeout) as r:
         return r.read()
-
 
 def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -87,7 +78,6 @@ def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
                 if progress_cb and total_size > 0:
                     progress_cb(downloaded, total_size)
 
-
 class InstallerApp:
     def __init__(self, root):
         self.root = root
@@ -97,8 +87,8 @@ class InstallerApp:
         self.current_icon_base64 = None
 
         # Center window
-        window_width = 450
-        window_height = 600
+        window_width = 500
+        window_height = 700  # Increased height slightly for the rating box
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -107,11 +97,13 @@ class InstallerApp:
 
         self.modpacks = self.load_data()
 
+        # Header
         tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=(15, 5))
 
         self.btn_refresh = tk.Button(root, text="Refresh List", command=self.refresh_data, font=("Segoe UI", 9))
         self.btn_refresh.pack(pady=5)
 
+        # Category Dropdown
         tk.Label(root, text="Select Category:", font=("Segoe UI", 10, "bold")).pack(pady=(5, 0))
         self.selected_category = tk.StringVar()
         self.cat_dropdown = ttk.Combobox(root, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 10))
@@ -123,24 +115,58 @@ class InstallerApp:
         self.cat_dropdown.bind("<<ComboboxSelected>>", self.update_pack_dropdown)
         self.cat_dropdown.pack(pady=5, ipadx=20)
 
+        # Pack Dropdown
         tk.Label(root, text="Select Modpack:", font=("Segoe UI", 10)).pack(pady=(10, 0))
         self.selected_pack = tk.StringVar()
         self.pack_dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
         self.pack_dropdown.bind("<<ComboboxSelected>>", self.on_pack_selected)
         self.pack_dropdown.pack(pady=5, ipadx=20)
 
+        # Icon Area
         self.icon_label = tk.Label(root, text="")
-        self.icon_label.pack(pady=10)
+        self.icon_label.pack(pady=(10, 5))
 
+        # Description Label
+        self.desc_label = tk.Label(
+            root, 
+            text="Description will appear here.", 
+            font=("Segoe UI", 9), 
+            fg="#555555",
+            wraplength=400,
+            justify="center"
+        )
+        self.desc_label.pack(pady=(0, 5))
+
+        # --- NEW: Rating Label ---
+        # We create a Frame to hold the rating so we can add a border or background if we want later
+        self.rating_frame = tk.Frame(root)
+        self.rating_frame.pack(pady=(5, 10))
+
+        self.rating_title = tk.Label(self.rating_frame, text="RATING:", font=("Segoe UI", 9, "bold"), fg="#333333")
+        self.rating_title.pack(anchor="center")
+        
+        self.rating_text = tk.Label(
+            self.rating_frame, 
+            text="", 
+            font=("Segoe UI", 9, "italic"), 
+            fg="#E65100", # A nice burnt orange color for the rating
+            wraplength=400,
+            justify="center"
+        )
+        self.rating_text.pack(anchor="center")
+
+        # Install Button
         self.btn_install = tk.Button(
             root, text="Install Selected Pack", command=self.start_thread,
             bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20
         )
         self.btn_install.pack(pady=15)
 
+        # Progress Bar
         self.progress_var = tk.DoubleVar()
         self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100)
 
+        # Status Label
         self.status = tk.Label(root, text="Ready", fg="gray")
         self.status.pack(side="bottom", pady=10)
 
@@ -172,18 +198,22 @@ class InstallerApp:
         self.btn_refresh.config(state="disabled", text="Refreshing...")
         self.root.update_idletasks()
 
-        new_data = self.load_data()
-        if new_data:
-            self.modpacks = new_data
-            self.cat_dropdown.set("")
-            self.cat_dropdown["values"] = list(self.modpacks.keys())
-            self.cat_dropdown.current(0)
-            self.update_pack_dropdown(None)
-            messagebox.showinfo("Refreshed", "Modpack list updated successfully!")
-        else:
-            messagebox.showwarning("Refresh Failed", f"Could not load modpacks.\nLog: {LOG_PATH}")
+        def do_refresh():
+            new_data = self.load_data()
+            if new_data:
+                self.modpacks = new_data
+                self.cat_dropdown.set("")
+                self.cat_dropdown["values"] = list(self.modpacks.keys())
+                self.cat_dropdown.current(0)
+                self.update_pack_dropdown(None)
+                messagebox.showinfo("Refreshed", "Modpack list updated successfully!")
+            else:
+                messagebox.showwarning("Refresh Failed", f"Could not load modpacks.\nLog: {LOG_PATH}")
+            
+            self.btn_refresh.config(state="normal", text="Refresh List")
+            self.root.update_idletasks()
 
-        self.btn_refresh.config(state="normal", text="Refresh List")
+        self.root.after(100, do_refresh)
 
     def update_pack_dropdown(self, _event):
         if not self.modpacks:
@@ -203,10 +233,28 @@ class InstallerApp:
 
         if category in self.modpacks and pack_name in self.modpacks[category]:
             config = self.modpacks[category][pack_name]
+            
+            # Update Icon
             if HAS_PILLOW and "icon_url" in config:
                 self.display_icon_preview(config["icon_url"])
             else:
                 self.icon_label.config(image="", text="")
+            
+            # Update Description
+            desc_text = config.get("description", "No description available.")
+            self.desc_label.config(text=desc_text)
+
+            # --- NEW: Update Rating ---
+            rating_text = config.get("rating", "").strip()
+            
+            if rating_text:
+                # If there is a rating, show the frame and text
+                self.rating_text.config(text=rating_text)
+                self.rating_frame.pack(pady=(5, 10)) 
+            else:
+                # If no rating, hide the frame completely so there's no empty gap
+                self.rating_frame.pack_forget()
+
 
     def display_icon_preview(self, url):
         if not HAS_PILLOW:
@@ -224,13 +272,20 @@ class InstallerApp:
                 if getattr(image, "is_animated", False):
                     image.seek(0)
                 image = image.resize((64, 64), Image.Resampling.LANCZOS)
-                photo = ImageTk.PhotoImage(image)
-                self.root.after(0, lambda: self._set_preview(url, photo))
+                
+                self.root.after(0, lambda: self._finish_icon_load(url, image))
             except Exception as e:
                 log("ERROR preview icon: " + repr(e))
                 log(traceback.format_exc())
 
         threading.Thread(target=fetch, daemon=True).start()
+
+    def _finish_icon_load(self, url, image):
+        try:
+            photo = ImageTk.PhotoImage(image)
+            self._set_preview(url, photo)
+        except Exception as e:
+            log(f"Error converting icon on main thread: {e}")
 
     def _set_preview(self, url, photo):
         self.icon_cache[url] = photo
@@ -254,10 +309,20 @@ class InstallerApp:
             config = self.modpacks[category][pack_name]
             mc_dir = self.get_mc_dir()
 
+            download_url = config["url"]
+            current_os = platform.system()
+            
+            if current_os == "Darwin" and "mac_url" in config:
+                log(f"Detected Mac: Using mac_url for {pack_name}")
+                download_url = config["mac_url"]
+            elif current_os == "Windows" and "windows_url" in config:
+                log(f"Detected Windows: Using windows_url for {pack_name}")
+                download_url = config["windows_url"]
+            
             self.update_status(f"Checking loader for {pack_name}...")
             self.install_loader(mc_dir, config["loader_url"])
 
-            self.install_modpack_logic(mc_dir, config)
+            self.install_modpack_logic(mc_dir, config, download_url)
 
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
@@ -336,10 +401,6 @@ class InstallerApp:
                     shutil.copy2(s, d)
 
     def download_icon_as_base64(self, icon_url, profile_dir):
-        """
-        Downloads icon, resizes to 128x128, saves icon.png in profile_dir,
-        then returns a data:image/png;base64,... string.
-        """
         if not HAS_PILLOW:
             return None
 
@@ -358,7 +419,7 @@ class InstallerApp:
             b64 = base64.b64encode(f.read()).decode("utf-8")
         return "data:image/png;base64," + b64
 
-    def install_modpack_logic(self, mc_dir, config):
+    def install_modpack_logic(self, mc_dir, config, download_url):
         if not os.path.exists(mc_dir):
             raise Exception("Minecraft folder not found.")
 
@@ -370,7 +431,8 @@ class InstallerApp:
         self.update_status(f"Downloading {config['profile_name']}...")
         self.progress_var.set(0)
         temp_zip = os.path.join(profile_dir, "temp.zip")
-        http_download_file(config["url"], temp_zip, progress_cb=self.update_progress, timeout=120)
+        
+        http_download_file(download_url, temp_zip, progress_cb=self.update_progress, timeout=120)
 
         temp_extract = os.path.join(profile_dir, "temp_extract")
         if os.path.exists(temp_extract):
@@ -402,7 +464,6 @@ class InstallerApp:
 
         shutil.rmtree(temp_extract, ignore_errors=True)
 
-        # Icon (Base64) if possible; fallback to block name (e.g., Furnace)
         final_icon = config.get("icon", "Furnace")
         if "icon_url" in config and HAS_PILLOW:
             self.update_status("Downloading icon...")
@@ -450,7 +511,6 @@ class InstallerApp:
         with open(profiles_file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
 
-
 def selftest():
     log("=== SELFTEST START ===")
     log(f"OS={platform.system()} {platform.release()}  PY={sys.version}")
@@ -466,9 +526,7 @@ def selftest():
         log(traceback.format_exc())
         return 1
 
-
 if __name__ == "__main__":
-    # Reset log each run
     try:
         with open(LOG_PATH, "w", encoding="utf-8") as f:
             f.write("")
