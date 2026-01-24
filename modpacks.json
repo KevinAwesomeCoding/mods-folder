@@ -8,6 +8,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1537/975/64/64/638998597436421586.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A psychological horror mod centered around the entity 'Herobrine' and the mystery of Wonderland.jar. It features sanity mechanics, eerie atmospheric sounds, and hallucinations that blur the line between reality and the game.",
       "rating": "3/10: Slow rising game. Nothing literally happened, only cool thing was it teleported to other worlds."
     },
@@ -19,6 +20,7 @@
       "icon_url": "https://cdn.modrinth.com/data/H6pjI7Ol/831ad01659612e42dc2adfe6bcf00b3a4a5515f4_96.webp",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "An immersive exploration mod based on the popular creepypasta. Clip out of reality into the mono-yellow infinite maze, featuring multiple levels, entities like the Bacteria, and a sanity system.",
       "rating": ""
     },
@@ -30,6 +32,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1021/144/64/64/638546002248440614.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "This mod introduces 'The Anomaly,' a stalking entity that learns from your behavior. It creates a constant sense of dread with subtle visual glitches, fake sounds, and sudden, aggressive encounters.",
       "rating": "N/A: We dont even know if it works..."
     },
@@ -41,6 +44,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1060/792/64/64/638592615065266762.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Adds a stalker entity that observes you from a distance. It rarely attacks directly but drains your sanity by appearing on hilltops, behind trees, and in dark caves, forcing you to always watch your back.",
       "rating": "1/10: A waste of 30 minutes, the barely showed up at all. couple of creepy noises and that's it... (it's a one because of the cool looking mob)."
     },
@@ -52,6 +56,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1493/316/64/64/638970280843690955_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Features a yandere-style horror entity that becomes 'obsessed' with the player. It leaves gifts, writes notes, and becomes increasingly aggressive if ignored or rejected.",
       "rating": ""
     },
@@ -63,6 +68,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1502/343/64/64/638976000076917783.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "The definitive Herobrine experience. This mod focuses on atmospheric horror rather than jumpscares, with Herobrine stalking you, building structures, and vanishing in the fog.",
       "rating": ""
     },
@@ -74,6 +80,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1221/788/64/64/638800364077412589.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A meta-horror mod where the game's code appears to be breaking. Expect corrupted textures, glitchy entities, and chat messages from the game itself trying to warn you.",
       "rating": ""
     },
@@ -85,6 +92,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1105/911/64/64/638655651054127554.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Based on a creepypasta about a cursed jar file. This mod introduces a dark, distorted version of the Overworld with void creatures and unsettling ambient silence.",
       "rating": "5/10: 2nd best ones thst we played but it's still not thast great. has built in structures to make it a lil scarier."
     },
@@ -96,6 +104,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1044/3/64/64/638571542156444978.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Adds the Goatman, a terrifying cryptid that mimics player sounds and movements. It hunts you in forests, can open doors, and gets faster the longer you survive.",
       "rating": ""
     },
@@ -107,6 +116,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1108/633/64/64/638659048745871424.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx6G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A story-driven horror modpack designed for co-op. Features a campaign, custom bosses, sanity mechanics, and the 'Remains of Chaos' update which adds new zones and weapons.",
       "rating": ""
     },
@@ -118,6 +128,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1504/785/64/64/638977225925060212.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx8G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A survival horror pack that removes all vanilla hostile mobs and replaces them with terrifying custom entities. The goal is pure survival in a world that wants you dead.",
       "rating": "6.7/10: Graphics are absolutely amazing and very immersive, would play this mod over any other mod in the list. laggy... only if u have a good pc."
     },
@@ -129,7 +140,8 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1183/618/64/64/638757353708439357.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
-      "description": "Transforms caves into a nightmare. Adds entities like the Cave Dweller and Man From The Fog, making mining a terrifying experience with realistic sound physics.",
+      "jvm_args": "-Xmx6G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
+      "description": "Transforms caves into a nightmare. Adds entities like the Cave Dweller and Man From The Fog, making mining a terrifying experience with realistic sound physics. Technical requirements: minimum 8GB RAM recommended.",
       "rating": ""
     },
     "Sanity": {
@@ -140,6 +152,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/834/875/64/64/638226090797745278.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A mod that focuses entirely on psychological horror. It adds a sanity bar that lowers in the dark or near monsters, causing hallucinations, screen shaking, and eventual death.",
       "rating": "3/10: it's just a slow rising game, not really scary... only to make your game harder. Wouldnt even count this as scary."
     },
@@ -151,6 +164,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1178/74/64/64/638750696362718504.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Introduces a 'Karma' system. Killing passive mobs lowers your karma. If it hits zero, a terrifying entity known as 'The God' appears to judge and execute you.",
       "rating": ""
     },
@@ -162,6 +176,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1602/726/64/64/639035320375482236_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Adds a stalking entity that hunts you underground. It can break torches, create fake sounds, and climb walls, forcing you to rely on sound and quick reflexes.",
       "rating": ""
     }
@@ -175,6 +190,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/356/538/64/64/637516966184620115.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx4G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A 'randomizer' style modpack where chaos ensues. Every 30 seconds a random effect happens—explosions, mob spawns, or item swaps. Pure unpredictability.",
       "rating": ""
     },
@@ -186,6 +202,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/468/243/64/64/637751369169569212.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx8G -Xms6G -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:CMSIncrementalMode -XX:-UseAdaptiveSizePolicy -Xmn256M -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Real Life Craft. The hardest modpack ever created. Adds thirst, temperature, realistic healing, and brutal dragons. You will die... a lot.",
       "rating": ""
     },
@@ -197,6 +214,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/279/234/64/64/637276853291457748.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx6G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Pokémon in Minecraft. Catch, train, and battle hundreds of Pokémon. Features gyms, centers, and a full battle system faithful to the original games.",
       "rating": ""
     },
@@ -208,6 +226,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/879/602/64/64/638307391510627432.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx5G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A race map style pack centered around Lucky Blocks. Break blocks for random loot or disasters. Best played with friends in a race to the finish.",
       "rating": ""
     },
@@ -219,6 +238,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx5G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Makes Minecraft completely round. Changes terrain generation to smooth slopes and curves, removing the blocky grid entirely for a surreal experience.",
       "rating": ""
     },
@@ -231,6 +251,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1311/962/64/64/638853142230249135_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx7G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "An deep-sea exploration modpack. Adds terrifying aquatic horrors, submarines, and deep ocean biomes. (Mac users get a specialized version automatically).",
       "rating": ""
     },
@@ -242,6 +263,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/800/90/64/64/638163118841956629.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.zip",
       "is_complex": false,
+      "jvm_args": "-Xmx3G -Xms256m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A mod that gives various types of TNT.",
       "rating": "6/10: Cool TNT and a good variety of TNT. Meteor TNT, TNT x 10000, SuperNova, was some good TNT."
     }
@@ -255,7 +277,8 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1577/605/64/64/639022081315858417.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
-      "description": "A modern zombie apocalypse modpack. Features guns, vehicles, city generation, and smart zombie AI that can build and break blocks to get to you.",
+      "jvm_args": "-Xmx6G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
+      "description": "A modern zombie apocalypse modpack. Features guns, vehicles, city generation, and smart zombie AI that can build and break blocks to get to you. Recommended minimum: 6GB RAM.",
       "rating": ""
     },
     "ZombieCraft": {
@@ -266,6 +289,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1140/104/64/64/638703335269676904.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx6G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "Classic zombie survival. Focuses on base defense against waves of undead. Includes barbed wire, turrets, and hordes that grow larger every night.",
       "rating": ""
     },
@@ -277,6 +301,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/614/500/64/64/637998216126755132.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
+      "jvm_args": "-Xmx5G -Xms512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true",
       "description": "A Walking Dead inspired modpack. Resources are extremely scarce, zombies are slow but persistent, and one bite can infect and kill you.",
       "rating": ""
     }
