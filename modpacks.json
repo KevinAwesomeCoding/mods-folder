@@ -238,9 +238,9 @@
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/tntmod/mods.zip",
       "profile_name": "TNT Mod",
       "folder_name": "TNTMod",
-      "version_id": "1.21-forge-51.0.33",
+      "version_id": "fabric-loader-0.18.4-1.21",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/800/90/64/64/638163118841956629.png",
-      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.21-forge-51.0.33.zip",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.zip",
       "is_complex": false,
       "description": "A mod that gives various types of TNT.",
       "rating": ""
