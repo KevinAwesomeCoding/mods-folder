@@ -323,6 +323,32 @@ class InstallerApp:
         self.btn_install.config(state="normal", text="Install Selected Pack")
         self.progress_bar.pack_forget()
 
+    # --- NEW FEATURE: OPTIONS.TXT COPY ---
+    def copy_options_template(self, profile_dir):
+        """
+        Looks for 'base_options.txt' in the same folder as the script.
+        If found, copies it to the profile folder as 'options.txt'.
+        """
+        template_name = "base_options.txt"
+        # Check current working directory
+        template_path = os.path.join(os.getcwd(), template_name)
+        
+        # If running as frozen exe, check sys._MEIPASS or executable dir
+        if not os.path.exists(template_path):
+            if getattr(sys, 'frozen', False):
+                template_path = os.path.join(os.path.dirname(sys.executable), template_name)
+
+        if os.path.exists(template_path):
+            try:
+                dest_path = os.path.join(profile_dir, "options.txt")
+                shutil.copy2(template_path, dest_path)
+                log(f"Copied {template_name} to {dest_path}")
+                self.update_status("Applied custom options settings...")
+            except Exception as e:
+                log(f"Failed to copy options template: {e}")
+        else:
+            log(f"No {template_name} found. Skipping options copy.")
+
     def run_install(self):
         try:
             category = self.selected_category.get()
@@ -446,10 +472,14 @@ class InstallerApp:
         if not os.path.exists(mc_dir):
             raise Exception("Minecraft folder not found.")
 
+        # Prepare the game directory (profile folder)
         profile_dir = os.path.join(mc_dir, "profiles", config["folder_name"])
         if os.path.exists(profile_dir):
             shutil.rmtree(profile_dir)
         os.makedirs(profile_dir, exist_ok=True)
+
+        # --- APPLY OPTIONS.TXT COPY HERE ---
+        self.copy_options_template(profile_dir)
 
         self.update_status(f"Downloading {config['profile_name']}...")
         self.progress_var.set(0)
