@@ -323,17 +323,14 @@ class InstallerApp:
         self.btn_install.config(state="normal", text="Install Selected Pack")
         self.progress_bar.pack_forget()
 
-    # --- NEW FEATURE: OPTIONS.TXT COPY ---
     def copy_options_template(self, profile_dir):
         """
         Looks for 'base_options.txt' in the same folder as the script.
         If found, copies it to the profile folder as 'options.txt'.
         """
         template_name = "base_options.txt"
-        # Check current working directory
         template_path = os.path.join(os.getcwd(), template_name)
         
-        # If running as frozen exe, check sys._MEIPASS or executable dir
         if not os.path.exists(template_path):
             if getattr(sys, 'frozen', False):
                 template_path = os.path.join(os.path.dirname(sys.executable), template_name)
@@ -472,13 +469,11 @@ class InstallerApp:
         if not os.path.exists(mc_dir):
             raise Exception("Minecraft folder not found.")
 
-        # Prepare the game directory (profile folder)
         profile_dir = os.path.join(mc_dir, "profiles", config["folder_name"])
         if os.path.exists(profile_dir):
             shutil.rmtree(profile_dir)
         os.makedirs(profile_dir, exist_ok=True)
 
-        # --- APPLY OPTIONS.TXT COPY HERE ---
         self.copy_options_template(profile_dir)
 
         self.update_status(f"Downloading {config['profile_name']}...")
@@ -506,7 +501,6 @@ class InstallerApp:
                 z.extract(file_info, temp_extract)
                 extracted_size += file_info.file_size
                 
-                # Optimized UI Update: Every 0.1 seconds
                 current_time = time.time()
                 if (current_time - last_update_time > 0.1):
                     elapsed_time = current_time - start_time
@@ -520,7 +514,6 @@ class InstallerApp:
                     self.update_progress(extracted_size, total_size, eta)
                     last_update_time = current_time
             
-            # Ensure we hit 100% at the end
             self.update_progress(total_size, total_size, 0)
 
         os.remove(temp_zip)
@@ -556,15 +549,20 @@ class InstallerApp:
                 log("ERROR icon base64: " + repr(e))
                 log(traceback.format_exc())
 
+        # Retrieve custom JVM args from JSON or default to a safe 4GB allocation
+        default_args = "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true"
+        custom_jvm_args = config.get("jvm_args", default_args)
+
         self.update_json_profile(
             mc_dir=mc_dir,
             name=config["profile_name"],
             game_dir=profile_dir,
             version_id=config["version_id"],
-            icon=final_icon
+            icon=final_icon,
+            jvm_args=custom_jvm_args
         )
 
-    def update_json_profile(self, mc_dir, name, game_dir, version_id, icon):
+    def update_json_profile(self, mc_dir, name, game_dir, version_id, icon, jvm_args):
         profiles_file = os.path.join(mc_dir, "launcher_profiles.json")
         if not os.path.exists(profiles_file):
             raise Exception("launcher_profiles.json not found (open Minecraft Launcher once first).")
@@ -578,6 +576,9 @@ class InstallerApp:
         profile_id = name.replace(" ", "_")
         current_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
 
+        # Add mandatory path argument to whatever custom args were provided
+        final_java_args = f'{jvm_args} -Dminecraft.applet.TargetDirectory="{game_dir}"'
+
         data["profiles"][profile_id] = {
             "created": current_time,
             "gameDir": game_dir,
@@ -585,7 +586,8 @@ class InstallerApp:
             "lastUsed": current_time,
             "lastVersionId": version_id,
             "name": name,
-            "type": "custom"
+            "type": "custom",
+            "javaArgs": final_java_args 
         }
 
         shutil.copy(profiles_file, profiles_file + ".bak")
