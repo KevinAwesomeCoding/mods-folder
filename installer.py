@@ -117,6 +117,10 @@ class InstallerApp:
 
         self.modpacks = self.load_data()
 
+        # --- DEBUG ICON (Top Right) ---
+        self.btn_debug = tk.Button(root, text="⚙", font=("Segoe UI", 12), command=self.open_debug_menu, bd=0)
+        self.btn_debug.place(relx=0.92, rely=0.02)
+
         # Header
         tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=(15, 5))
 
@@ -191,6 +195,144 @@ class InstallerApp:
 
         if self.modpacks:
             self.update_pack_dropdown(None)
+
+    # --- DEBUG MENU LOGIC ---
+    def open_debug_menu(self):
+        debug_win = tk.Toplevel(self.root)
+        debug_win.title("Debug / Tools")
+        debug_win.geometry("300x250")
+        
+        tk.Label(debug_win, text="Maintenance Tools", font=("Segoe UI", 10, "bold")).pack(pady=10)
+
+        # Button 1: Update Launcher Profiles (JSON only)
+        btn_update_json = tk.Button(debug_win, text="Update Launcher Profiles (JSON)", 
+                                   command=lambda: self.debug_update_profiles(debug_win))
+        btn_update_json.pack(pady=5, fill="x", padx=20)
+
+        # Button 2: Update Mods
+        tk.Label(debug_win, text="Update Installed Mods:", font=("Segoe UI", 9)).pack(pady=(15, 5))
+        
+        # Get installed packs by looking at profiles folder
+        mc_dir = self.get_mc_dir()
+        profiles_dir = os.path.join(mc_dir, "profiles")
+        installed_packs = ["All"]
+        if os.path.exists(profiles_dir):
+            for item in os.listdir(profiles_dir):
+                if os.path.isdir(os.path.join(profiles_dir, item)):
+                    installed_packs.append(item)
+        
+        pack_var = tk.StringVar()
+        pack_dropdown = ttk.Combobox(debug_win, textvariable=pack_var, values=installed_packs, state="readonly")
+        if installed_packs:
+            pack_dropdown.current(0)
+        pack_dropdown.pack(pady=5, padx=20, fill="x")
+
+        btn_update_mods = tk.Button(debug_win, text="Update Selected Mods", 
+                                   command=lambda: self.debug_update_mods(pack_var.get(), debug_win))
+        btn_update_mods.pack(pady=5, fill="x", padx=20)
+
+    def debug_update_profiles(self, window):
+        """Refreshes launcher_profiles.json for all installed packs using modpacks.json data"""
+        threading.Thread(target=self._debug_update_profiles_thread, args=(window,), daemon=True).start()
+
+    def _debug_update_profiles_thread(self, window):
+        mc_dir = self.get_mc_dir()
+        log("DEBUG: Updating profiles JSON...")
+        count = 0
+        try:
+            # Flatten modpacks dict for easier searching
+            all_configs = {}
+            for cat in self.modpacks:
+                for pack_name, cfg in self.modpacks[cat].items():
+                    # Key by folder name because that's what we see on disk
+                    all_configs[cfg["folder_name"]] = cfg
+
+            profiles_dir = os.path.join(mc_dir, "profiles")
+            if os.path.exists(profiles_dir):
+                for folder in os.listdir(profiles_dir):
+                    if folder in all_configs:
+                        cfg = all_configs[folder]
+                        
+                        # Handle Icon
+                        final_icon = cfg.get("icon", "Furnace")
+                        if "icon_url" in cfg and HAS_PILLOW:
+                            try:
+                                b64 = self.download_icon_as_base64(cfg["icon_url"], os.path.join(profiles_dir, folder))
+                                if b64: final_icon = b64
+                            except: pass
+
+                        # Get JVM Args
+                        default_args = "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US"
+                        jvm_args = cfg.get("jvm_args", default_args)
+
+                        self.update_json_profile(
+                            mc_dir=mc_dir,
+                            name=cfg["profile_name"],
+                            game_dir=os.path.join(profiles_dir, folder),
+                            version_id=cfg["version_id"],
+                            icon=final_icon,
+                            jvm_args=jvm_args
+                        )
+                        count += 1
+            
+            messagebox.showinfo("Debug", f"Updated {count} profiles in launcher_profiles.json")
+            window.destroy()
+        except Exception as e:
+            log(f"DEBUG ERROR: {e}")
+            messagebox.showerror("Error", str(e))
+
+    def debug_update_mods(self, selection, window):
+        if not selection: return
+        window.destroy()
+        threading.Thread(target=self._debug_update_mods_thread, args=(selection,), daemon=True).start()
+
+    def _debug_update_mods_thread(self, selection):
+        self.btn_install.config(state="disabled")
+        self.progress_bar.pack(fill="x", padx=40, pady=10)
+        
+        mc_dir = self.get_mc_dir()
+        
+        # Flatten configs again
+        all_configs = {}
+        for cat in self.modpacks:
+            for pname, cfg in self.modpacks[cat].items():
+                all_configs[cfg["folder_name"]] = cfg
+
+        targets = []
+        if selection == "All":
+            profiles_dir = os.path.join(mc_dir, "profiles")
+            if os.path.exists(profiles_dir):
+                for folder in os.listdir(profiles_dir):
+                    if folder in all_configs:
+                        targets.append(all_configs[folder])
+        else:
+            if selection in all_configs:
+                targets.append(all_configs[selection])
+
+        if not targets:
+            messagebox.showinfo("Info", "No matching modpacks found to update.")
+            self.reset_ui()
+            return
+
+        for i, config in enumerate(targets):
+            self.update_status(f"Updating {config['profile_name']} ({i+1}/{len(targets)})...")
+            try:
+                # Re-run install logic (downloads mods & extracts)
+                # We skip loader download to save time unless it's missing
+                download_url = config["url"]
+                if platform.system() == "Darwin" and "mac_url" in config:
+                    download_url = config["mac_url"]
+                elif platform.system() == "Windows" and "windows_url" in config:
+                    download_url = config["windows_url"]
+                
+                self.install_modpack_logic(mc_dir, config, download_url)
+            except Exception as e:
+                log(f"Failed to update {config['profile_name']}: {e}")
+
+        self.update_status("Update Complete!")
+        messagebox.showinfo("Success", "Selected modpacks have been updated.")
+        self.reset_ui()
+
 
     def update_status(self, text):
         self.root.after(0, lambda: self.status.config(text=text))
@@ -549,8 +691,7 @@ class InstallerApp:
                 log("ERROR icon base64: " + repr(e))
                 log(traceback.format_exc())
 
-        # Retrieve custom JVM args from JSON or default to a safe 4GB allocation
-        default_args = "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true"
+        default_args = "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US"
         custom_jvm_args = config.get("jvm_args", default_args)
 
         self.update_json_profile(
