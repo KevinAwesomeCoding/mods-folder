@@ -46,7 +46,7 @@
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Adds a stalker entity that observes you from a distance. It rarely attacks directly but drains your sanity by appearing on hilltops, behind trees, and in dark caves, forcing you to always watch your back.",
-      "rating": "1/10: A waste of 30 minutes, the barely showed up at all. couple of creepy noises and that's it... (it's a one because of the cool looking mob)."
+      "rating": "1/10: A waste of 30 minutes, the monster barely showed up at all. couple of creepy noises and that's it... (it's a one because of the cool looking mob)."
     },
     "The Obsessed": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/obsessed/mods.zip",
