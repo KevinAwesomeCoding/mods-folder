@@ -400,7 +400,7 @@ class InstallerApp:
             log(f"Loaded modpacks OK. Categories: {len(data)}")
             return data
         except Exception as e:
-            log("ERROR load_ " + repr(e))
+            log("ERROR load_data: " + repr(e))
             log(traceback.format_exc())
             return {}
 
@@ -410,7 +410,7 @@ class InstallerApp:
 
         def do_refresh():
             new_data = self.load_data()
-            if new_
+            if new_data:
                 self.modpacks = new_data
                 self.cat_dropdown.set("")
                 self.cat_dropdown["values"] = list(self.modpacks.keys())
@@ -645,7 +645,7 @@ class InstallerApp:
 
         with open(icon_path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode("utf-8")
-        return "image/png;base64," + b64
+        return "data:image/png;base64," + b64
 
     def install_modpack_logic(self, mc_dir, config, download_url):
         if not os.path.exists(mc_dir):
@@ -751,7 +751,7 @@ class InstallerApp:
         with open(profiles_file, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        if "profiles" not in 
+        if "profiles" not in data:
             data["profiles"] = {}
 
         profile_id = name.replace(" ", "_")
