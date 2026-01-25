@@ -34,6 +34,17 @@ except Exception:
 MODPACKS_URL = "https://raw.githubusercontent.com/KevinAwesomeCoding/mods-folder/main/modpacks.json"
 LOG_PATH = os.path.join(os.getcwd(), "installer_debug.log")
 
+# --- DARK THEME COLORS ---
+BG_COLOR = "#2E2E2E"
+FG_COLOR = "#FFFFFF"
+ACCENT_COLOR = "#007ACC"
+BUTTON_BG = "#3E3E3E"
+BUTTON_FG = "#FFFFFF"
+BUTTON_ACTIVE = "#505050"
+ENTRY_BG = "#404040"
+ENTRY_FG = "#FFFFFF"
+FRAME_BG = "#2E2E2E"
+
 def log(msg: str):
     try:
         with open(LOG_PATH, "a", encoding="utf-8") as f:
@@ -101,6 +112,7 @@ class InstallerApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Modpack Installer")
+        self.root.configure(bg=BG_COLOR)
 
         self.icon_cache = {}
         self.current_icon_base64 = None
@@ -108,71 +120,94 @@ class InstallerApp:
 
         # Center window
         window_width = 500
-        window_height = 700
+        window_height = 750
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
         y = (screen_height // 2) - (window_height // 2)
         self.root.geometry(f"{window_width}x{window_height}+{int(x)}+{int(y)}")
 
+        # Configure Dark Theme Styles
+        style = ttk.Style()
+        style.theme_use('clam') # 'clam' allows for better color customization
+        
+        style.configure("TLabel", background=BG_COLOR, foreground=FG_COLOR, font=("Segoe UI", 10))
+        style.configure("TButton", background=BUTTON_BG, foreground=BUTTON_FG, borderwidth=1, font=("Segoe UI", 10))
+        style.map("TButton", background=[('active', BUTTON_ACTIVE)])
+        
+        style.configure("TCombobox", fieldbackground=ENTRY_BG, background=BUTTON_BG, foreground=FG_COLOR, arrowcolor=FG_COLOR)
+        style.map("TCombobox", fieldbackground=[('readonly', ENTRY_BG)], selectbackground=[('readonly', ACCENT_COLOR)])
+        
+        style.configure("Horizontal.TProgressbar", background=ACCENT_COLOR, troughcolor=BUTTON_BG, bordercolor=BG_COLOR, lightcolor=ACCENT_COLOR, darkcolor=ACCENT_COLOR)
+
         self.modpacks = self.load_data()
 
         # --- DEBUG ICON (Top Right) ---
-        self.btn_debug = tk.Button(root, text="⚙", font=("Segoe UI", 12), command=self.open_debug_menu, bd=0)
+        self.btn_debug = tk.Button(root, text="⚙", font=("Segoe UI", 12), command=self.open_debug_menu, 
+                                   bg=BG_COLOR, fg=FG_COLOR, activebackground=BUTTON_ACTIVE, activeforeground=FG_COLOR, bd=0, highlightthickness=0)
         self.btn_debug.place(relx=0.92, rely=0.02)
 
         # Header
-        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 16, "bold")).pack(pady=(15, 5))
+        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 18, "bold"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(20, 10))
 
-        self.btn_refresh = tk.Button(root, text="Refresh List", command=self.refresh_data, font=("Segoe UI", 9))
+        self.btn_refresh = tk.Button(root, text="Refresh List", command=self.refresh_data, 
+                                     font=("Segoe UI", 9), bg=BUTTON_BG, fg=BUTTON_FG, activebackground=BUTTON_ACTIVE, activeforeground=BUTTON_FG, bd=1, relief="flat")
         self.btn_refresh.pack(pady=5)
 
+        # Main Content Frame
+        content_frame = tk.Frame(root, bg=BG_COLOR)
+        content_frame.pack(fill="both", expand=True, padx=20)
+
         # Category Dropdown
-        tk.Label(root, text="Select Category:", font=("Segoe UI", 10, "bold")).pack(pady=(5, 0))
+        tk.Label(content_frame, text="CATEGORY", font=("Segoe UI", 9, "bold"), bg=BG_COLOR, fg="#AAAAAA").pack(pady=(15, 2), anchor="w")
         self.selected_category = tk.StringVar()
-        self.cat_dropdown = ttk.Combobox(root, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 10))
+        self.cat_dropdown = ttk.Combobox(content_frame, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 11))
         if self.modpacks:
             self.cat_dropdown["values"] = list(self.modpacks.keys())
             self.cat_dropdown.current(0)
         else:
             self.cat_dropdown["values"] = ["Error loading data"]
         self.cat_dropdown.bind("<<ComboboxSelected>>", self.update_pack_dropdown)
-        self.cat_dropdown.pack(pady=5, ipadx=20)
+        self.cat_dropdown.pack(pady=5, fill="x")
 
         # Pack Dropdown
-        tk.Label(root, text="Select Modpack:", font=("Segoe UI", 10)).pack(pady=(10, 0))
+        tk.Label(content_frame, text="MODPACK", font=("Segoe UI", 9, "bold"), bg=BG_COLOR, fg="#AAAAAA").pack(pady=(15, 2), anchor="w")
         self.selected_pack = tk.StringVar()
-        self.pack_dropdown = ttk.Combobox(root, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 10))
+        self.pack_dropdown = ttk.Combobox(content_frame, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 11))
         self.pack_dropdown.bind("<<ComboboxSelected>>", self.on_pack_selected)
-        self.pack_dropdown.pack(pady=5, ipadx=20)
+        self.pack_dropdown.pack(pady=5, fill="x")
 
         # Icon Area
-        self.icon_label = tk.Label(root, text="")
-        self.icon_label.pack(pady=(10, 5))
+        self.icon_frame = tk.Frame(content_frame, bg=BG_COLOR, height=80) # Fixed height placeholder
+        self.icon_frame.pack(pady=(20, 10))
+        self.icon_label = tk.Label(self.icon_frame, text="", bg=BG_COLOR)
+        self.icon_label.pack()
 
         # Description Label
         self.desc_label = tk.Label(
-            root, 
+            content_frame, 
             text="Description will appear here.", 
-            font=("Segoe UI", 9), 
-            fg="#555555",
+            font=("Segoe UI", 10), 
+            fg="#CCCCCC",
+            bg=BG_COLOR,
             wraplength=400,
             justify="center"
         )
-        self.desc_label.pack(pady=(0, 5))
+        self.desc_label.pack(pady=(0, 10))
 
         # Rating Frame
-        self.rating_frame = tk.Frame(root)
-        self.rating_frame.pack(pady=(5, 10))
+        self.rating_frame = tk.Frame(content_frame, bg=BG_COLOR)
+        self.rating_frame.pack(pady=(5, 15))
 
-        self.rating_title = tk.Label(self.rating_frame, text="RATING:", font=("Segoe UI", 9, "bold"), fg="#333333")
+        self.rating_title = tk.Label(self.rating_frame, text="RATING", font=("Segoe UI", 8, "bold"), fg="#888888", bg=BG_COLOR)
         self.rating_title.pack(anchor="center")
         
         self.rating_text = tk.Label(
             self.rating_frame, 
             text="", 
-            font=("Segoe UI", 9, "italic"), 
-            fg="#E65100", 
+            font=("Segoe UI", 10, "bold"), 
+            fg="#FFD700", # Gold color for rating
+            bg=BG_COLOR,
             wraplength=400,
             justify="center"
         )
@@ -180,18 +215,20 @@ class InstallerApp:
 
         # Install Button
         self.btn_install = tk.Button(
-            root, text="Install Selected Pack", command=self.start_thread,
-            bg="#4CAF50", fg="white", font=("Segoe UI", 12, "bold"), height=2, width=20
+            root, text="INSTALL SELECTED PACK", command=self.start_thread,
+            bg=ACCENT_COLOR, fg="white", font=("Segoe UI", 11, "bold"), 
+            activebackground="#005A9E", activeforeground="white", bd=0, relief="flat",
+            height=2
         )
-        self.btn_install.pack(pady=15)
+        self.btn_install.pack(pady=20, fill="x", padx=40)
 
         # Progress Bar
         self.progress_var = tk.DoubleVar()
-        self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100)
+        self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100, style="Horizontal.TProgressbar")
 
         # Status Label
-        self.status = tk.Label(root, text="Ready", fg="gray")
-        self.status.pack(side="bottom", pady=10)
+        self.status = tk.Label(root, text="Ready", fg="#888888", bg=BG_COLOR, font=("Segoe UI", 9))
+        self.status.pack(side="bottom", pady=15)
 
         if self.modpacks:
             self.update_pack_dropdown(None)
@@ -200,17 +237,19 @@ class InstallerApp:
     def open_debug_menu(self):
         debug_win = tk.Toplevel(self.root)
         debug_win.title("Debug / Tools")
-        debug_win.geometry("300x250")
+        debug_win.geometry("350x300")
+        debug_win.configure(bg=BG_COLOR)
         
-        tk.Label(debug_win, text="Maintenance Tools", font=("Segoe UI", 10, "bold")).pack(pady=10)
+        tk.Label(debug_win, text="Maintenance Tools", font=("Segoe UI", 12, "bold"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=15)
 
         # Button 1: Update Launcher Profiles (JSON only)
         btn_update_json = tk.Button(debug_win, text="Update Launcher Profiles (JSON)", 
-                                   command=lambda: self.debug_update_profiles(debug_win))
-        btn_update_json.pack(pady=5, fill="x", padx=20)
+                                   command=lambda: self.debug_update_profiles(debug_win),
+                                   bg=BUTTON_BG, fg=BUTTON_FG, activebackground=BUTTON_ACTIVE, activeforeground=BUTTON_FG, relief="flat", font=("Segoe UI", 10))
+        btn_update_json.pack(pady=5, fill="x", padx=30, ipady=5)
 
         # Button 2: Update Mods
-        tk.Label(debug_win, text="Update Installed Mods:", font=("Segoe UI", 9)).pack(pady=(15, 5))
+        tk.Label(debug_win, text="Update Installed Mods:", font=("Segoe UI", 10), bg=BG_COLOR, fg="#AAAAAA").pack(pady=(20, 5))
         
         # Get installed packs by looking at profiles folder
         mc_dir = self.get_mc_dir()
@@ -222,14 +261,15 @@ class InstallerApp:
                     installed_packs.append(item)
         
         pack_var = tk.StringVar()
-        pack_dropdown = ttk.Combobox(debug_win, textvariable=pack_var, values=installed_packs, state="readonly")
+        pack_dropdown = ttk.Combobox(debug_win, textvariable=pack_var, values=installed_packs, state="readonly", font=("Segoe UI", 10))
         if installed_packs:
             pack_dropdown.current(0)
-        pack_dropdown.pack(pady=5, padx=20, fill="x")
+        pack_dropdown.pack(pady=5, padx=30, fill="x")
 
         btn_update_mods = tk.Button(debug_win, text="Update Selected Mods", 
-                                   command=lambda: self.debug_update_mods(pack_var.get(), debug_win))
-        btn_update_mods.pack(pady=5, fill="x", padx=20)
+                                   command=lambda: self.debug_update_mods(pack_var.get(), debug_win),
+                                   bg=ACCENT_COLOR, fg="white", activebackground="#005A9E", activeforeground="white", relief="flat", font=("Segoe UI", 10, "bold"))
+        btn_update_mods.pack(pady=10, fill="x", padx=30, ipady=5)
 
     def debug_update_profiles(self, window):
         """Refreshes launcher_profiles.json for all installed packs using modpacks.json data"""
@@ -360,7 +400,7 @@ class InstallerApp:
             log(f"Loaded modpacks OK. Categories: {len(data)}")
             return data
         except Exception as e:
-            log("ERROR load_data: " + repr(e))
+            log("ERROR load_ " + repr(e))
             log(traceback.format_exc())
             return {}
 
@@ -370,7 +410,7 @@ class InstallerApp:
 
         def do_refresh():
             new_data = self.load_data()
-            if new_data:
+            if new_
                 self.modpacks = new_data
                 self.cat_dropdown.set("")
                 self.cat_dropdown["values"] = list(self.modpacks.keys())
@@ -457,12 +497,12 @@ class InstallerApp:
     def start_thread(self):
         if not self.modpacks:
             return
-        self.btn_install.config(state="disabled", text="Installing...")
+        self.btn_install.config(state="disabled", text="INSTALLING...", bg="#555555")
         self.progress_bar.pack(fill="x", padx=40, pady=10)
         threading.Thread(target=self.run_install, daemon=True).start()
 
     def reset_ui(self):
-        self.btn_install.config(state="normal", text="Install Selected Pack")
+        self.btn_install.config(state="normal", text="INSTALL SELECTED PACK", bg=ACCENT_COLOR)
         self.progress_bar.pack_forget()
 
     def copy_options_template(self, profile_dir):
@@ -605,7 +645,7 @@ class InstallerApp:
 
         with open(icon_path, "rb") as f:
             b64 = base64.b64encode(f.read()).decode("utf-8")
-        return "data:image/png;base64," + b64
+        return "image/png;base64," + b64
 
     def install_modpack_logic(self, mc_dir, config, download_url):
         if not os.path.exists(mc_dir):
@@ -711,7 +751,7 @@ class InstallerApp:
         with open(profiles_file, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        if "profiles" not in data:
+        if "profiles" not in 
             data["profiles"] = {}
 
         profile_id = name.replace(" ", "_")
