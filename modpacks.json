@@ -116,7 +116,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1108/633/64/64/638659048745871424.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
-      "jvm_args": "-Xmx6144m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "jvm_args": "-Xmx7104m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "A story-driven horror modpack designed for co-op. Features a campaign, custom bosses, sanity mechanics, and the 'Remains of Chaos' update which adds new zones and weapons.",
       "rating": ""
     },
@@ -251,7 +251,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1311/962/64/64/638853142230249135_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
-      "jvm_args": "-Xmx7168m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "An deep-sea exploration modpack. Adds terrifying aquatic horrors, submarines, and deep ocean biomes. (Mac users get a specialized version automatically).",
       "rating": ""
     },
@@ -301,7 +301,7 @@
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/614/500/64/64/637998216126755132.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
-      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "jvm_args": "-Xmx6144m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "A Walking Dead inspired modpack. Resources are extremely scarce, zombies are slow but persistent, and one bite can infect and kill you.",
       "rating": ""
     }
