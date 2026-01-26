@@ -284,7 +284,7 @@
       "profile_name": "Manhunt Mod",
       "folder_name": "ManhuntMod",
       "version_id": "fabric-loader-0.18.4-1.21.11",
-      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1052/710/64/64/638583000356932390.png",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/376/330/64/64/637552579935006667.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
