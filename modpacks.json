@@ -312,7 +312,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "BattleArmory is a modern tactical gunfight integration package designed for Minecraft 1.20.1 to Eternal Firearms Workshop: Zero (Tacz) It is a \"core module\" combined with carefully designed Random Firearms Game Packet And CS grenade extension system, bringing you an immersive team tactical shooting experience.",
+      "description": "BattleArmory is a modern tactical gunfight integration package designed for Minecraft 1.20.1 to Eternal Firearms Workshop: Zero Tacz It is a core module combined with carefully designed Random Firearms Game Packet And CS grenade extension system, bringing you an immersive team tactical shooting experience.",
       "rating": ""
     }
   },
