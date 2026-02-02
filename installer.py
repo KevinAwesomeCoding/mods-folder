@@ -683,19 +683,21 @@ class InstallerApp:
                 z.extract(file_info, temp_extract)
                 extracted_size += file_info.file_size
                 
+                # --- ZERO DIVISION FIX HERE ---
                 current_time = time.time()
                 if (current_time - last_update_time > 0.1):
                     elapsed_time = current_time - start_time
-                    if elapsed_time > 0:
+                    if elapsed_time > 0 and extracted_size > 0:
                         speed = extracted_size / elapsed_time
-                        remaining = total_size - extracted_size
-                        eta = remaining / speed
-                    else:
-                        eta = 0
-                    
-                    self.update_progress(extracted_size, total_size, eta)
+                        if speed > 0:
+                            remaining = total_size - extracted_size
+                            eta = remaining / speed
+                        else:
+                            eta = 0
+                        self.update_progress(extracted_size, total_size, eta)
                     last_update_time = current_time
             
+            # Ensure 100% at end
             self.update_progress(total_size, total_size, 0)
 
         os.remove(temp_zip)
