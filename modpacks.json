@@ -179,6 +179,18 @@
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Adds a stalking entity that hunts you underground. It can break torches, create fake sounds, and climb walls, forcing you to rely on sound and quick reflexes.",
       "rating": ""
+    },
+    "SCP-087 The Stairwell": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/scp087/mods.zip",
+      "profile_name": "SCP-087 The Stairwell",
+      "folder_name": "SCP087",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1208/158/64/64/638785427224009080.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "This structure is found on the surface and is indestructible. Once you enter, you’ll encounter an endless, dark stairwell that descends deep into the ground. It's very dark inside the stairwell, even light won't help you much. As you descend down, you’ll hear disturbing sounds echoing from below, but the true horror is what might be waiting for you down there...  Will you dare venture into the dark, or will you turn back before it’s too late?",
+      "rating": ""
     }
   },
   "Challenge": {
