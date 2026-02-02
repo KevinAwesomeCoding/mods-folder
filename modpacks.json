@@ -312,7 +312,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "",
+      "description": "It's just a lot of guns that are added to the game to be honest with you... have fun!",
       "rating": ""
     }
   },
