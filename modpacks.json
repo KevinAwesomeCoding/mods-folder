@@ -302,6 +302,18 @@
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "It's a simple serversided fabric mod that uses the classic compass + right clicking to track the speedrunner/s ",
       "rating": ""
+    },
+    "BattleArmory TACZ": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/BattleArmory/mods.zip",
+      "profile_name": "BattleArmory TACZ",
+      "folder_name": "BattleArmoryTACZ",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://cdn.modrinth.com/data/rQiXwLhB/1f8cafea7dcd59dff7dc58cad7a17ae0424847a2_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "BattleArmory is a modern tactical gunfight integration package designed for Minecraft 1.20.1 to Eternal Firearms Workshop: Zero (Tacz) It is a "core module" combined with carefully designed Random Firearms Game Packet And CS grenade extension system, bringing you an immersive team tactical shooting experience.",
+      "rating": ""
     }
   },
   "Apocalypse": {
