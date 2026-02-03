@@ -191,6 +191,30 @@
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "This structure is found on the surface and is indestructible. Once you enter, you’ll encounter an endless, dark stairwell that descends deep into the ground. It's very dark inside the stairwell, even light won't help you much. As you descend down, you’ll hear disturbing sounds echoing from below, but the true horror is what might be waiting for you down there...  Will you dare venture into the dark, or will you turn back before it’s too late?",
       "rating": ""
+    },
+    "The Chuchoteur": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thechuchoteur/mods.zip",
+      "profile_name": "The Chuchoteur",
+      "folder_name": "TheChuchoteur",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1561/988/64/64/639013341871638448_animated.gif",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "The Chuchoteur is a stalking entity capable of adapting its behavior at will. It observes from a distance, remaining unseen while tracking the player’s movement and attention.",
+      "rating": ""
+    },
+    "Flywheel of Terror": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/flywheelofterror/mods.zip",
+      "profile_name": "Flywheel of Terror",
+      "folder_name": "Flywheel of Terror",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://cdn.modrinth.com/data/5JLURyDv/6be4fc836fb905d2cb82a8a831cff07001d7acad_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "Your only protection is the house.",
+      "rating": ""
     }
   },
   "Challenge": {
