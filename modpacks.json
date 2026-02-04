@@ -218,18 +218,6 @@
     }
   },
   "Challenge": {
-    "Entropy: The Chaos Mod": {
-      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/entropy/mods.zip",
-      "profile_name": "Entropy: The Chaos Mod",
-      "folder_name": "Entropy",
-      "version_id": "fabric-loader-0.18.4-1.21.8",
-      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/356/538/64/64/637516966184620115.png",
-      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
-      "is_complex": false,
-      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A 'randomizer' style modpack where chaos ensues. Every 30 seconds a random effect happens—explosions, mob spawns, or item swaps. Pure unpredictability.",
-      "rating": ""
-    },
     "RLCraft": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/rlcraft/RLCraft.zip",
       "profile_name": "RLCraft",
@@ -240,6 +228,31 @@
       "is_complex": true,
       "jvm_args": "-Xmx8192m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Real Life Craft. The hardest modpack ever created. Adds thirst, temperature, realistic healing, and brutal dragons. You will die... a lot.",
+      "rating": ""
+    },
+    "Prominence™ II Hasturian Era": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/prominence2/mods.zip",
+      "profile_name": "Prominence™ II Hasturian Era",
+      "folder_name": "ProminenceII",
+      "version_id": "fabric-loader-0.18.4-1.20.1",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1112/755/64/64/638665111298705796_animated.gif",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx9504m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "You one of the Flameborn of Vaaz, a race created by S'kellak, the Creator of All Things to protect and ensure the balance of all realms. After thousands of years of peace, a ravenous force known as the Void has started an invasion into the universal realms, worlds filled with life and death, are now threatened to being destroyed completely. Will you fulfill your mission and stop the Void's Invasion?",
+      "rating": ""
+    },
+    "Beyond Depth": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods.zip",
+      "mac_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods-mac.zip",
+      "profile_name": "Beyond Depth",
+      "folder_name": "BeyondDepth",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1311/962/64/64/638853142230249135_animated.gif",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "An deep-sea exploration modpack. Adds terrifying aquatic horrors, submarines, and deep ocean biomes. (Mac users get a specialized version automatically).",
       "rating": ""
     },
     "Pixelmon": {
@@ -266,6 +279,18 @@
       "description": "A race map style pack centered around Lucky Blocks. Break blocks for random loot or disasters. Best played with friends in a race to the finish.",
       "rating": ""
     },
+    "Entropy: The Chaos Mod": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/entropy/mods.zip",
+      "profile_name": "Entropy: The Chaos Mod",
+      "folder_name": "Entropy",
+      "version_id": "fabric-loader-0.18.4-1.21.8",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/356/538/64/64/637516966184620115.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.8.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "A 'randomizer' style modpack where chaos ensues. Every 30 seconds a random effect happens—explosions, mob spawns, or item swaps. Pure unpredictability.",
+      "rating": ""
+    },
     "No Cubes": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/nocubes/mods.zip",
       "profile_name": "No Cubes",
@@ -276,19 +301,6 @@
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Makes Minecraft completely round. Changes terrain generation to smooth slopes and curves, removing the blocky grid entirely for a surreal experience.",
-      "rating": ""
-    },
-    "Beyond Depth": {
-      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods.zip",
-      "mac_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods-mac.zip",
-      "profile_name": "Beyond Depth",
-      "folder_name": "BeyondDepth",
-      "version_id": "1.20.1-forge-47.4.15",
-      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1311/962/64/64/638853142230249135_animated.gif",
-      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-      "is_complex": true,
-      "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "An deep-sea exploration modpack. Adds terrifying aquatic horrors, submarines, and deep ocean biomes. (Mac users get a specialized version automatically).",
       "rating": ""
     },
     "TNT Mod": {
