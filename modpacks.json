@@ -135,7 +135,7 @@
     "Cave Horror Project": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/dread/mods.zip",
       "profile_name": "Cave Horror Project",
-      "folder_name": "CaveHorrorProject",
+      "folder_name": "Cave Horror Project",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1183/618/64/64/638757353708439357.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
@@ -183,7 +183,7 @@
     "SCP-087 The Stairwell": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/scp087/mods.zip",
       "profile_name": "SCP-087 The Stairwell",
-      "folder_name": "SCP087",
+      "folder_name": "SCP 087",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1208/158/64/64/638785427224009080.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
@@ -195,7 +195,7 @@
     "The Chuchoteur": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thechuchoteur/mods.zip",
       "profile_name": "The Chuchoteur",
-      "folder_name": "TheChuchoteur",
+      "folder_name": "The Chuchoteur",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1561/988/64/64/639013341871638448_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
@@ -215,6 +215,30 @@
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Your only protection is the house.",
       "rating": ""
+    },
+    "The Knocker": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/theknocker/mods.zip",
+      "profile_name": "The Knocker",
+      "folder_name": "The Knocker",
+      "version_id": "neoforge-21.1.218",
+      "icon_url": "https://cdn.modrinth.com/data/hTju2zcV/01970c6b4b50f4e63d0941fe0297407f0b67d1ce_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "This mod adds an unpredictable human like stalker which follows every of your steps and may visit you while sleeping...",
+      "rating": ""
+    },
+    "Arthropod Phobia": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/arthropodphobia/mods.zip",
+      "profile_name": "Arthropod Phobia",
+      "folder_name": "Arthropod Phobia",
+      "version_id": "neoforge-21.1.218",
+      "icon_url": "https://cdn.modrinth.com/data/k0RPP4IO/5384f109c75cd5f50a060830afa9ebb647d965c1.gif",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "ArPhEx - THE ULTIMATE ARTHROPOD HORROR MOD WITH POWERFUL BOSSES + STALKERS + REALISTIC INSECTS, ARACHNIDS, CENTIPEDES, CHELICERATES, AND NON-ARTHROPOD WORMS ",
+      "rating": ""
     }
   },
   "Challenge": {
@@ -233,7 +257,7 @@
     "Prominence™ II Hasturian Era": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/prominence2/mods.zip",
       "profile_name": "Prominence™ II Hasturian Era",
-      "folder_name": "ProminenceII",
+      "folder_name": "Prominence II",
       "version_id": "fabric-loader-0.18.4-1.20.1",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1112/755/64/64/638665111298705796_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
@@ -246,7 +270,7 @@
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods.zip",
       "mac_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/beyonddepth/mods-mac.zip",
       "profile_name": "Beyond Depth",
-      "folder_name": "BeyondDepth",
+      "folder_name": "Beyond Depth",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1311/962/64/64/638853142230249135_animated.gif",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
@@ -270,7 +294,7 @@
     "Lucky Block Challenge": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyblockchallenge/mods.zip",
       "profile_name": "Lucky Block Challenge",
-      "folder_name": "LuckyBlockChallenge",
+      "folder_name": "Lucky Block Challenge",
       "version_id": "neoforge-21.1.218",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/879/602/64/64/638307391510627432.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
@@ -294,7 +318,7 @@
     "No Cubes": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/nocubes/mods.zip",
       "profile_name": "No Cubes",
-      "folder_name": "NoCubes",
+      "folder_name": "No Cubes",
       "version_id": "fabric-loader-0.18.4-1.20.1",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
@@ -306,7 +330,7 @@
     "TNT Mod": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/tntmod/mods.zip",
       "profile_name": "TNT Mod",
-      "folder_name": "TNTMod",
+      "folder_name": "TNT Mod",
       "version_id": "fabric-loader-0.18.4-1.21",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/800/90/64/64/638163118841956629.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.zip",
@@ -318,7 +342,7 @@
     "Lucky World Invasion": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyworldinvasion/mods.zip",
       "profile_name": "Lucky World Invasion",
-      "folder_name": "LuckyWorldInvasion",
+      "folder_name": "Lucky World Invasion",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1052/710/64/64/638583000356932390.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
@@ -330,7 +354,7 @@
     "Manhunt Mod": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/manhuntmod/mods.zip",
       "profile_name": "Manhunt Mod",
-      "folder_name": "ManhuntMod",
+      "folder_name": "Manhunt Mod",
       "version_id": "fabric-loader-0.18.4-1.21.11",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/376/330/64/64/637552579935006667.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
@@ -342,7 +366,7 @@
     "BattleArmory TACZ": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/BattleArmory/mods.zip",
       "profile_name": "BattleArmory TACZ",
-      "folder_name": "BattleArmoryTACZ",
+      "folder_name": "BattleArmory TACZ",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://cdn.modrinth.com/data/rQiXwLhB/1f8cafea7dcd59dff7dc58cad7a17ae0424847a2_96.webp",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
@@ -380,7 +404,7 @@
     "Cursed Walking": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/cursedwalking/mods.zip",
       "profile_name": "Cursed Walking",
-      "folder_name": "CursedWalking",
+      "folder_name": "Cursed Walking",
       "version_id": "1.20.1-forge-47.4.15",
       "icon_url": "https://media.forgecdn.net/avatars/thumbnails/614/500/64/64/637998216126755132.png",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
