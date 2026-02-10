@@ -45,12 +45,14 @@ ENTRY_BG = "#404040"
 ENTRY_FG = "#FFFFFF"
 FRAME_BG = "#2E2E2E"
 
+
 def log(msg: str):
     try:
         with open(LOG_PATH, "a", encoding="utf-8") as f:
             f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {msg}\n")
     except Exception:
         pass
+
 
 def get_ssl_context():
     try:
@@ -62,16 +64,22 @@ def get_ssl_context():
         pass
     return ssl.create_default_context()
 
+
 SSL_CTX = get_ssl_context()
 
+
 def http_get_bytes(url: str, timeout=15) -> bytes:
-    req = urllib.request.Request(url, headers={
-        "User-Agent": "Mozilla/5.0",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
-    })
+    req = urllib.request.Request(
+        url,
+        headers={
+            "User-Agent": "Mozilla/5.0",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+        },
+    )
     with urllib.request.urlopen(req, context=SSL_CTX, timeout=timeout) as r:
         return r.read()
+
 
 def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -79,10 +87,10 @@ def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
         total_size = int(response.info().get("Content-Length", 0))
         block_size = 8192
         downloaded = 0
-        
+
         start_time = time.time()
         last_update_time = 0
-        
+
         with open(path, "wb") as out_file:
             while True:
                 chunk = response.read(block_size)
@@ -90,23 +98,28 @@ def http_download_file(url: str, path: str, progress_cb=None, timeout=30):
                     break
                 out_file.write(chunk)
                 downloaded += len(chunk)
-                
+
                 # Update UI only every 0.1s to prevent lag
                 current_time = time.time()
-                if progress_cb and total_size > 0 and (current_time - last_update_time > 0.1):
+                if (
+                    progress_cb
+                    and total_size > 0
+                    and (current_time - last_update_time > 0.1)
+                ):
                     elapsed_time = current_time - start_time
                     if elapsed_time > 0:
                         speed = downloaded / elapsed_time
                         remaining_bytes = total_size - downloaded
-                        eta_seconds = remaining_bytes / speed
+                        eta_seconds = remaining_bytes / speed if speed > 0 else 0
                     else:
                         eta_seconds = 0
                     progress_cb(downloaded, total_size, eta_seconds)
                     last_update_time = current_time
-            
+
             # Ensure final update hits 100%
             if progress_cb and total_size > 0:
                 progress_cb(total_size, total_size, 0)
+
 
 class InstallerApp:
     def __init__(self, root):
@@ -129,29 +142,83 @@ class InstallerApp:
 
         # Configure Dark Theme Styles
         style = ttk.Style()
-        style.theme_use('clam') # 'clam' allows for better color customization
-        
-        style.configure("TLabel", background=BG_COLOR, foreground=FG_COLOR, font=("Segoe UI", 10))
-        style.configure("TButton", background=BUTTON_BG, foreground=BUTTON_FG, borderwidth=1, font=("Segoe UI", 10))
-        style.map("TButton", background=[('active', BUTTON_ACTIVE)])
-        
-        style.configure("TCombobox", fieldbackground=ENTRY_BG, background=BUTTON_BG, foreground=FG_COLOR, arrowcolor=FG_COLOR)
-        style.map("TCombobox", fieldbackground=[('readonly', ENTRY_BG)], selectbackground=[('readonly', ACCENT_COLOR)])
-        
-        style.configure("Horizontal.TProgressbar", background=ACCENT_COLOR, troughcolor=BUTTON_BG, bordercolor=BG_COLOR, lightcolor=ACCENT_COLOR, darkcolor=ACCENT_COLOR)
+        style.theme_use("clam")  # 'clam' allows for better color customization
+
+        style.configure(
+            "TLabel",
+            background=BG_COLOR,
+            foreground=FG_COLOR,
+            font=("Segoe UI", 10),
+        )
+        style.configure(
+            "TButton",
+            background=BUTTON_BG,
+            foreground=BUTTON_FG,
+            borderwidth=1,
+            font=("Segoe UI", 10),
+        )
+        style.map("TButton", background=[("active", BUTTON_ACTIVE)])
+
+        style.configure(
+            "TCombobox",
+            fieldbackground=ENTRY_BG,
+            background=BUTTON_BG,
+            foreground=FG_COLOR,
+            arrowcolor=FG_COLOR,
+        )
+        style.map(
+            "TCombobox",
+            fieldbackground=[("readonly", ENTRY_BG)],
+            selectbackground=[("readonly", ACCENT_COLOR)],
+        )
+
+        style.configure(
+            "Horizontal.TProgressbar",
+            background=ACCENT_COLOR,
+            troughcolor=BUTTON_BG,
+            bordercolor=BG_COLOR,
+            lightcolor=ACCENT_COLOR,
+            darkcolor=ACCENT_COLOR,
+        )
 
         self.modpacks = self.load_data()
 
         # --- DEBUG ICON (Top Right) ---
-        self.btn_debug = tk.Button(root, text="⚙", font=("Segoe UI", 12), command=self.open_debug_menu, 
-                                   bg=BG_COLOR, fg=FG_COLOR, activebackground=BUTTON_ACTIVE, activeforeground=FG_COLOR, bd=0, highlightthickness=0)
+        self.btn_debug = tk.Button(
+            root,
+            text="⚙",
+            font=("Segoe UI", 12),
+            command=self.open_debug_menu,
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+            activebackground=BUTTON_ACTIVE,
+            activeforeground=FG_COLOR,
+            bd=0,
+            highlightthickness=0,
+        )
         self.btn_debug.place(relx=0.92, rely=0.02)
 
         # Header
-        tk.Label(root, text="Select a Modpack", font=("Segoe UI", 18, "bold"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=(20, 10))
+        tk.Label(
+            root,
+            text="Select a Modpack",
+            font=("Segoe UI", 18, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).pack(pady=(20, 10))
 
-        self.btn_refresh = tk.Button(root, text="Refresh List", command=self.refresh_data, 
-                                     font=("Segoe UI", 9), bg=BUTTON_BG, fg=BUTTON_FG, activebackground=BUTTON_ACTIVE, activeforeground=BUTTON_FG, bd=1, relief="flat")
+        self.btn_refresh = tk.Button(
+            root,
+            text="Refresh List",
+            command=self.refresh_data,
+            font=("Segoe UI", 9),
+            bg=BUTTON_BG,
+            fg=BUTTON_FG,
+            activebackground=BUTTON_ACTIVE,
+            activeforeground=BUTTON_FG,
+            bd=1,
+            relief="flat",
+        )
         self.btn_refresh.pack(pady=5)
 
         # Main Content Frame
@@ -159,9 +226,20 @@ class InstallerApp:
         content_frame.pack(fill="both", expand=True, padx=20)
 
         # Category Dropdown
-        tk.Label(content_frame, text="CATEGORY", font=("Segoe UI", 9, "bold"), bg=BG_COLOR, fg="#AAAAAA").pack(pady=(15, 2), anchor="w")
+        tk.Label(
+            content_frame,
+            text="CATEGORY",
+            font=("Segoe UI", 9, "bold"),
+            bg=BG_COLOR,
+            fg="#AAAAAA",
+        ).pack(pady=(15, 2), anchor="w")
         self.selected_category = tk.StringVar()
-        self.cat_dropdown = ttk.Combobox(content_frame, textvariable=self.selected_category, state="readonly", font=("Segoe UI", 11))
+        self.cat_dropdown = ttk.Combobox(
+            content_frame,
+            textvariable=self.selected_category,
+            state="readonly",
+            font=("Segoe UI", 11),
+        )
         if self.modpacks:
             self.cat_dropdown["values"] = list(self.modpacks.keys())
             self.cat_dropdown.current(0)
@@ -171,27 +249,38 @@ class InstallerApp:
         self.cat_dropdown.pack(pady=5, fill="x")
 
         # Pack Dropdown
-        tk.Label(content_frame, text="MODPACK", font=("Segoe UI", 9, "bold"), bg=BG_COLOR, fg="#AAAAAA").pack(pady=(15, 2), anchor="w")
+        tk.Label(
+            content_frame,
+            text="MODPACK",
+            font=("Segoe UI", 9, "bold"),
+            bg=BG_COLOR,
+            fg="#AAAAAA",
+        ).pack(pady=(15, 2), anchor="w")
         self.selected_pack = tk.StringVar()
-        self.pack_dropdown = ttk.Combobox(content_frame, textvariable=self.selected_pack, state="readonly", font=("Segoe UI", 11))
+        self.pack_dropdown = ttk.Combobox(
+            content_frame,
+            textvariable=self.selected_pack,
+            state="readonly",
+            font=("Segoe UI", 11),
+        )
         self.pack_dropdown.bind("<<ComboboxSelected>>", self.on_pack_selected)
         self.pack_dropdown.pack(pady=5, fill="x")
 
         # Icon Area
-        self.icon_frame = tk.Frame(content_frame, bg=BG_COLOR, height=80) # Fixed height placeholder
+        self.icon_frame = tk.Frame(content_frame, bg=BG_COLOR, height=80)
         self.icon_frame.pack(pady=(20, 10))
         self.icon_label = tk.Label(self.icon_frame, text="", bg=BG_COLOR)
         self.icon_label.pack()
 
         # Description Label
         self.desc_label = tk.Label(
-            content_frame, 
-            text="Description will appear here.", 
-            font=("Segoe UI", 10), 
+            content_frame,
+            text="Description will appear here.",
+            font=("Segoe UI", 10),
             fg="#CCCCCC",
             bg=BG_COLOR,
             wraplength=400,
-            justify="center"
+            justify="center",
         )
         self.desc_label.pack(pady=(0, 10))
 
@@ -199,35 +288,59 @@ class InstallerApp:
         self.rating_frame = tk.Frame(content_frame, bg=BG_COLOR)
         self.rating_frame.pack(pady=(5, 15))
 
-        self.rating_title = tk.Label(self.rating_frame, text="RATING", font=("Segoe UI", 8, "bold"), fg="#888888", bg=BG_COLOR)
+        self.rating_title = tk.Label(
+            self.rating_frame,
+            text="RATING",
+            font=("Segoe UI", 8, "bold"),
+            fg="#888888",
+            bg=BG_COLOR,
+        )
         self.rating_title.pack(anchor="center")
-        
+
         self.rating_text = tk.Label(
-            self.rating_frame, 
-            text="", 
-            font=("Segoe UI", 10, "bold"), 
-            fg="#FFD700", # Gold color for rating
+            self.rating_frame,
+            text="",
+            font=("Segoe UI", 10, "bold"),
+            fg="#FFD700",
             bg=BG_COLOR,
             wraplength=400,
-            justify="center"
+            justify="center",
         )
         self.rating_text.pack(anchor="center")
 
         # Install Button
         self.btn_install = tk.Button(
-            root, text="INSTALL SELECTED PACK", command=self.start_thread,
-            bg=ACCENT_COLOR, fg="white", font=("Segoe UI", 11, "bold"), 
-            activebackground="#005A9E", activeforeground="white", bd=0, relief="flat",
-            height=2
+            root,
+            text="INSTALL SELECTED PACK",
+            command=self.start_thread,
+            bg=ACCENT_COLOR,
+            fg="white",
+            font=("Segoe UI", 11, "bold"),
+            activebackground="#005A9E",
+            activeforeground="white",
+            bd=0,
+            relief="flat",
+            height=2,
         )
         self.btn_install.pack(pady=20, fill="x", padx=40)
 
         # Progress Bar
         self.progress_var = tk.DoubleVar()
-        self.progress_bar = ttk.Progressbar(root, variable=self.progress_var, maximum=100, style="Horizontal.TProgressbar")
+        self.progress_bar = ttk.Progressbar(
+            root,
+            variable=self.progress_var,
+            maximum=100,
+            style="Horizontal.TProgressbar",
+        )
 
         # Status Label
-        self.status = tk.Label(root, text="Ready", fg="#888888", bg=BG_COLOR, font=("Segoe UI", 9))
+        self.status = tk.Label(
+            root,
+            text="Ready",
+            fg="#888888",
+            bg=BG_COLOR,
+            font=("Segoe UI", 9),
+        )
         self.status.pack(side="bottom", pady=15)
 
         if self.modpacks:
@@ -239,18 +352,38 @@ class InstallerApp:
         debug_win.title("Debug / Tools")
         debug_win.geometry("350x300")
         debug_win.configure(bg=BG_COLOR)
-        
-        tk.Label(debug_win, text="Maintenance Tools", font=("Segoe UI", 12, "bold"), bg=BG_COLOR, fg=FG_COLOR).pack(pady=15)
+
+        tk.Label(
+            debug_win,
+            text="Maintenance Tools",
+            font=("Segoe UI", 12, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).pack(pady=15)
 
         # Button 1: Update Launcher Profiles (JSON only)
-        btn_update_json = tk.Button(debug_win, text="Update Launcher Profiles (JSON)", 
-                                   command=lambda: self.debug_update_profiles(debug_win),
-                                   bg=BUTTON_BG, fg=BUTTON_FG, activebackground=BUTTON_ACTIVE, activeforeground=BUTTON_FG, relief="flat", font=("Segoe UI", 10))
+        btn_update_json = tk.Button(
+            debug_win,
+            text="Update Launcher Profiles (JSON)",
+            command=lambda: self.debug_update_profiles(debug_win),
+            bg=BUTTON_BG,
+            fg=BUTTON_FG,
+            activebackground=BUTTON_ACTIVE,
+            activeforeground=BUTTON_FG,
+            relief="flat",
+            font=("Segoe UI", 10),
+        )
         btn_update_json.pack(pady=5, fill="x", padx=30, ipady=5)
 
         # Button 2: Update Mods
-        tk.Label(debug_win, text="Update Installed Mods:", font=("Segoe UI", 10), bg=BG_COLOR, fg="#AAAAAA").pack(pady=(20, 5))
-        
+        tk.Label(
+            debug_win,
+            text="Update Installed Mods:",
+            font=("Segoe UI", 10),
+            bg=BG_COLOR,
+            fg="#AAAAAA",
+        ).pack(pady=(20, 5))
+
         # Get installed packs by looking at profiles folder
         mc_dir = self.get_mc_dir()
         profiles_dir = os.path.join(mc_dir, "profiles")
@@ -259,32 +392,45 @@ class InstallerApp:
             for item in os.listdir(profiles_dir):
                 if os.path.isdir(os.path.join(profiles_dir, item)):
                     installed_packs.append(item)
-        
+
         pack_var = tk.StringVar()
-        pack_dropdown = ttk.Combobox(debug_win, textvariable=pack_var, values=installed_packs, state="readonly", font=("Segoe UI", 10))
+        pack_dropdown = ttk.Combobox(
+            debug_win,
+            textvariable=pack_var,
+            values=installed_packs,
+            state="readonly",
+            font=("Segoe UI", 10),
+        )
         if installed_packs:
             pack_dropdown.current(0)
         pack_dropdown.pack(pady=5, padx=30, fill="x")
 
-        btn_update_mods = tk.Button(debug_win, text="Update Selected Mods", 
-                                   command=lambda: self.debug_update_mods(pack_var.get(), debug_win),
-                                   bg=ACCENT_COLOR, fg="white", activebackground="#005A9E", activeforeground="white", relief="flat", font=("Segoe UI", 10, "bold"))
+        btn_update_mods = tk.Button(
+            debug_win,
+            text="Update Selected Mods",
+            command=lambda: self.debug_update_mods(pack_var.get(), debug_win),
+            bg=ACCENT_COLOR,
+            fg="white",
+            activebackground="#005A9E",
+            activeforeground="white",
+            relief="flat",
+            font=("Segoe UI", 10, "bold"),
+        )
         btn_update_mods.pack(pady=10, fill="x", padx=30, ipady=5)
 
     def debug_update_profiles(self, window):
-        """Refreshes launcher_profiles.json for all installed packs using modpacks.json data"""
-        threading.Thread(target=self._debug_update_profiles_thread, args=(window,), daemon=True).start()
+        threading.Thread(
+            target=self._debug_update_profiles_thread, args=(window,), daemon=True
+        ).start()
 
     def _debug_update_profiles_thread(self, window):
         mc_dir = self.get_mc_dir()
         log("DEBUG: Updating profiles JSON...")
         count = 0
         try:
-            # Flatten modpacks dict for easier searching
             all_configs = {}
             for cat in self.modpacks:
                 for pack_name, cfg in self.modpacks[cat].items():
-                    # Key by folder name because that's what we see on disk
                     all_configs[cfg["folder_name"]] = cfg
 
             profiles_dir = os.path.join(mc_dir, "profiles")
@@ -292,17 +438,25 @@ class InstallerApp:
                 for folder in os.listdir(profiles_dir):
                     if folder in all_configs:
                         cfg = all_configs[folder]
-                        
-                        # Handle Icon
+
                         final_icon = cfg.get("icon", "Furnace")
                         if "icon_url" in cfg and HAS_PILLOW:
                             try:
-                                b64 = self.download_icon_as_base64(cfg["icon_url"], os.path.join(profiles_dir, folder))
-                                if b64: final_icon = b64
-                            except: pass
+                                b64 = self.download_icon_as_base64(
+                                    cfg["icon_url"],
+                                    os.path.join(profiles_dir, folder),
+                                )
+                                if b64:
+                                    final_icon = b64
+                            except Exception:
+                                pass
 
-                        # Get JVM Args
-                        default_args = "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US"
+                        default_args = (
+                            "-Xmx4096m -Xms256m "
+                            "-Dfml.ignorePatchDiscrepancies=true "
+                            "-Dfml.ignoreInvalidMinecraftCertificates=true "
+                            "-Duser.language=en -Duser.country=US"
+                        )
                         jvm_args = cfg.get("jvm_args", default_args)
 
                         self.update_json_profile(
@@ -311,28 +465,32 @@ class InstallerApp:
                             game_dir=os.path.join(profiles_dir, folder),
                             version_id=cfg["version_id"],
                             icon=final_icon,
-                            jvm_args=jvm_args
+                            jvm_args=jvm_args,
                         )
                         count += 1
-            
-            messagebox.showinfo("Debug", f"Updated {count} profiles in launcher_profiles.json")
+
+            messagebox.showinfo(
+                "Debug", f"Updated {count} profiles in launcher_profiles.json"
+            )
             window.destroy()
         except Exception as e:
             log(f"DEBUG ERROR: {e}")
             messagebox.showerror("Error", str(e))
 
     def debug_update_mods(self, selection, window):
-        if not selection: return
+        if not selection:
+            return
         window.destroy()
-        threading.Thread(target=self._debug_update_mods_thread, args=(selection,), daemon=True).start()
+        threading.Thread(
+            target=self._debug_update_mods_thread, args=(selection,), daemon=True
+        ).start()
 
     def _debug_update_mods_thread(self, selection):
         self.btn_install.config(state="disabled")
         self.progress_bar.pack(fill="x", padx=40, pady=10)
-        
+
         mc_dir = self.get_mc_dir()
-        
-        # Flatten configs again
+
         all_configs = {}
         for cat in self.modpacks:
             for pname, cfg in self.modpacks[cat].items():
@@ -355,16 +513,17 @@ class InstallerApp:
             return
 
         for i, config in enumerate(targets):
-            self.update_status(f"Updating {config['profile_name']} ({i+1}/{len(targets)})...")
+            self.update_status(
+                f"Updating {config['profile_name']} ({i+1}/{len(targets)})..."
+            )
             try:
-                # Re-run install logic (downloads mods & extracts)
-                # We skip loader download to save time unless it's missing
                 download_url = config["url"]
                 if platform.system() == "Darwin" and "mac_url" in config:
                     download_url = config["mac_url"]
                 elif platform.system() == "Windows" and "windows_url" in config:
                     download_url = config["windows_url"]
-                
+
+                # Use the same logic as normal: detect existing profile and update
                 self.install_modpack_logic(mc_dir, config, download_url)
             except Exception as e:
                 log(f"Failed to update {config['profile_name']}: {e}")
@@ -373,21 +532,21 @@ class InstallerApp:
         messagebox.showinfo("Success", "Selected modpacks have been updated.")
         self.reset_ui()
 
-
     def update_status(self, text):
         self.root.after(0, lambda: self.status.config(text=text))
         log(f"STATUS: {text}")
 
     def update_progress(self, current, total, eta_seconds=0):
-        if total <= 0: return
+        if total <= 0:
+            return
         percent = (current / total) * 100
         self.root.after(0, lambda: self.progress_var.set(percent))
-        
+
         if eta_seconds < 60:
             time_str = f"{int(eta_seconds)}s"
         else:
             time_str = f"{int(eta_seconds // 60)}m {int(eta_seconds % 60)}s"
-            
+
         status_text = f"{self.current_action_name}... {int(percent)}% ({time_str} left)"
         self.root.after(0, lambda: self.status.config(text=status_text))
 
@@ -418,8 +577,10 @@ class InstallerApp:
                 self.update_pack_dropdown(None)
                 messagebox.showinfo("Refreshed", "Modpack list updated successfully!")
             else:
-                messagebox.showwarning("Refresh Failed", f"Could not load modpacks.\nLog: {LOG_PATH}")
-            
+                messagebox.showwarning(
+                    "Refresh Failed", f"Could not load modpacks.\nLog: {LOG_PATH}"
+                )
+
             self.btn_refresh.config(state="normal", text="Refresh List")
             self.root.update_idletasks()
 
@@ -443,19 +604,19 @@ class InstallerApp:
 
         if category in self.modpacks and pack_name in self.modpacks[category]:
             config = self.modpacks[category][pack_name]
-            
+
             if HAS_PILLOW and "icon_url" in config:
                 self.display_icon_preview(config["icon_url"])
             else:
                 self.icon_label.config(image="", text="")
-            
+
             desc_text = config.get("description", "No description available.")
             self.desc_label.config(text=desc_text)
 
             rating_text = config.get("rating", "").strip()
             if rating_text:
                 self.rating_text.config(text=rating_text)
-                self.rating_frame.pack(pady=(5, 10)) 
+                self.rating_frame.pack(pady=(5, 10))
             else:
                 self.rating_frame.pack_forget()
 
@@ -475,8 +636,10 @@ class InstallerApp:
                 if getattr(image, "is_animated", False):
                     image.seek(0)
                 image = image.resize((64, 64), Image.Resampling.LANCZOS)
-                
-                self.root.after(0, lambda: self._finish_icon_load(url, image))
+                self.root.after(
+                    0,
+                    lambda: self._finish_icon_load(url, image),
+                )
             except Exception as e:
                 log("ERROR preview icon: " + repr(e))
                 log(traceback.format_exc())
@@ -502,19 +665,17 @@ class InstallerApp:
         threading.Thread(target=self.run_install, daemon=True).start()
 
     def reset_ui(self):
-        self.btn_install.config(state="normal", text="INSTALL SELECTED PACK", bg=ACCENT_COLOR)
+        self.btn_install.config(
+            state="normal", text="INSTALL SELECTED PACK", bg=ACCENT_COLOR
+        )
         self.progress_bar.pack_forget()
 
     def copy_options_template(self, profile_dir):
-        """
-        Looks for 'base_options.txt' in the same folder as the script.
-        If found, copies it to the profile folder as 'options.txt'.
-        """
         template_name = "base_options.txt"
         template_path = os.path.join(os.getcwd(), template_name)
-        
+
         if not os.path.exists(template_path):
-            if getattr(sys, 'frozen', False):
+            if getattr(sys, "frozen", False):
                 template_path = os.path.join(os.path.dirname(sys.executable), template_name)
 
         if os.path.exists(template_path):
@@ -537,16 +698,16 @@ class InstallerApp:
 
             download_url = config["url"]
             current_os = platform.system()
-            
+
             if current_os == "Darwin" and "mac_url" in config:
                 log(f"Detected Mac: Using mac_url for {pack_name}")
                 download_url = config["mac_url"]
             elif current_os == "Windows" and "windows_url" in config:
                 log(f"Detected Windows: Using windows_url for {pack_name}")
                 download_url = config["windows_url"]
-            
+
             self.update_status(f"Checking loader for {pack_name}...")
-            
+
             self.current_action_name = "Downloading Loader"
             self.install_loader(mc_dir, config["loader_url"])
 
@@ -554,11 +715,21 @@ class InstallerApp:
 
             self.root.after(0, self.reset_ui)
             self.root.after(0, lambda: self.status.config(text="Installation Complete"))
-            self.root.after(0, lambda: messagebox.showinfo("Success", f"Installed '{pack_name}' successfully!"))
+            self.root.after(
+                0,
+                lambda: messagebox.showinfo(
+                    "Success", f"Installed '{pack_name}' successfully!"
+                ),
+            )
         except Exception as e:
             log("INSTALL ERROR: " + repr(e))
             log(traceback.format_exc())
-            self.root.after(0, lambda: messagebox.showerror("Error", f"{e}\n\nLog: {LOG_PATH}"))
+            self.root.after(
+                0,
+                lambda: messagebox.showerror(
+                    "Error", f"{e}\n\nLog: {LOG_PATH}"
+                ),
+            )
             self.root.after(0, self.reset_ui)
 
     def get_mc_dir(self):
@@ -566,7 +737,12 @@ class InstallerApp:
         if system == "Windows":
             return os.path.join(os.getenv("APPDATA"), ".minecraft")
         if system == "Darwin":
-            return os.path.join(os.path.expanduser("~"), "Library", "Application Support", "minecraft")
+            return os.path.join(
+                os.path.expanduser("~"),
+                "Library",
+                "Application Support",
+                "minecraft",
+            )
         return os.path.join(os.path.expanduser("~"), ".minecraft")
 
     def install_loader(self, mc_dir, loader_url):
@@ -575,7 +751,9 @@ class InstallerApp:
         version_folder = os.path.join(versions_dir, version_id)
 
         if os.path.exists(version_folder):
-            self.update_status(f"Loader {version_id} already installed, skipping...")
+            self.update_status(
+                f"Loader {version_id} already installed, skipping..."
+            )
             return
 
         libraries_dir = os.path.join(mc_dir, "libraries")
@@ -586,7 +764,9 @@ class InstallerApp:
         self.progress_var.set(0)
 
         self.current_action_name = "Downloading Loader"
-        http_download_file(loader_url, temp_loader_zip, progress_cb=self.update_progress, timeout=60)
+        http_download_file(
+            loader_url, temp_loader_zip, progress_cb=self.update_progress, timeout=60
+        )
 
         self.update_status("Installing Loader...")
         temp_extract_path = os.path.join(mc_dir, "temp_loader_extract")
@@ -647,45 +827,44 @@ class InstallerApp:
             b64 = base64.b64encode(f.read()).decode("utf-8")
         return "data:image/png;base64," + b64
 
-    def install_modpack_logic(self, mc_dir, config, download_url):
-        if not os.path.exists(mc_dir):
-            raise Exception("Minecraft folder not found.")
-
-        profile_dir = os.path.join(mc_dir, "profiles", config["folder_name"])
-        if os.path.exists(profile_dir):
-            shutil.rmtree(profile_dir)
-        os.makedirs(profile_dir, exist_ok=True)
-
+    # --- NEW: update-in-place logic ---
+    def install_modpack_update_in_place(self, mc_dir, config, download_url, profile_dir):
+        """
+        Used when the profile already exists and the user chooses to update.
+        It will NOT delete anything in the existing profile_dir.
+        It only overwrites/merges content that is present in the downloaded zip.
+        """
         self.copy_options_template(profile_dir)
 
-        self.update_status(f"Downloading {config['profile_name']}...")
+        self.update_status(f"Downloading {config['profile_name']} (update)...")
         self.progress_var.set(0)
-        temp_zip = os.path.join(profile_dir, "temp.zip")
-        
-        self.current_action_name = "Downloading Mods"
-        http_download_file(download_url, temp_zip, progress_cb=self.update_progress, timeout=120)
+        temp_zip = os.path.join(profile_dir, "temp_update.zip")
 
-        temp_extract = os.path.join(profile_dir, "temp_extract")
+        self.current_action_name = "Downloading Mods"
+        http_download_file(
+            download_url, temp_zip, progress_cb=self.update_progress, timeout=120
+        )
+
+        temp_extract = os.path.join(profile_dir, "temp_update_extract")
         if os.path.exists(temp_extract):
             shutil.rmtree(temp_extract)
         os.makedirs(temp_extract, exist_ok=True)
 
-        self.update_status("Extracting mods...")
+        self.update_status("Extracting mods (update)...")
         self.current_action_name = "Extracting"
-        
+
         with zipfile.ZipFile(temp_zip, "r") as z:
             total_size = sum(f.file_size for f in z.infolist())
             extracted_size = 0
             start_time = time.time()
             last_update_time = 0
-            
+
             for file_info in z.infolist():
                 z.extract(file_info, temp_extract)
                 extracted_size += file_info.file_size
-                
-                # --- ZERO DIVISION FIX HERE ---
+
                 current_time = time.time()
-                if (current_time - last_update_time > 0.1):
+                if current_time - last_update_time > 0.1:
                     elapsed_time = current_time - start_time
                     if elapsed_time > 0 and extracted_size > 0:
                         speed = extracted_size / elapsed_time
@@ -694,10 +873,144 @@ class InstallerApp:
                             eta = remaining / speed
                         else:
                             eta = 0
-                        self.update_progress(extracted_size, total_size, eta)
+                        self.update_progress(
+                            extracted_size, total_size, eta
+                        )
                     last_update_time = current_time
-            
-            # Ensure 100% at end
+
+            self.update_progress(total_size, total_size, 0)
+
+        os.remove(temp_zip)
+
+        is_complex = config.get("is_complex", False)
+
+        if is_complex:
+            # Complex pack: merge everything from temp_extract into profile_dir,
+            # but DO NOT delete anything that is not in the zip.
+            self.merge_folders(temp_extract, profile_dir)
+        else:
+            # Simple pack: only replace the 'mods' folder
+            target_mods = os.path.join(profile_dir, "mods")
+            os.makedirs(target_mods, exist_ok=True)
+
+            found_mods_nested = None
+            for root_path, dirs, _files in os.walk(temp_extract):
+                if "mods" in dirs:
+                    found_mods_nested = os.path.join(root_path, "mods")
+                    break
+
+            if found_mods_nested:
+                shutil.rmtree(target_mods, ignore_errors=True)
+                os.makedirs(target_mods, exist_ok=True)
+                self.merge_folders(found_mods_nested, target_mods)
+            else:
+                # If no mods folder in zip, just merge what exists
+                self.merge_folders(temp_extract, profile_dir)
+
+        shutil.rmtree(temp_extract, ignore_errors=True)
+
+        final_icon = config.get("icon", "Furnace")
+        if "icon_url" in config and HAS_PILLOW:
+            self.update_status("Downloading icon...")
+            try:
+                b64_icon = self.download_icon_as_base64(
+                    config["icon_url"], profile_dir
+                )
+                if b64_icon:
+                    final_icon = b64_icon
+            except Exception as e:
+                log("ERROR icon base64 (update): " + repr(e))
+                log(traceback.format_exc())
+
+        default_args = (
+            "-Xmx4096m -Xms256m "
+            "-Dfml.ignorePatchDiscrepancies=true "
+            "-Dfml.ignoreInvalidMinecraftCertificates=true "
+            "-Duser.language=en -Duser.country=US"
+        )
+        custom_jvm_args = config.get("jvm_args", default_args)
+
+        self.update_json_profile(
+            mc_dir=mc_dir,
+            name=config["profile_name"],
+            game_dir=profile_dir,
+            version_id=config["version_id"],
+            icon=final_icon,
+            jvm_args=custom_jvm_args,
+        )
+
+    # --- REWRITTEN install_modpack_logic with prompt ---
+    def install_modpack_logic(self, mc_dir, config, download_url):
+        if not os.path.exists(mc_dir):
+            raise Exception("Minecraft folder not found.")
+
+        profile_dir = os.path.join(mc_dir, "profiles", config["folder_name"])
+        already_exists = os.path.exists(profile_dir)
+
+        if already_exists:
+            answer = messagebox.askyesno(
+                "Modpack Already Installed",
+                f"You already have '{config['profile_name']}' installed.\n\n"
+                "Would you like to update it?\n\n"
+                "This will overwrite files from the modpack itself, but your existing worlds and other data in this profile will stay.",
+            )
+            if not answer:
+                self.update_status("Update cancelled by user.")
+                return
+
+            os.makedirs(profile_dir, exist_ok=True)
+            self.install_modpack_update_in_place(
+                mc_dir, config, download_url, profile_dir
+            )
+            return
+
+        # Fresh install path
+        os.makedirs(profile_dir, exist_ok=True)
+
+        self.copy_options_template(profile_dir)
+
+        self.update_status(f"Downloading {config['profile_name']}...")
+        self.progress_var.set(0)
+        temp_zip = os.path.join(profile_dir, "temp.zip")
+
+        self.current_action_name = "Downloading Mods"
+        http_download_file(
+            download_url, temp_zip, progress_cb=self.update_progress, timeout=120
+        )
+
+        temp_extract = os.path.join(profile_dir, "temp_extract")
+        if os.path.exists(temp_extract):
+            shutil.rmtree(temp_extract)
+        os.makedirs(temp_extract, exist_ok=True)
+
+        self.update_status("Extracting mods...")
+        self.current_action_name = "Extracting"
+
+        with zipfile.ZipFile(temp_zip, "r") as z:
+            total_size = sum(f.file_size for f in z.infolist())
+            extracted_size = 0
+            start_time = time.time()
+            last_update_time = 0
+
+            for file_info in z.infolist():
+                z.extract(file_info, temp_extract)
+                extracted_size += file_info.file_size
+
+                current_time = time.time()
+                if current_time - last_update_time > 0.1:
+                    elapsed_time = current_time - start_time
+                    if elapsed_time > 0 and extracted_size > 0:
+                        speed = extracted_size / elapsed_time
+                        if speed > 0:
+                            remaining = total_size - extracted_size
+                            eta = remaining / speed
+                        else:
+                            eta = 0
+                        self.update_progress(
+                            extracted_size, total_size, eta
+                        )
+                    last_update_time = current_time
+
             self.update_progress(total_size, total_size, 0)
 
         os.remove(temp_zip)
@@ -726,14 +1039,21 @@ class InstallerApp:
         if "icon_url" in config and HAS_PILLOW:
             self.update_status("Downloading icon...")
             try:
-                b64_icon = self.download_icon_as_base64(config["icon_url"], profile_dir)
+                b64_icon = self.download_icon_as_base64(
+                    config["icon_url"], profile_dir
+                )
                 if b64_icon:
                     final_icon = b64_icon
             except Exception as e:
                 log("ERROR icon base64: " + repr(e))
                 log(traceback.format_exc())
 
-        default_args = "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US"
+        default_args = (
+            "-Xmx4096m -Xms256m "
+            "-Dfml.ignorePatchDiscrepancies=true "
+            "-Dfml.ignoreInvalidMinecraftCertificates=true "
+            "-Duser.language=en -Duser.country=US"
+        )
         custom_jvm_args = config.get("jvm_args", default_args)
 
         self.update_json_profile(
@@ -742,13 +1062,15 @@ class InstallerApp:
             game_dir=profile_dir,
             version_id=config["version_id"],
             icon=final_icon,
-            jvm_args=custom_jvm_args
+            jvm_args=custom_jvm_args,
         )
 
     def update_json_profile(self, mc_dir, name, game_dir, version_id, icon, jvm_args):
         profiles_file = os.path.join(mc_dir, "launcher_profiles.json")
         if not os.path.exists(profiles_file):
-            raise Exception("launcher_profiles.json not found (open Minecraft Launcher once first).")
+            raise Exception(
+                "launcher_profiles.json not found (open Minecraft Launcher once first)."
+            )
 
         with open(profiles_file, "r", encoding="utf-8") as f:
             data = json.load(f)
@@ -759,8 +1081,9 @@ class InstallerApp:
         profile_id = name.replace(" ", "_")
         current_time = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
 
-        # Add mandatory path argument to whatever custom args were provided
-        final_java_args = f'{jvm_args} -Dminecraft.applet.TargetDirectory="{game_dir}"'
+        final_java_args = (
+            f'{jvm_args} -Dminecraft.applet.TargetDirectory="{game_dir}"'
+        )
 
         data["profiles"][profile_id] = {
             "created": current_time,
@@ -770,12 +1093,13 @@ class InstallerApp:
             "lastVersionId": version_id,
             "name": name,
             "type": "custom",
-            "javaArgs": final_java_args 
+            "javaArgs": final_java_args,
         }
 
         shutil.copy(profiles_file, profiles_file + ".bak")
         with open(profiles_file, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)
+
 
 def selftest():
     log("=== SELFTEST START ===")
@@ -791,6 +1115,7 @@ def selftest():
         log("SELFTEST FAIL: " + repr(e))
         log(traceback.format_exc())
         return 1
+
 
 if __name__ == "__main__":
     try:
