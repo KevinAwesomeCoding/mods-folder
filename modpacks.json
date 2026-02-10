@@ -315,16 +315,64 @@
       "description": "A 'randomizer' style modpack where chaos ensues. Every 30 seconds a random effect happens—explosions, mob spawns, or item swaps. Pure unpredictability.",
       "rating": ""
     },
-    "No Cubes": {
-      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/nocubes/mods.zip",
-      "profile_name": "No Cubes",
-      "folder_name": "No Cubes",
+    "Would you Rather": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wouldyourather/mods.zip",
+      "profile_name": "Would you Rather",
+      "folder_name": "Would you Rather",
       "version_id": "fabric-loader-0.18.4-1.20.1",
-      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/183/45/64/64/636812258201400201.png",
+      "icon_url": "https://cdn.modrinth.com/data/fdHxJ4Dv/1b402ebcead6905a0b7923f34ca906aeabbc28fe_96.webp",
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Makes Minecraft completely round. Changes terrain generation to smooth slopes and curves, removing the blocky grid entirely for a surreal experience.",
+      "description": "Progressively complicate your gameplay with a reappearing \"Would you Rather\" prompt",
+      "rating": ""
+    },
+    "Randomizer": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/randomizer/mods.zip",
+      "profile_name": "Randomizer",
+      "folder_name": "Randomizer",
+      "version_id": "fabric-loader-0.18.4-1.21.11",
+      "icon_url": "https://cdn.modrinth.com/data/ZtICh1u8/8a976102329688fd0c055f7e7316c58738a31d51_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "Random block drops, mob drops, crafting recipes, chest loot, fishing and many more.",
+      "rating": ""
+    },
+    "Shared Inventory": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/sharedinventory/mods.zip",
+      "profile_name": "Shared Inventory",
+      "folder_name": "Shared Inventory",
+      "version_id": "fabric-loader-0.18.4-1.21.11",
+      "icon_url": "https://cdn.modrinth.com/data/MhGYDguV/b71f2998c592809078fba7a1905355017959cf98.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "Linked inventory with other players.",
+      "rating": ""
+    },
+    "Minecraft but if you touch grass you die": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/touchgrassdie/mods.zip",
+      "profile_name": "Minecraft but if you touch grass you die",
+      "folder_name": "Touch grass you Die",
+      "version_id": "fabric-loader-0.18.4-1.21.11",
+      "icon_url": "https://cdn.modrinth.com/data/MkeJmome/47aa4533c8c6728ed3a5dbb70f1130d0c1999dc9_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "A very simple datapack/mod that will rapidly kill those who come in contact with grass.",
+      "rating": ""
+    },
+    "Death Swap": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/deathswap/mods.zip",
+      "profile_name": "Death Swap",
+      "folder_name": "Death Swap",
+      "version_id": "fabric-loader-0.18.4-1.21.11",
+      "icon_url": "https://cdn.modrinth.com/data/tDER9MJ9/53c9338d723cd849ad8a1aa463c38d6a43a80e6e_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "A minigame where you swap positions with other players every 5 minutes and use this mechanic to kill them! [Compatible with 2-8 Players]",
       "rating": ""
     },
     "TNT Mod": {
