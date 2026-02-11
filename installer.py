@@ -133,7 +133,7 @@ class InstallerApp:
 
         # Center window
         window_width = 500
-        window_height = 750
+        window_height = 800
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
         x = (screen_width // 2) - (window_width // 2)
@@ -322,7 +322,24 @@ class InstallerApp:
             relief="flat",
             height=2,
         )
-        self.btn_install.pack(pady=20, fill="x", padx=40)
+        self.btn_install.pack(pady=(20, 10), fill="x", padx=40)
+
+        # Commands Help Button
+        self.btn_commands = tk.Button(
+            root,
+            text="COMMAND HELP",
+            command=self.show_command_help,
+            bg=BUTTON_BG,
+            fg=BUTTON_FG,
+            font=("Segoe UI", 9),
+            activebackground=BUTTON_ACTIVE,
+            activeforeground=BUTTON_FG,
+            bd=1,
+            relief="flat",
+            height=1,
+            state="disabled",  # Start disabled
+        )
+        self.btn_commands.pack(pady=(0, 10), fill="x", padx=40)
 
         # Progress Bar
         self.progress_var = tk.DoubleVar()
@@ -619,6 +636,31 @@ class InstallerApp:
                 self.rating_frame.pack(pady=(5, 10))
             else:
                 self.rating_frame.pack_forget()
+            
+            # --- COMMANDS LOGIC ---
+            commands = config.get("commands", [])
+            if commands:
+                self.btn_commands.config(state="normal")
+            else:
+                self.btn_commands.config(state="disabled")
+
+    def show_command_help(self):
+        category = self.selected_category.get()
+        pack_name = self.selected_pack.get()
+        if not category or not pack_name:
+            return
+
+        config = self.modpacks.get(category, {}).get(pack_name)
+        if not config:
+            return
+
+        commands = config.get("commands", [])
+        if not commands:
+            messagebox.showinfo("Command Help", "This modpack does not use any special commands.")
+            return
+
+        msg = "Use these commands in chat:\n\n" + "\n".join(commands)
+        messagebox.showinfo("Command Help", msg)
 
     def display_icon_preview(self, url):
         if not HAS_PILLOW:
@@ -676,7 +718,9 @@ class InstallerApp:
 
         if not os.path.exists(template_path):
             if getattr(sys, "frozen", False):
-                template_path = os.path.join(os.path.dirname(sys.executable), template_name)
+                template_path = os.path.join(
+                    os.path.dirname(sys.executable), template_name
+                )
 
         if os.path.exists(template_path):
             try:
@@ -827,7 +871,6 @@ class InstallerApp:
             b64 = base64.b64encode(f.read()).decode("utf-8")
         return "data:image/png;base64," + b64
 
-    # --- NEW: update-in-place logic ---
     def install_modpack_update_in_place(self, mc_dir, config, download_url, profile_dir):
         """
         Used when the profile already exists and the user chooses to update.
