@@ -315,13 +315,13 @@
       "description": "A 'randomizer' style modpack where chaos ensues. Every 30 seconds a random effect happens—explosions, mob spawns, or item swaps. Pure unpredictability.",
       "rating": ""
     },
-    "Would you Rather (Broken)": {
+    "Would you Rather": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/wouldyourather/mods.zip",
       "profile_name": "Would you Rather",
       "folder_name": "Would you Rather",
-      "version_id": "fabric-loader-0.18.4-1.20.1",
+      "version_id": "fabric-loader-0.18.4-1.20.2",
       "icon_url": "https://cdn.modrinth.com/data/fdHxJ4Dv/1b402ebcead6905a0b7923f34ca906aeabbc28fe_96.webp",
-      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.2.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Progressively complicate your gameplay with a reappearing \"Would you Rather\" prompt",
