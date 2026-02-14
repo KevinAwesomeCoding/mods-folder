@@ -57,7 +57,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Features a yandere-style horror entity that becomes 'obsessed' with the player. It leaves gifts, writes notes, and becomes increasingly aggressive if ignored or rejected.",
+      "description": "Features a yandere-style horror entity that becomes 'obsessed' with the player. It leaves gifts, writes notes, and becomes increasingly aggressive if ignored or rejected. Has 25+ behavioral variants including stalker, mimic, and intrude modes.",
       "rating": ""
     },
     "From The Fog": {
@@ -69,7 +69,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "The definitive Herobrine experience. This mod focuses on atmospheric horror rather than jumpscares, with Herobrine stalking you, building structures, and vanishing in the fog.",
+      "description": "The definitive Herobrine experience. This mod focuses on atmospheric horror rather than jumpscares, with Herobrine stalking you, building structures, and vanishing in the fog. Faithful to the original legend with breaking torches, mining around you, placing signs, and burning your house.",
       "rating": ""
     },
     "The Broken Script": {
@@ -81,7 +81,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A meta-horror mod where the game's code appears to be breaking. Expect corrupted textures, glitchy entities, and chat messages from the game itself trying to warn you.",
+      "description": "A meta-horror mod where the game's code appears to be breaking. Expect corrupted textures, glitchy entities, and chat messages from the game itself trying to warn you. Can corrupt recordings and even crash your PC in extreme cases.",
       "rating": ""
     },
     "000.jar": {
@@ -94,7 +94,7 @@
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Based on a creepypasta about a cursed jar file. This mod introduces a dark, distorted version of the Overworld with void creatures and unsettling ambient silence.",
-      "rating": "5/10: 2nd best ones thst we played but it's still not thast great. has built in structures to make it a lil scarier."
+      "rating": "5/10: 2nd best ones that we played but it's still not that great. has built in structures to make it a lil scarier."
     },
     "The Newest Goatman": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/goatman/mods.zip",
@@ -105,7 +105,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.19.2-forge-43.5.2.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Adds the Goatman, a terrifying cryptid that mimics player sounds and movements. It hunts you in forests, can open doors, and gets faster the longer you survive.",
+      "description": "Adds the Goatman, a terrifying cryptid that mimics player sounds and movements. It hunts you in forests, can open doors, breaks blocks (glass, fences, slabs), and gets faster the longer you survive. Eats/destroys crops and applies weakness/nausea effects.",
       "rating": ""
     },
     "Fear Nightfall: Remains of Chaos": {
@@ -117,7 +117,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx7104m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A story-driven horror modpack designed for co-op. Features a campaign, custom bosses, sanity mechanics, and the 'Remains of Chaos' update which adds new zones and weapons.",
+      "description": "A story-driven horror modpack designed for co-op. Features a campaign, custom bosses, sanity mechanics, and the 'Remains of Chaos' update which adds new zones and weapons. Post-apocalyptic world with intense nights and custom Hysteria shader.",
       "rating": ""
     },
     "Dread": {
@@ -141,7 +141,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx8192m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Transforms caves into a nightmare. Adds entities like the Cave Dweller and Man From The Fog, making mining a terrifying experience with realistic sound physics.",
+      "description": "Transforms caves into a nightmare. Adds entities like the Cave Dweller and Man From The Fog, making mining a terrifying experience with realistic sound physics and quest system. Chapter 8 available with continuing story.",
       "rating": ""
     },
     "Sanity": {
@@ -165,7 +165,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Introduces a 'Karma' system. Killing passive mobs lowers your karma. If it hits zero, a terrifying entity known as 'The God' appears to judge and execute you.",
+      "description": "Introduces a 'Karma' system. Killing passive mobs lowers your karma (-15 for villagers, varies by mob). If it hits zero, a terrifying entity known as 'The God' appears to judge and execute you. Killing hostile mobs raises karma (+1 each). 24 different horror events triggered by low karma.",
       "rating": ""
     },
     "From The Caves": {
@@ -177,7 +177,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Adds a stalking entity that hunts you underground. It can break torches, create fake sounds, and climb walls, forcing you to rely on sound and quick reflexes.",
+      "description": "Adds a stalking entity that hunts you underground. It can break torches, create fake sounds, and climb walls, forcing you to rely on sound and quick reflexes. Four-phase system where it eventually escapes to surface. Places creepy signs like 'Right behind'.",
       "rating": ""
     },
     "SCP-087 The Stairwell": {
@@ -189,7 +189,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "This structure is found on the surface and is indestructible. Once you enter, you’ll encounter an endless, dark stairwell that descends deep into the ground. It's very dark inside the stairwell, even light won't help you much. As you descend down, you’ll hear disturbing sounds echoing from below, but the true horror is what might be waiting for you down there...  Will you dare venture into the dark, or will you turn back before it’s too late?",
+      "description": "This structure is found on the surface and is indestructible. Once you enter, you'll encounter an endless, dark stairwell that descends deep into the ground. It's very dark inside the stairwell, even light won't help you much. As you descend down, you'll hear disturbing sounds echoing from below, but the true horror is what might be waiting for you down there...",
       "rating": ""
     },
     "The Chuchoteur": {
@@ -201,7 +201,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "The Chuchoteur is a stalking entity capable of adapting its behavior at will. It observes from a distance, remaining unseen while tracking the player’s movement and attention.",
+      "description": "The Chuchoteur is a stalking entity capable of adapting its behavior at will. It observes from a distance, remaining unseen while tracking the player's movement and attention. French for 'The Whisperer'.",
       "rating": ""
     },
     "Flywheel of Terror": {
@@ -213,7 +213,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Your only protection is the house.",
+      "description": "Your only protection is the house. Survive the night while entities hunt you outside.",
       "rating": ""
     },
     "The Knocker": {
@@ -225,7 +225,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "This mod adds an unpredictable human like stalker which follows every of your steps and may visit you while sleeping...",
+      "description": "This mod adds an unpredictable human-like stalker which follows every one of your steps and may visit you while sleeping. Never feel safe again.",
       "rating": ""
     },
     "Arthropod Phobia": {
@@ -237,7 +237,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "ArPhEx - THE ULTIMATE ARTHROPOD HORROR MOD WITH POWERFUL BOSSES + STALKERS + REALISTIC INSECTS, ARACHNIDS, CENTIPEDES, CHELICERATES, AND NON-ARTHROPOD WORMS ",
+      "description": "ArPhEx - THE ULTIMATE ARTHROPOD HORROR MOD WITH POWERFUL BOSSES + STALKERS + REALISTIC INSECTS, ARACHNIDS, CENTIPEDES, CHELICERATES, AND NON-ARTHROPOD WORMS. Not for arachnophobes!",
       "rating": ""
     }
   },
@@ -251,7 +251,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
       "is_complex": true,
       "jvm_args": "-Xmx8192m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Real Life Craft. The hardest modpack ever created. Adds thirst, temperature, realistic healing, and brutal dragons. You will die... a lot.",
+      "description": "Real Life Craft. The hardest modpack ever created with 23+ million downloads. Adds thirst, temperature, localized health (headshots deadly), realistic healing, and brutal dragons. 185+ mods including Lycanites Mobs. You will die... a lot. Can't punch trees, torches need matches, skill system for tool usage.",
       "rating": ""
     },
     "Prominence™ II Hasturian Era": {
@@ -263,7 +263,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.1.zip",
       "is_complex": true,
       "jvm_args": "-Xmx9504m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "You one of the Flameborn of Vaaz, a race created by S'kellak, the Creator of All Things to protect and ensure the balance of all realms. After thousands of years of peace, a ravenous force known as the Void has started an invasion into the universal realms, worlds filled with life and death, are now threatened to being destroyed completely. Will you fulfill your mission and stop the Void's Invasion?",
+      "description": "Lore-rich RPG modpack with custom content. You are one of the Flameborn of Vaaz, created to protect realms from the Void's invasion. Features Talent Tree progression, artifact weapon forging/upgrading, powerful bosses, reforging system with random stats, and campaign storyline.",
       "rating": ""
     },
     "Beyond Depth": {
@@ -276,7 +276,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "An deep-sea exploration modpack. Adds terrifying aquatic horrors, submarines, and deep ocean biomes. (Mac users get a specialized version automatically).",
+      "description": "Challenging exploration modpack with 400+ mods. Features deep ocean biomes, terrifying aquatic horrors, submarines, tough bosses, enhanced combat, pet systems, and complex building contraptions. Unique progression without over-relying on quests. (Mac users get specialized version automatically).",
       "rating": ""
     },
     "Pixelmon": {
@@ -288,7 +288,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/neoforge-21.1.218.zip",
       "is_complex": false,
       "jvm_args": "-Xmx6144m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Pokémon in Minecraft. Catch, train, and battle hundreds of Pokémon. Features gyms, centers, and a full battle system faithful to the original games.",
+      "description": "Pokémon in Minecraft. Catch, train, and battle hundreds of Pokémon. Features gyms, Pokémon centers, full battle system faithful to original games, raid bosses (1-5 stars), Apricorns for Pokéballs, and revamped biomes including Ultra Space.",
       "rating": ""
     },
     "Lucky Block Challenge": {
@@ -301,6 +301,54 @@
       "is_complex": true,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "A race map style pack centered around Lucky Blocks. Break blocks for random loot or disasters. Best played with friends in a race to the finish.",
+      "rating": ""
+    },
+    "Lucky World Invasion": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyworldinvasion/mods.zip",
+      "profile_name": "Lucky World Invasion",
+      "folder_name": "Lucky World Invasion",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1052/710/64/64/638583000356932390.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "Lucky Block Challenge: can you defeat the Ender Dragon before the invasion kills you? Increasingly dangerous waves spawn as time passes.",
+      "rating": ""
+    },
+    "Popularmmos Lucky Block Challenge Games": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/popularmmos/mods.zip",
+      "profile_name": "Popularmmos Lucky Block Challenge Games",
+      "folder_name": "Popularmmos Lucky Block Challenge Games",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1562/764/64/64/639013769337179311.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "Recreation of Pat and Jen's iconic Challenge Games. Break 20 Lucky Blocks, trade with custom villagers for OP gear, and battle in an arena against massive bosses or each other. Includes Spiral Lucky Blocks and custom NPCs.",
+      "rating": ""
+    },
+    "All The Hacks - ATH": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/allthehacks/mods.zip",
+      "profile_name": "All The Hacks - ATH",
+      "folder_name": "All The Hacks",
+      "version_id": "fabric-loader-0.18.4-1.21.10",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1504/833/64/64/638977248433669729.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.10.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "A comprehensive 'Anarchy' style modpack designed for technical players. Includes utility mods like Litematica, MiniHUD, Item Scroller, and Freecam. Essential for technical SMPs or anarchy servers where client-side advantages are allowed.",
+      "rating": ""
+    },
+    "Modded Bed Wars": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/allthehacks/mods.zip",
+      "profile_name": "Modded Bed Wars",
+      "folder_name": "Modded Bed Wars",
+      "version_id": "1.12.2-forge-14.23.5.2864",
+      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/473/471/64/64/637765142298535938.png",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.12.2-forge-14.23.5.2864.zip",
+      "is_complex": true,
+      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "A twist on classic Bedwars. Adds guns, lucky blocks, and overpowered swords to the standard bed defense formula. Features custom maps designed for modded gameplay and improved PvP mechanics like Better Sprinting.",
       "rating": ""
     },
     "Entropy: The Chaos Mod": {
@@ -324,7 +372,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.20.2.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Progressively complicate your gameplay with a reappearing \"Would you Rather\" prompt",
+      "description": "Progressively complicate your gameplay with a reappearing 'Would you Rather' prompt. Make difficult choices that permanently affect your world.",
       "rating": ""
     },
     "Randomizer": {
@@ -336,7 +384,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Random block drops, mob drops, crafting recipes, chest loot, fishing and many more.",
+      "description": "Random block drops, mob drops, crafting recipes, chest loot, fishing and many more. Nothing works as you expect.",
       "rating": ""
     },
     "Shared Inventory": {
@@ -348,7 +396,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Linked inventory with other players.",
+      "description": "Linked inventory with other players. All players share the same 36 inventory slots.",
       "rating": ""
     },
     "Minecraft but if you touch grass you die": {
@@ -360,7 +408,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A very simple datapack/mod that will rapidly kill those who come in contact with grass.",
+      "description": "A very simple datapack/mod that will rapidly kill those who come in contact with grass. The ultimate 'touch grass' meme challenge.",
       "rating": ""
     },
     "Death Swap": {
@@ -384,20 +432,8 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.zip",
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A mod that gives various types of TNT.",
+      "description": "A mod that gives various types of TNT including Meteor TNT, TNT x10000, and SuperNova.",
       "rating": "6/10: Cool TNT and a good variety of TNT. Meteor TNT, TNT x 10000, SuperNova, was some good TNT."
-    },
-    "Lucky World Invasion": {
-      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/luckyworldinvasion/mods.zip",
-      "profile_name": "Lucky World Invasion",
-      "folder_name": "Lucky World Invasion",
-      "version_id": "1.20.1-forge-47.4.15",
-      "icon_url": "https://media.forgecdn.net/avatars/thumbnails/1052/710/64/64/638583000356932390.png",
-      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
-      "is_complex": true,
-      "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Lucky Block Challenge, can you defeat the Ender Dragon before invading and killing you?",
-      "rating": ""
     },
     "Manhunt Mod": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/manhuntmod/mods.zip",
@@ -408,7 +444,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/fabric-loader-0.18.4-1.21.11.zip",
       "is_complex": true,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "It's a simple serversided fabric mod that uses the classic compass + right clicking to track the speedrunner/s ",
+      "description": "It's a simple server-sided fabric mod that uses the classic compass + right clicking to track the speedrunners. Dream-style manhunt mechanics.",
       "rating": ""
     },
     "BattleArmory TACZ": {
@@ -420,7 +456,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx8416m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "It's just a lot of guns that are added to the game to be honest with you... have fun!",
+      "description": "It's just a lot of guns that are added to the game to be honest with you... have fun! Modern firearms with realistic mechanics.",
       "rating": ""
     }
   },
@@ -434,7 +470,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx6144m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A modern zombie apocalypse modpack. Features guns, vehicles, city generation, and smart zombie AI that can build and break blocks to get to you.",
+      "description": "A modern zombie apocalypse modpack. Features 100+ firearms (TAC Guns), vehicles, handcrafted city generation, and smart zombie AI that can build and break blocks to get to you. Includes thirst, temperature, bleeding, infection system, and parkour mechanics.",
       "rating": ""
     },
     "ZombieCraft": {
@@ -446,7 +482,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx6144m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "Classic zombie survival. Focuses on base defense against waves of undead. Includes barbed wire, turrets, and hordes that grow larger every night.",
+      "description": "Classic zombie survival. Focuses on base defense against waves of undead. Includes barbed wire, turrets, hordes that grow every 5 days, guns (TaCZ), planes/helicopters, smarter zombie AI, thirst/temperature management, and true darkness.",
       "rating": ""
     },
     "Cursed Walking": {
@@ -458,7 +494,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": true,
       "jvm_args": "-Xmx6144m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "A Walking Dead inspired modpack. Resources are extremely scarce, zombies are slow but persistent, and one bite can infect and kill you.",
+      "description": "A Walking Dead inspired modpack. Resources are extremely scarce, zombies are slow but persistent, and one bite can infect and kill you. Your reanimated corpse keeps all your loot - forcing you to fight a zombie as strong as you were.",
       "rating": ""
     }
   }
