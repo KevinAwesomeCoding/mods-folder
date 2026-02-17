@@ -190,7 +190,7 @@
       "is_complex": false,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "This structure is found on the surface and is indestructible. Once you enter, you'll encounter an endless, dark stairwell that descends deep into the ground. It's very dark inside the stairwell, even light won't help you much. As you descend down, you'll hear disturbing sounds echoing from below, but the true horror is what might be waiting for you down there...",
-      "rating": ""
+      "rating": "3/10: Good concept but too repetitive, mobs are good but everythign else, from vision to repetitiveness, was dookie."
     },
     "The Chuchoteur": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/thechuchoteur/mods.zip",
