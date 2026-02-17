@@ -313,7 +313,7 @@
       "is_complex": true,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Lucky Block Challenge: can you defeat the Ender Dragon before the invasion kills you? Increasingly dangerous waves spawn as time passes.",
-      "rating": ""
+      "rating": "7.5/10: The gameplah is pretty good... although we did try to play the game legitimately, we resorted to cheating and getting guns to kill. Good game, but RNG is RNG, sometimes gets annoying, sometimes it's good."
     },
     "Popularmmos Lucky Block Challenge Games": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/popularmmos/mods.zip",
