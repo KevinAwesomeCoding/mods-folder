@@ -375,6 +375,18 @@
       "description": "Progressively complicate your gameplay with a reappearing 'Would you Rather' prompt. Make difficult choices that permanently affect your world.",
       "rating": ""
     },
+    "Simple Minigames": {
+      "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/simpleminigames/mods.zip",
+      "profile_name": "Simple Minigames",
+      "folder_name": "Simple Minigames",
+      "version_id": "1.20.1-forge-47.4.15",
+      "icon_url": "https://cdn.modrinth.com/data/qMbryx55/bc8efbb2b54b831a2efa65fd38b154693b0c39b1_96.webp",
+      "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
+      "is_complex": false,
+      "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
+      "description": "This mod will add games to play against eachother like BedWars, SkyWars, SkyBlock, and others I don't even know of.",
+      "rating": ""
+    },
     "Randomizer": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/randomizer/mods.zip",
       "profile_name": "Randomizer",
