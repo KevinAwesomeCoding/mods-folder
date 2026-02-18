@@ -384,7 +384,7 @@
       "loader_url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/versions/1.20.1-forge-47.4.15.zip",
       "is_complex": false,
       "jvm_args": "-Xmx5120m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
-      "description": "This mod will add games to play against eachother like BedWars, SkyWars, SkyBlock, and others I don't even know of.",
+      "description": "This mod will add games to play against eachother like BedWars, SkyWars(Work In Progress), SkyBlock(WIP), and others(WIP) I don't even know of.",
       "rating": ""
     },
     "Randomizer": {
