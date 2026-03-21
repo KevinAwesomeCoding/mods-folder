@@ -325,7 +325,7 @@
       "is_complex": true,
       "jvm_args": "-Xmx4096m -Xms256m -Dfml.ignorePatchDiscrepancies=true -Dfml.ignoreInvalidMinecraftCertificates=true -Duser.language=en -Duser.country=US",
       "description": "Recreation of Pat and Jen's iconic Challenge Games. Break 20 Lucky Blocks, trade with custom villagers for OP gear, and battle in an arena against massive bosses or each other. Includes Spiral Lucky Blocks and custom NPCs.",
-      "rating": ""
+      "rating": "6/10: Game was lagging from all of the events ut overall it was an interesting experience... especially with Godzilla."
     },
     "All The Hacks - ATH": {
       "url": "https://github.com/KevinAwesomeCoding/mods-folder/releases/download/allthehacks/mods.zip",
