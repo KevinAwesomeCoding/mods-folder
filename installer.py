@@ -367,7 +367,7 @@ class InstallerApp:
     def open_debug_menu(self):
         debug_win = tk.Toplevel(self.root)
         debug_win.title("Debug / Tools")
-        debug_win.geometry("350x300")
+        debug_win.geometry("350x400")
         debug_win.configure(bg=BG_COLOR)
 
         tk.Label(
@@ -434,6 +434,110 @@ class InstallerApp:
             font=("Segoe UI", 10, "bold"),
         )
         btn_update_mods.pack(pady=10, fill="x", padx=30, ipady=5)
+
+        # Button 3: Custom Saves Link
+        btn_custom_link = tk.Button(
+            debug_win,
+            text="Create Custom Saves Link",
+            command=self.open_custom_link_tool,
+            bg=BUTTON_BG,
+            fg=BUTTON_FG,
+            activebackground=BUTTON_ACTIVE,
+            activeforeground=BUTTON_FG,
+            relief="flat",
+            font=("Segoe UI", 10),
+        )
+        btn_custom_link.pack(pady=5, fill="x", padx=30, ipady=5)
+
+    def open_custom_link_tool(self):
+        tool_win = tk.Toplevel(self.root)
+        tool_win.title("Custom Saves Link Tool")
+        tool_win.geometry("450x300")
+        tool_win.configure(bg=BG_COLOR)
+
+        tk.Label(
+            tool_win,
+            text="Create Custom Saves Link",
+            font=("Segoe UI", 12, "bold"),
+            bg=BG_COLOR,
+            fg=FG_COLOR,
+        ).pack(pady=15)
+
+        main_saves_var = tk.StringVar()
+        dest_saves_var = tk.StringVar()
+
+        def browse_main():
+            from tkinter import filedialog
+            d = filedialog.askdirectory(title="Select Main Minecraft Saves Directory")
+            if d:
+                main_saves_var.set(d)
+
+        def browse_dest():
+            from tkinter import filedialog
+            d = filedialog.askdirectory(title="Select Destination Profile Directory")
+            if d:
+                dest_saves_var.set(d)
+
+        def do_link():
+            main_dir = main_saves_var.get()
+            dest_dir = dest_saves_var.get()
+            if not main_dir or not dest_dir:
+                messagebox.showerror("Error", "Please select both directories.")
+                return
+
+            dest_saves = os.path.join(dest_dir, "saves")
+            
+            try:
+                if os.path.islink(dest_saves):
+                    messagebox.showinfo("Skipped", "A link already exists at the destination.")
+                    return
+                if os.path.exists(dest_saves):
+                    if os.path.realpath(dest_saves) == os.path.realpath(main_dir):
+                        messagebox.showinfo("Skipped", "Junction already exists at the destination.")
+                        return
+                    messagebox.showerror("Error", f"A 'saves' folder already exists at:\n{dest_saves}\nPlease remove it first.")
+                    return
+
+                system = platform.system()
+                import subprocess
+                if system == "Windows":
+                    cmd = ["cmd", "/c", f'mklink /D "{dest_saves}" "{main_dir}"']
+                    result = subprocess.run(cmd, capture_output=True, text=True)
+                    if result.returncode == 0:
+                        messagebox.showinfo("Success", "Successfully created saves link!")
+                        tool_win.destroy()
+                    else:
+                        messagebox.showerror("Error", f"Failed to create link:\n{result.stderr.strip() or result.stdout.strip()}")
+                elif system == "Darwin":
+                    result = subprocess.run(["ln", "-s", main_dir, dest_saves], capture_output=True, text=True)
+                    if result.returncode == 0:
+                        messagebox.showinfo("Success", "Successfully created saves link!")
+                        tool_win.destroy()
+                    else:
+                        messagebox.showerror("Error", f"Failed to create link:\n{result.stderr.strip()}")
+                else:
+                    messagebox.showerror("Error", f"Symlinks not supported on OS: {system}")
+            except Exception as e:
+                messagebox.showerror("Error", f"An error occurred: {e}")
+
+        frame1 = tk.Frame(tool_win, bg=BG_COLOR)
+        frame1.pack(fill="x", padx=15, pady=5)
+        tk.Label(frame1, text="Main Minecraft Saves:", bg=BG_COLOR, fg=FG_COLOR).pack(anchor="w")
+        e1 = ttk.Entry(frame1, textvariable=main_saves_var)
+        e1.pack(side="left", fill="x", expand=True, padx=(0, 5))
+        tk.Button(frame1, text="Browse", command=browse_main, bg=BUTTON_BG, fg=BUTTON_FG, bd=1).pack(side="right")
+
+        frame2 = tk.Frame(tool_win, bg=BG_COLOR)
+        frame2.pack(fill="x", padx=15, pady=15)
+        tk.Label(frame2, text="Destination Directory (Where link will go):", bg=BG_COLOR, fg=FG_COLOR).pack(anchor="w")
+        e2 = ttk.Entry(frame2, textvariable=dest_saves_var)
+        e2.pack(side="left", fill="x", expand=True, padx=(0, 5))
+        tk.Button(frame2, text="Browse", command=browse_dest, bg=BUTTON_BG, fg=BUTTON_FG, bd=1).pack(side="right")
+
+        tk.Button(
+            tool_win, text="Create Link", command=do_link,
+            bg=ACCENT_COLOR, fg="white", font=("Segoe UI", 10, "bold"), bd=0
+        ).pack(pady=20, ipadx=20, ipady=5)
 
     def debug_update_profiles(self, window):
         threading.Thread(
@@ -1002,6 +1106,7 @@ class InstallerApp:
                 return
 
             os.makedirs(profile_dir, exist_ok=True)
+            self.create_saves_symlink(mc_dir, profile_dir)
             self.install_modpack_update_in_place(
                 mc_dir, config, download_url, profile_dir
             )
@@ -1009,6 +1114,7 @@ class InstallerApp:
 
         # Fresh install path
         os.makedirs(profile_dir, exist_ok=True)
+        self.create_saves_symlink(mc_dir, profile_dir)
 
         self.copy_options_template(profile_dir)
 
@@ -1107,6 +1213,80 @@ class InstallerApp:
             icon=final_icon,
             jvm_args=custom_jvm_args,
         )
+
+    def create_saves_symlink(self, mc_dir, profile_dir):
+        """
+        Create a symlink (or directory junction on Windows) so that
+        <profile_dir>/saves points to <mc_dir>/saves.
+
+        Windows : mklink /D "<profile_dir>\saves" "<mc_dir>\saves"
+        macOS   : ln -s  "<mc_dir>/saves"          "<profile_dir>/saves"
+        """
+        import subprocess
+
+        main_saves = os.path.join(mc_dir, "saves")
+        profile_saves = os.path.join(profile_dir, "saves")
+
+        # Ensure the main saves directory exists so the link target is valid.
+        os.makedirs(main_saves, exist_ok=True)
+
+        # If the saves entry already exists (real dir, symlink, or junction) skip.
+        if os.path.islink(profile_saves):
+            log(f"Saves symlink already present, skipping: {profile_saves}")
+            return
+            
+        if os.path.exists(profile_saves):
+            if os.path.realpath(profile_saves) == os.path.realpath(main_saves):
+                log(f"Saves junction already present, skipping: {profile_saves}")
+                return
+            else:
+                from tkinter import messagebox
+                err_msg = f"A 'saves' folder already exists at:\n{profile_saves}\n\nPlease rename or remove it so a link can be created, then try installing again."
+                messagebox.showerror("Error", err_msg)
+                raise Exception("Saves folder already exists. Please remove it and try again.")
+
+        system = platform.system()
+        try:
+            if system == "Windows":
+                # mklink /D creates a directory symbolic link / junction.
+                # Running through cmd.exe so mklink (a shell built-in) is available.
+                cmd = [
+                    "cmd", "/c",
+                    f'mklink /D "{profile_saves}" "{main_saves}"'
+                ]
+                result = subprocess.run(
+                    cmd,
+                    capture_output=True,
+                    text=True,
+                )
+                if result.returncode == 0:
+                    log(f"Created saves symlink: {profile_saves} -> {main_saves}")
+                    self.update_status("Linked saves folder...")
+                else:
+                    log(
+                        f"mklink failed (code {result.returncode}): "
+                        f"{result.stderr.strip() or result.stdout.strip()}"
+                    )
+            elif system == "Darwin":
+                # ln -s <target> <link_name>
+                result = subprocess.run(
+                    ["ln", "-s", main_saves, profile_saves],
+                    capture_output=True,
+                    text=True,
+                )
+                if result.returncode == 0:
+                    log(f"Created saves symlink: {profile_saves} -> {main_saves}")
+                    self.update_status("Linked saves folder...")
+                else:
+                    log(
+                        f"ln -s failed (code {result.returncode}): "
+                        f"{result.stderr.strip()}"
+                    )
+            else:
+                log(f"Saves symlink not supported on OS: {system}")
+        except Exception as e:
+            log(f"ERROR creating saves symlink: {e}")
+            log(traceback.format_exc())
 
     def update_json_profile(self, mc_dir, name, game_dir, version_id, icon, jvm_args):
         profiles_file = os.path.join(mc_dir, "launcher_profiles.json")
